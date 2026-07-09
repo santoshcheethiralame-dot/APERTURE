@@ -53,8 +53,10 @@ MIRROR/
 ### concepts.py
 Concept bank schema (name, category, prompt pairs) loaded from YAML.
 Each concept carries ~40 contrastive pairs: positive prompts evoking the
-concept, negatives evoking a random same-category concept. Bank loader
-validates counts and category matching.
+concept, negatives evoking a random same-category concept. Pairs are
+generated from a fixed set of prompt templates instantiated per concept, so
+the bank YAML stores concepts and templates, not hand-written prompts. Bank
+loader validates counts and category matching.
 
 ### vectors.py
 Diff-in-means extraction: run positive and negative batches, cache residual
