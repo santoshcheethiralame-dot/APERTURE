@@ -18,3 +18,14 @@ def test_metadata(vec):
 def test_flags_present_and_boolean(vec):
     assert set(vec.flags) == {"steering", "probe", "stability"}
     assert all(isinstance(v, bool) for v in vec.flags.values())
+
+
+def test_probe_split_shares_no_prompts(bank):
+    from mirror.vectors import split_pairs
+
+    pairs = bank.pairs(bank.get("elephant"), n_pairs=20)
+    train, test = split_pairs(pairs, len(bank.templates))
+    assert train and test
+    train_prompts = {p for pair in train for p in pair}
+    test_prompts = {p for pair in test for p in pair}
+    assert not train_prompts & test_prompts

@@ -66,10 +66,16 @@ def stability_check(model, pairs, layer, threshold=0.8):
     return bool(torch.cosine_similarity(a, b, dim=0) >= threshold)
 
 
+def split_pairs(pairs, n_templates, held_out_templates=2):
+    cut = n_templates - held_out_templates
+    train = [p for i, p in enumerate(pairs) if i % n_templates < cut]
+    test = [p for i, p in enumerate(pairs) if i % n_templates >= cut]
+    return train, test
+
+
 def extract(model, bank, concept, layer, n_pairs=40, seed=0):
     pairs = bank.pairs(concept, n_pairs, seed)
-    held_out = max(2, n_pairs // 5)
-    train, test = pairs[:-held_out], pairs[-held_out:]
+    train, test = split_pairs(pairs, len(bank.templates))
     vector, sigma = raw_direction(model, train, layer)
     direction = vector / vector.norm()
     flags = {
