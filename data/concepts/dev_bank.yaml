@@ -1,0 +1,28 @@
+concepts:
+- {name: elephant, category: animals}
+- {name: spider, category: animals}
+- {name: eagle, category: animals}
+- {name: dolphin, category: animals}
+- {name: volcano, category: places}
+- {name: desert, category: places}
+- {name: library, category: places}
+- {name: harbor, category: places}
+- {name: joy, category: emotions}
+- {name: fear, category: emotions}
+- {name: jealousy, category: emotions}
+- {name: serenity, category: emotions}
+- {name: violin, category: objects}
+- {name: umbrella, category: objects}
+- {name: telescope, category: objects}
+- {name: candle, category: objects}
+templates:
+- "Write a short story about {concept}."
+- "Describe {concept} in vivid detail."
+- "Explain what {concept} means to you."
+- "Compose a poem about {concept}."
+- "List five facts about {concept}."
+- "Tell me about a memory involving {concept}."
+- "Write a news headline about {concept}."
+- "Describe a dream featuring {concept}."
+- "Explain {concept} to a five year old."
+- "Write a diary entry about {concept}."
