@@ -44,9 +44,9 @@ def steering_check(model, concept, direction, sigma, layer, alpha=8.0):
         return resid
 
     with torch.no_grad():
-        clean = model(prompt)[0, -1, token]
+        clean = model(prompt)[0, -1].log_softmax(-1)[token]
         with model.hooks(fwd_hooks=[(hook_name(layer), hook)]):
-            steered = model(prompt)[0, -1, token]
+            steered = model(prompt)[0, -1].log_softmax(-1)[token]
     return bool(steered > clean)
 
 

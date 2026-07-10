@@ -36,3 +36,4 @@ def test_run_writes_records(model, tmp_path):
                 "kl", "flags", "clean", "report"}
     assert expected <= set(lines[0])
     assert {r["alpha"] for r in records} == {0, 8}
+    assert json.loads((tmp_path / "out.config.json").read_text()) == cfg

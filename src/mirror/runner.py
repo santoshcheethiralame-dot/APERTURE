@@ -25,12 +25,15 @@ def run(model, cfg):
     injection_cfg, run_cfg = cfg["injection"], cfg["run"]
     out = Path(run_cfg["out"])
     out.parent.mkdir(parents=True, exist_ok=True)
+    out.with_suffix(".config.json").write_text(json.dumps(cfg, indent=2))
     records = []
     with out.open("a") as f:
         for name in cfg["concepts"]["names"]:
             vec = extract(model, bank, bank.get(name),
                           injection_cfg["layer"], cfg["concepts"]["n_pairs"])
             for alpha in injection_cfg["alphas"]:
+                kl = kl_meter(model, run_cfg["prompt"], vec, alpha,
+                              injection_cfg["span"])
                 for seed in run_cfg["seeds"]:
                     clean = generate(model, run_cfg["prompt"], seed=seed,
                                      max_new_tokens=run_cfg["max_new_tokens"])
@@ -44,8 +47,7 @@ def run(model, cfg):
                         "alpha": alpha,
                         "span": injection_cfg["span"],
                         "seed": seed,
-                        "kl": kl_meter(model, run_cfg["prompt"], vec, alpha,
-                                       injection_cfg["span"]),
+                        "kl": kl,
                         "flags": vec.flags,
                         "clean": clean,
                         "report": report,
