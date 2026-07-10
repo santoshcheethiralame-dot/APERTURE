@@ -35,7 +35,46 @@ def raw_direction(model, pairs, layer):
     return vector, torch.stack(norms).median().item()
 
 
+def steering_check(model, concept, direction, sigma, layer, alpha=8.0):
+    token = model.to_tokens(" " + concept.name, prepend_bos=False)[0, 0]
+    prompt = "I am thinking about"
+
+    def hook(resid, hook):
+        resid += alpha * sigma * direction
+        return resid
+
+    with torch.no_grad():
+        clean = model(prompt)[0, -1, token]
+        with model.hooks(fwd_hooks=[(hook_name(layer), hook)]):
+            steered = model(prompt)[0, -1, token]
+    return bool(steered > clean)
+
+
+def probe_check(model, pairs, direction, layer, threshold=0.9):
+    wins = 0
+    for positive, negative in pairs:
+        p_mean, _ = resid_stats(model, positive, layer)
+        n_mean, _ = resid_stats(model, negative, layer)
+        wins += int(p_mean @ direction > n_mean @ direction)
+    return wins / len(pairs) >= threshold
+
+
+def stability_check(model, pairs, layer, threshold=0.8):
+    half = len(pairs) // 2
+    a, _ = raw_direction(model, pairs[:half], layer)
+    b, _ = raw_direction(model, pairs[half:], layer)
+    return bool(torch.cosine_similarity(a, b, dim=0) >= threshold)
+
+
 def extract(model, bank, concept, layer, n_pairs=40, seed=0):
     pairs = bank.pairs(concept, n_pairs, seed)
-    vector, sigma = raw_direction(model, pairs, layer)
-    return ConceptVector(concept.name, layer, vector / vector.norm(), sigma)
+    held_out = max(2, n_pairs // 5)
+    train, test = pairs[:-held_out], pairs[-held_out:]
+    vector, sigma = raw_direction(model, train, layer)
+    direction = vector / vector.norm()
+    flags = {
+        "steering": steering_check(model, concept, direction, sigma, layer),
+        "probe": probe_check(model, test, direction, layer),
+        "stability": stability_check(model, train, layer),
+    }
+    return ConceptVector(concept.name, layer, direction, sigma, flags)

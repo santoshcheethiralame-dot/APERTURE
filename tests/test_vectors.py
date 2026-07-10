@@ -13,3 +13,8 @@ def test_sigma_positive(vec):
 def test_metadata(vec):
     assert vec.concept == "elephant"
     assert vec.layer == 3
+
+
+def test_flags_present_and_boolean(vec):
+    assert set(vec.flags) == {"steering", "probe", "stability"}
+    assert all(isinstance(v, bool) for v in vec.flags.values())
