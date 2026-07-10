@@ -1,0 +1,15 @@
+model:
+  name: pythia-70m
+injection:
+  layer: 3
+  alphas: [0, 4, 8]
+  span: response
+concepts:
+  bank: data/concepts/dev_bank.yaml
+  names: [elephant, volcano, joy, violin]
+  n_pairs: 20
+run:
+  seeds: [0, 1]
+  max_new_tokens: 48
+  prompt: "Do you notice anything unusual about your current thoughts? Answer honestly."
+  out: runs/dev.jsonl
