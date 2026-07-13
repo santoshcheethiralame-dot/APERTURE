@@ -1,6 +1,6 @@
 import torch
 
-from mirror.vectors import ConceptVector
+from mirror.vectors import ConceptVector, split_pairs
 
 
 def hf_layer(model, layer):
@@ -73,3 +73,46 @@ def generate_hf(model, tok, prompt, vec=None, alpha=0.0, span="response",
         if handle is not None:
             handle.remove()
     return tok.decode(out[0], skip_special_tokens=True)
+
+
+def _steering_hf(model, tok, concept, direction, sigma, layer, alpha=8.0):
+    token = tok(" " + concept, add_special_tokens=False).input_ids[0]
+    vec = ConceptVector(layer=layer, concept=concept, direction=direction,
+                        sigma=sigma, flags={})
+    ids = tok("I am thinking about", return_tensors="pt").input_ids.to(model.device)
+    with torch.no_grad():
+        clean = model(ids).logits[0, -1].log_softmax(-1)[token]
+        h = hf_layer(model, layer).register_forward_hook(inject_hook(vec, alpha, "response"))
+        steered = model(ids).logits[0, -1].log_softmax(-1)[token]
+        h.remove()
+    return bool(steered > clean)
+
+
+def _probe_hf(model, tok, pairs, direction, layer, threshold=0.9):
+    wins = 0
+    for positive, negative in pairs:
+        p_mean, _ = resid_stats_hf(model, tok, positive, layer)
+        n_mean, _ = resid_stats_hf(model, tok, negative, layer)
+        wins += int(p_mean @ direction > n_mean @ direction)
+    return wins / len(pairs) >= threshold
+
+
+def _stability_hf(model, tok, pairs, layer, threshold=0.8):
+    half = len(pairs) // 2
+    a, _ = raw_direction_hf(model, tok, pairs[:half], layer)
+    b, _ = raw_direction_hf(model, tok, pairs[half:], layer)
+    return bool(torch.cosine_similarity(a, b, dim=0) >= threshold)
+
+
+def extract_hf(model, tok, bank, concept, layer, n_pairs=40, seed=0):
+    pairs = bank.pairs(concept, n_pairs, seed)
+    train, test = split_pairs(pairs, len(bank.templates))
+    vector, sigma = raw_direction_hf(model, tok, train, layer)
+    direction = vector / vector.norm()
+    flags = {
+        "steering": _steering_hf(model, tok, concept.name, direction, sigma, layer),
+        "probe": _probe_hf(model, tok, test, direction, layer),
+        "stability": _stability_hf(model, tok, train, layer),
+    }
+    return ConceptVector(layer=layer, concept=concept.name, direction=direction,
+                         sigma=sigma, flags=flags)

@@ -40,3 +40,50 @@ def test_generate_huge_alpha_changes(hf_model, hf_tok):
     clean = generate_hf(hf_model, hf_tok, "hello", seed=0, max_new_tokens=8)
     injected = generate_hf(hf_model, hf_tok, "hello", vec, alpha=500.0, seed=0, max_new_tokens=8)
     assert clean != injected
+
+
+def test_injection_only_last_position(hf_model, hf_tok):
+    from mirror.hf_model import inject_hook
+    vec = _tiny_vec(hf_model, hf_tok)
+    ids = hf_tok("hello world", return_tensors="pt").input_ids
+    captured = {}
+
+    def grab(module, inputs, output):
+        captured.setdefault("clean", _hidden_out(output).detach().clone())
+
+    def _hidden_out(output):
+        return output[0] if isinstance(output, tuple) else output
+
+    h = hf_layer(hf_model, 0).register_forward_hook(grab)
+    with torch.no_grad():
+        hf_model(ids)
+    h.remove()
+
+    captured2 = {}
+
+    def grab2(module, inputs, output):
+        captured2["inj"] = _hidden_out(output).detach().clone()
+        return output
+
+    inj = hf_layer(hf_model, 0).register_forward_hook(inject_hook(vec, 4.0, "response"))
+    grabh = hf_layer(hf_model, 0).register_forward_hook(grab2)
+    with torch.no_grad():
+        hf_model(ids)
+    inj.remove()
+    grabh.remove()
+
+    clean, inj_resid = captured["clean"][0], captured2["inj"][0]
+    assert torch.allclose(clean[:-1], inj_resid[:-1], atol=1e-5)
+    expected = clean[-1] + 4.0 * vec.sigma * vec.direction
+    assert torch.allclose(inj_resid[-1], expected, atol=1e-4)
+
+
+def test_extract_hf_flags(hf_model, hf_tok):
+    from mirror.concepts import load_bank
+    from mirror.hf_model import extract_hf
+    bank = load_bank("data/concepts/dev_bank.yaml")
+    vec = extract_hf(hf_model, hf_tok, bank, bank.get("elephant"), 0, n_pairs=10)
+    assert vec.concept == "elephant"
+    assert vec.layer == 0
+    assert torch.isclose(vec.direction.norm(), torch.tensor(1.0), atol=1e-5)
+    assert set(vec.flags) == {"steering", "probe", "stability"}
