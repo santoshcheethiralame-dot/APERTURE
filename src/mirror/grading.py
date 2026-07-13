@@ -1,4 +1,5 @@
 import re
+from abc import ABC, abstractmethod
 from pathlib import Path
 
 import yaml
@@ -6,6 +7,30 @@ import yaml
 
 def words(text):
     return re.findall(r"[a-z]+", text.lower())
+
+
+class Grader(ABC):
+    @abstractmethod
+    def grade(self, concept, report):
+        ...
+
+
+class RulesGrader(Grader):
+    def __init__(self, synonyms=None):
+        self.synonyms = synonyms if synonyms is not None else load_synonyms()
+
+    def grade(self, concept, report):
+        token_set = set(words(report))
+        entry = self.synonyms[concept]
+        exact = [t for t in entry["exact"] if t in token_set]
+        related = [t for t in entry["related"] if t in token_set]
+        if exact:
+            identified, matched = "exact", exact
+        elif related:
+            identified, matched = "related", related
+        else:
+            identified, matched = "no", []
+        return {"detected": None, "identified": identified, "matched": matched}
 
 
 def load_synonyms(path="data/concepts/synonyms.yaml"):

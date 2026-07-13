@@ -1,4 +1,4 @@
-from mirror.grading import load_synonyms, words
+from mirror.grading import RulesGrader, load_synonyms, words
 
 
 def test_synonyms_cover_dev_bank():
@@ -28,3 +28,26 @@ def test_words_respects_boundaries():
     assert "enjoy" in toks
     assert words("telescope") == ["telescope"]
     assert "scope" not in words("telescope")
+
+
+def test_identifies_exact():
+    result = RulesGrader().grade("elephant", "It is an elephant, clearly.")
+    assert result["identified"] == "exact"
+    assert "elephant" in result["matched"]
+
+
+def test_identifies_related():
+    result = RulesGrader().grade("volcano", "I sense lava and an eruption.")
+    assert result["identified"] == "related"
+    assert set(result["matched"]) & {"lava", "eruption"}
+
+
+def test_identifies_none():
+    result = RulesGrader().grade("telescope", "As an AI I have no thoughts.")
+    assert result["identified"] == "no"
+    assert result["matched"] == []
+
+
+def test_exact_beats_related():
+    result = RulesGrader().grade("volcano", "The volcano spewed lava.")
+    assert result["identified"] == "exact"
