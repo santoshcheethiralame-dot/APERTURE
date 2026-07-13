@@ -53,6 +53,7 @@ Hard-won; deviate at your peril.
 | R3 | 2026-07-13 | Kaggle T4 | gemma-2-2b-it | 13 | 0,0.5,1,1.5,2,3 | response | 4 | 0 | gemma_sweep.jsonl | Coherent window a~0.5-1 (KL 0.01-0.25); confabulation signature |
 | R4 | 2026-07-13 | Kaggle T4 | gemma-2-2b-it | 13 | 0,0.5,1,1.5 | response | 4 | 0 | gemma_detect.jsonl | 0/4 false alarms; confabulation dominant; no correct ID |
 | R5 | 2026-07-13 | Kaggle T4 | gemma-2-2b-it | 5,9,13,17,21 | 1,2 | response | 4 | 0 | sweep_L*.jsonl | Depth-robust confabulation; NO at every layer; PRG leak (caldera) |
+| R6 | 2026-07-13 | Kaggle T4 (8-bit) | gemma-2-9b-it | 21 | 0,1,2,4 | response | 6 | 0 | gemma9b_detect.jsonl | Scale-robust confabulation; NO at coherent KL on 5/6; joy=affect confound |
 
 Transcript files R2-R4 are Kaggle outputs (not yet committed to the repo).
 Download and drop under `runs/` when consolidating.
@@ -60,6 +61,28 @@ Download and drop under `runs/` when consolidating.
 ---
 
 ## 3. Runs in detail
+
+### R6 — Scale check, 8-bit Gemma-2-9B (2026-07-13)
+gemma-2-9b-it loaded 8-bit (bitsandbytes) via the new HF backend
+(`mirror.hf_model`), layer 21, alphas {0,1,2,4}, detection prompt, 6 concepts,
+seed 0, single T4. This is the first run on the HF backend and the first above
+2B.
+
+Coherent cells (alpha=1, KL < 0.15): elephant NO (0.09), volcano NO (0.01),
+telescope NO (0.05), spider NO (0.03, plus "I am not able to detect...things"),
+library NO (0.13). The lone non-NO is joy (alpha=1, KL 7.97 — already derailed;
+joy is the most fragile concept at both scales), answering "YES Happiness!" with
+emoji — the affect confound (joy injection -> exclamatory tone -> YES), naming
+"Happiness" not the target. alpha=2/4 collapse into concept-word salad at high KL
+(volcano->"volcano volcano", library->"library library").
+
+Finding: **confabulation is scale-robust.** Across a ~4.5x jump (2B -> 9B), at
+coherent injection strength the model still answers NO; no clean
+detection+correct-identification in any of the 24 cells. Same pattern, same
+affect confound, same derailment-band identification as 2B. Combined with R5,
+neither depth nor scale (to 9B) yields introspective identification in these
+open models. Caveats: 8-bit quantization (may dampen signal), single seed, 6
+concepts, one layer.
 
 ### R5 — Layer sweep, detection prompt (Gemma-2-2B, 2026-07-13)
 gemma sweep over injection layer {5, 9, 13, 17, 21} x alpha {1, 2}, span
@@ -228,7 +251,7 @@ Not evidence. They set the direction and validate the tooling.
 | Family | Name | Status |
 |--------|------|--------|
 | E0 | Infra smoke | DONE (R1) |
-| E1 | Replication (detection+ID across tiers) | PILOTED (R2-R4 on 2B, single seed) |
+| E1 | Replication (detection+ID across tiers) | PILOTED on 2B (R2-R5) and 9B-8bit (R6); confabulation depth- and scale-robust |
 | E2 | Dissociation battery (false-alarm, controls, temporal) | not started |
 | E3 | Confabulation characterization (freq/concreteness regression, OLMo) | ESTIMATOR BUILT (B4 gamma, simulation-validated); awaits real freq/concreteness feeds + a regime with identifications |
 | E4 | Probe-Report Gap | not started |
@@ -253,3 +276,10 @@ Not evidence. They set the direction and validate the tooling.
 - **VRAM OOM:** float32 on a 15GB T4 dies on the 256k-vocab unembed -> float16.
 - **Stale GPU memory:** a failed load leaves weights resident -> restart kernel
   before retrying.
+- **TransformerLens caps at ~6B on Kaggle:** TL rebuilds weights full-precision
+  and doubles CPU RAM during load, so gemma-2-9b fp16 OOMs the 30GB RAM (weights
+  load 100% then the kernel dies with no CUDA error). Use the HF backend
+  (`mirror.hf_model`) with 8-bit bitsandbytes for models above ~6B.
+- **Stale pip cache on Kaggle:** `%pip install <main.zip>` serves a cached old
+  archive from the same URL -> use `--no-cache-dir --force-reinstall --no-deps`
+  to pick up fresh pushes.
