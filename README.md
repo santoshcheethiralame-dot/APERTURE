@@ -22,4 +22,5 @@ Tests run on pythia-70m on CPU.
 `notebooks/kaggle_demo.ipynb` runs the full loop on Gemma-2-2B-it
 (Kaggle T4/P100, HF token required — Gemma is gated).
 
-Plans and specs live in `docs/`.
+Plans and specs live in `docs/`. Experimental history is in
+`docs/LAB_NOTEBOOK.md` (run registry + findings, updated after every run).
