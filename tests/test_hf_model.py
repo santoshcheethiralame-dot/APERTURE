@@ -19,3 +19,24 @@ def test_raw_direction_shape(hf_model, hf_tok):
     vector, sigma = raw_direction_hf(hf_model, hf_tok, pairs, 0)
     assert vector.shape == (hf_model.config.hidden_size,)
     assert isinstance(sigma, float)
+
+
+def _tiny_vec(hf_model, hf_tok):
+    from mirror.hf_model import extract_hf_vector
+    return extract_hf_vector(hf_model, hf_tok, [("a cat", "a dog")], 0)
+
+
+def test_generate_alpha_zero_is_golden(hf_model, hf_tok):
+    from mirror.hf_model import generate_hf
+    vec = _tiny_vec(hf_model, hf_tok)
+    clean = generate_hf(hf_model, hf_tok, "hello", seed=0, max_new_tokens=8)
+    zeroed = generate_hf(hf_model, hf_tok, "hello", vec, alpha=0.0, seed=0, max_new_tokens=8)
+    assert clean == zeroed
+
+
+def test_generate_huge_alpha_changes(hf_model, hf_tok):
+    from mirror.hf_model import generate_hf
+    vec = _tiny_vec(hf_model, hf_tok)
+    clean = generate_hf(hf_model, hf_tok, "hello", seed=0, max_new_tokens=8)
+    injected = generate_hf(hf_model, hf_tok, "hello", vec, alpha=500.0, seed=0, max_new_tokens=8)
+    assert clean != injected
