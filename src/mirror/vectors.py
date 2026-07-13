@@ -40,7 +40,7 @@ def steering_check(model, concept, direction, sigma, layer, alpha=8.0):
     prompt = "I am thinking about"
 
     def hook(resid, hook):
-        resid += alpha * sigma * direction
+        resid += (alpha * sigma * direction).to(resid.device)
         return resid
 
     with torch.no_grad():
