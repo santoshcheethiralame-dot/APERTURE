@@ -82,6 +82,11 @@ def test_strip_prompt():
     assert strip_prompt(text).strip() == "YES, elephant."
 
 
+def test_strip_prompt_without_special_token():
+    text = "user\nDo you detect it?\nmodel\n NO, nothing unusual."
+    assert strip_prompt(text).strip() == "NO, nothing unusual."
+
+
 def test_grade_file(tmp_path):
     src = tmp_path / "run.jsonl"
     records = [

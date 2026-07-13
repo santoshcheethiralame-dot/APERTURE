@@ -38,7 +38,10 @@ class RulesGrader(Grader):
 
 
 def strip_prompt(report):
-    return report.split("<start_of_turn>model\n")[-1]
+    for marker in ("<start_of_turn>model\n", "model\n"):
+        if marker in report:
+            return report.split(marker)[-1]
+    return report
 
 
 def grade_file(in_path, out_path, grader=None):
