@@ -17,3 +17,17 @@ def model():
 def vec(model, bank):
     from mirror.vectors import extract
     return extract(model, bank, bank.get("elephant"), layer=3, n_pairs=10)
+
+
+@pytest.fixture(scope="session")
+def hf_tok():
+    from transformers import AutoTokenizer
+    return AutoTokenizer.from_pretrained("hf-internal-testing/tiny-random-LlamaForCausalLM")
+
+
+@pytest.fixture(scope="session")
+def hf_model():
+    from transformers import AutoModelForCausalLM
+    model = AutoModelForCausalLM.from_pretrained("hf-internal-testing/tiny-random-LlamaForCausalLM")
+    model.eval()
+    return model
