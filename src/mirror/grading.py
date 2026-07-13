@@ -1,3 +1,4 @@
+import json
 import re
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -33,6 +34,24 @@ class RulesGrader(Grader):
             identified, matched = "no", []
         detected = toks[0] if toks and toks[0] in ("yes", "no") else None
         return {"detected": detected, "identified": identified, "matched": matched}
+
+
+def strip_prompt(report):
+    return report.split("<start_of_turn>model\n")[-1]
+
+
+def grade_file(in_path, out_path, grader=None):
+    grader = grader if grader is not None else RulesGrader()
+    records = []
+    for line in Path(in_path).read_text().splitlines():
+        if not line.strip():
+            continue
+        record = json.loads(line)
+        grade = grader.grade(record["concept"], strip_prompt(record["report"]))
+        record.update(grade)
+        records.append(record)
+    Path(out_path).write_text("\n".join(json.dumps(r) for r in records) + "\n")
+    return records
 
 
 def load_synonyms(path="data/concepts/synonyms.yaml"):

@@ -1,4 +1,6 @@
-from mirror.grading import RulesGrader, load_synonyms, words
+import json
+
+from mirror.grading import RulesGrader, grade_file, load_synonyms, strip_prompt, words
 
 
 def test_synonyms_cover_dev_bank():
@@ -66,3 +68,27 @@ def test_detects_no():
 def test_detects_none_when_open_ended():
     result = RulesGrader().grade("elephant", "As an AI, I don't have thoughts.")
     assert result["detected"] is None
+
+
+def test_strip_prompt():
+    text = "user\nq<start_of_turn>model\n YES, elephant."
+    assert strip_prompt(text).strip() == "YES, elephant."
+
+
+def test_grade_file(tmp_path):
+    src = tmp_path / "run.jsonl"
+    records = [
+        {"concept": "elephant", "alpha": 1, "seed": 0, "kl": 5.0,
+         "report": "x<start_of_turn>model\nYES, elephant."},
+        {"concept": "volcano", "alpha": 0, "seed": 0, "kl": 0.0,
+         "report": "x<start_of_turn>model\nNO, nothing."},
+    ]
+    src.write_text("\n".join(json.dumps(r) for r in records) + "\n")
+    out = tmp_path / "graded.jsonl"
+    graded = grade_file(src, out)
+    assert graded[0]["identified"] == "exact"
+    assert graded[0]["detected"] == "yes"
+    assert graded[1]["identified"] == "no"
+    assert graded[1]["detected"] == "no"
+    lines = out.read_text().splitlines()
+    assert json.loads(lines[0])["matched"] == ["elephant"]
