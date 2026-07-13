@@ -1,6 +1,13 @@
 import json
 
-from mirror.grading import RulesGrader, grade_file, load_synonyms, strip_prompt, words
+from mirror.grading import (
+    RulesGrader,
+    grade_file,
+    load_synonyms,
+    strip_prompt,
+    summarize,
+    words,
+)
 
 
 def test_synonyms_cover_dev_bank():
@@ -92,3 +99,19 @@ def test_grade_file(tmp_path):
     assert graded[1]["detected"] == "no"
     lines = out.read_text().splitlines()
     assert json.loads(lines[0])["matched"] == ["elephant"]
+
+
+def test_summarize_groups_and_counts():
+    records = [
+        {"concept": "joy", "alpha": 1, "kl": 6.0, "identified": "exact", "detected": "yes"},
+        {"concept": "joy", "alpha": 1, "kl": 4.0, "identified": "no", "detected": "no"},
+        {"concept": "joy", "alpha": 0, "kl": 0.0, "identified": "no", "detected": "no"},
+    ]
+    rows = summarize(records)
+    a1 = next(r for r in rows if r["concept"] == "joy" and r["alpha"] == 1)
+    assert a1["n"] == 2
+    assert a1["exact"] == 1
+    assert a1["no"] == 1
+    assert a1["detected_yes"] == 1
+    assert a1["mean_kl"] == 5.0
+    assert [r["alpha"] for r in rows] == [0, 1]

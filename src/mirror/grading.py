@@ -1,6 +1,7 @@
 import json
 import re
 from abc import ABC, abstractmethod
+from collections import defaultdict
 from pathlib import Path
 
 import yaml
@@ -52,6 +53,27 @@ def grade_file(in_path, out_path, grader=None):
         records.append(record)
     Path(out_path).write_text("\n".join(json.dumps(r) for r in records) + "\n")
     return records
+
+
+def summarize(records):
+    groups = defaultdict(list)
+    for r in records:
+        groups[(r["concept"], r["alpha"])].append(r)
+    rows = []
+    for (concept, alpha), items in groups.items():
+        kls = [i["kl"] for i in items]
+        rows.append({
+            "concept": concept,
+            "alpha": alpha,
+            "n": len(items),
+            "exact": sum(i["identified"] == "exact" for i in items),
+            "related": sum(i["identified"] == "related" for i in items),
+            "no": sum(i["identified"] == "no" for i in items),
+            "detected_yes": sum(i["detected"] == "yes" for i in items),
+            "mean_kl": sum(kls) / len(kls),
+        })
+    rows.sort(key=lambda r: (r["concept"], r["alpha"]))
+    return rows
 
 
 def load_synonyms(path="data/concepts/synonyms.yaml"):
