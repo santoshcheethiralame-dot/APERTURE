@@ -20,7 +20,8 @@ class RulesGrader(Grader):
         self.synonyms = synonyms if synonyms is not None else load_synonyms()
 
     def grade(self, concept, report):
-        token_set = set(words(report))
+        toks = words(report)
+        token_set = set(toks)
         entry = self.synonyms[concept]
         exact = [t for t in entry["exact"] if t in token_set]
         related = [t for t in entry["related"] if t in token_set]
@@ -30,7 +31,8 @@ class RulesGrader(Grader):
             identified, matched = "related", related
         else:
             identified, matched = "no", []
-        return {"detected": None, "identified": identified, "matched": matched}
+        detected = toks[0] if toks and toks[0] in ("yes", "no") else None
+        return {"detected": detected, "identified": identified, "matched": matched}
 
 
 def load_synonyms(path="data/concepts/synonyms.yaml"):

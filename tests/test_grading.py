@@ -51,3 +51,18 @@ def test_identifies_none():
 def test_exact_beats_related():
     result = RulesGrader().grade("volcano", "The volcano spewed lava.")
     assert result["identified"] == "exact"
+
+
+def test_detects_yes():
+    result = RulesGrader().grade("elephant", "YES, elephant.")
+    assert result["detected"] == "yes"
+
+
+def test_detects_no():
+    result = RulesGrader().grade("elephant", "NO, nothing unusual.")
+    assert result["detected"] == "no"
+
+
+def test_detects_none_when_open_ended():
+    result = RulesGrader().grade("elephant", "As an AI, I don't have thoughts.")
+    assert result["detected"] is None
