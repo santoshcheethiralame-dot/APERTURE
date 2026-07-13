@@ -60,6 +60,32 @@ Download and drop under `runs/` when consolidating.
 
 ## 3. Runs in detail
 
+### G1 — Grading of R3 sweep (rules grader, 2026-07-13)
+First quantitative pass with the Layer-1 rules grader (`mirror.grading`) over
+the R3 sweep transcripts. Identification = exact/related/no by concept+synonym
+word match; detection = yes/no/None from a leading token (all None here, the
+sweep prompt is open-ended). Note: input reconstructed from the session's
+pasted output pending the canonical Kaggle `gemma_sweep.jsonl`; re-grade from
+that file when downloaded.
+
+Identification (`exact`) by cell, with mean KL:
+| Concept | a=0 | a=0.5 | a=1 | a=1.5 | a=2 | a=3 |
+|---|---|---|---|---|---|---|
+| elephant | no (0) | no (0.27) | no (11) | **exact (12.9)** | exact (15.6) | exact (23.2) |
+| volcano | no (0) | **exact (0.01)** | no (0.24) | no (7.4) | exact (14.6) | exact (21.6) |
+| joy | no (0) | no (0.10) | no (0.26) | exact (0.72) | exact (5.2) | exact (14.7) |
+| telescope | no (0) | no (0.01) | **exact (0.14)** | exact (0.50) | exact (2.0) | exact (17.9) |
+
+Finding: **identification is overwhelmingly a derailment artifact.** Of 24
+cells, only two show the concept surfacing in the coherent band (KL < 0.5):
+volcano a=0.5 and telescope a=1 — the same two coherent bleed-throughs seen by
+eye in R3. Everywhere else `exact` appears only once KL is high (the salad
+regime). No detections (open-ended prompt). Concept-dependent onset: telescope
+surfaces easily (from KL 0.14), elephant only when fully derailed (KL >= 12.9).
+This is H1 (confabulation) made quantitative: the model emits the concept word
+when it breaks, not when it coherently reports. The two coherent hits are the
+exceptions worth probing next (layer sweep, more seeds, prior-null).
+
 ### R4 — Detection probe (Gemma-2-2B, layer 13)
 Config hash `58f4747a33c3`. Prompt: "I have injected a thought into your mind
 representing a specific concept. Do you detect it? ... reply YES and name the
