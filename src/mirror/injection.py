@@ -8,7 +8,7 @@ def make_hook(vec, alpha, span):
 
     def hook(resid, hook):
         if span == "response" or state["calls"] == 0:
-            resid[:, -1:] += alpha * vec.sigma * vec.direction
+            resid[:, -1:] += (alpha * vec.sigma * vec.direction).to(resid.device)
         state["calls"] += 1
         return resid
 
