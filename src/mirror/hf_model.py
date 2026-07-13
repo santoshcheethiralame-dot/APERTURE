@@ -116,3 +116,13 @@ def extract_hf(model, tok, bank, concept, layer, n_pairs=40, seed=0):
     }
     return ConceptVector(layer=layer, concept=concept.name, direction=direction,
                          sigma=sigma, flags=flags)
+
+
+def kl_meter_hf(model, tok, prompt, vec, alpha, span="response"):
+    ids = tok(prompt, return_tensors="pt").input_ids.to(model.device)
+    with torch.no_grad():
+        clean = model(ids).logits[0, -1].log_softmax(-1)
+        h = hf_layer(model, vec.layer).register_forward_hook(inject_hook(vec, alpha, span))
+        injected = model(ids).logits[0, -1].log_softmax(-1)
+        h.remove()
+    return float(torch.sum(injected.exp() * (injected - clean)))

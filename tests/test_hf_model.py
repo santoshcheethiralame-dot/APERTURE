@@ -87,3 +87,15 @@ def test_extract_hf_flags(hf_model, hf_tok):
     assert vec.layer == 0
     assert torch.isclose(vec.direction.norm(), torch.tensor(1.0), atol=1e-5)
     assert set(vec.flags) == {"steering", "probe", "stability"}
+
+
+def test_kl_hf_zero_at_alpha_zero(hf_model, hf_tok):
+    from mirror.hf_model import kl_meter_hf
+    vec = _tiny_vec(hf_model, hf_tok)
+    assert abs(kl_meter_hf(hf_model, hf_tok, "hello world", vec, 0.0)) < 1e-4
+
+
+def test_kl_hf_positive_under_injection(hf_model, hf_tok):
+    from mirror.hf_model import kl_meter_hf
+    vec = _tiny_vec(hf_model, hf_tok)
+    assert kl_meter_hf(hf_model, hf_tok, "hello world", vec, 50.0) > 0.0
