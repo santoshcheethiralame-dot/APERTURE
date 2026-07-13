@@ -1,6 +1,16 @@
 import numpy as np
 
-from mirror.prior_null import neg_log_likelihood, simulate_reports
+from mirror.prior_null import fit, neg_log_likelihood, simulate_reports
+
+
+def _sim_dataset(theta_true, n_trials, n_concepts, n_features, seed):
+    rng = np.random.default_rng(seed)
+    X = rng.normal(size=(n_trials, n_concepts, n_features))
+    injected = rng.integers(0, n_concepts, size=n_trials)
+    X[:, :, -1] = 0.0
+    X[np.arange(n_trials), injected, -1] = 1.0
+    y = simulate_reports(X, theta_true, rng)
+    return X, y
 
 
 def test_nll_matches_hand_computation():
@@ -35,3 +45,24 @@ def test_simulate_shape_and_range():
     y = simulate_reports(X, np.zeros(2), rng)
     assert y.shape == (10,)
     assert set(np.unique(y)).issubset({0, 1, 2, 3})
+
+
+def test_fit_recovers_zero_gamma():
+    theta_true = np.array([1.0, 0.0])
+    X, y = _sim_dataset(theta_true, 4000, 6, 2, seed=0)
+    result = fit(X, y)
+    assert abs(result.gamma) < 0.3
+
+
+def test_fit_recovers_signal_gamma():
+    theta_true = np.array([0.5, 2.0])
+    X, y = _sim_dataset(theta_true, 4000, 6, 2, seed=1)
+    result = fit(X, y)
+    assert abs(result.gamma - 2.0) < 0.4
+
+
+def test_fit_recovers_frequency_coefficient():
+    theta_true = np.array([1.5, 0.0])
+    X, y = _sim_dataset(theta_true, 4000, 6, 2, seed=2)
+    result = fit(X, y)
+    assert abs(result.theta[0] - 1.5) < 0.4
