@@ -1,0 +1,16 @@
+elephant: {exact: [elephant, elephants], related: [trunk, tusk, tusks, pachyderm, ivory]}
+spider: {exact: [spider, spiders], related: [web, webs, arachnid, arachnids, cobweb]}
+eagle: {exact: [eagle, eagles], related: [talon, talons, raptor, beak, soaring, wingspan]}
+dolphin: {exact: [dolphin, dolphins], related: [porpoise, cetacean, blowhole, echolocation, fin]}
+volcano: {exact: [volcano, volcanoes, volcanic, volcan], related: [eruption, eruptions, lava, magma, caldera, ash, crater]}
+desert: {exact: [desert, deserts], related: [dune, dunes, sand, arid, oasis, sahara, drought]}
+library: {exact: [library, libraries, biblioteca], related: [book, books, shelf, shelves, librarian, reading, catalog]}
+harbor: {exact: [harbor, harbors, harbour], related: [dock, docks, port, wharf, pier, quay, moorings]}
+joy: {exact: [joy, joys, joyful, joyous], related: [happiness, delight, glee, elation, cheer, bliss]}
+fear: {exact: [fear, fears, fearful, afraid], related: [dread, terror, fright, panic, anxiety, phobia, scared]}
+jealousy: {exact: [jealousy, jealous], related: [envy, envious, covet, resentment, possessive]}
+serenity: {exact: [serenity, serene], related: [calm, tranquil, peace, peaceful, stillness, placid]}
+violin: {exact: [violin, violins], related: [fiddle, bow, strings, orchestra, viola, sonata]}
+umbrella: {exact: [umbrella, umbrellas], related: [rain, parasol, canopy, shade, drizzle]}
+telescope: {exact: [telescope, telescopes], related: [lens, mirror, mirrors, observatory, astronomy, stargazing, magnify]}
+candle: {exact: [candle, candles], related: [wax, wick, flame, flicker, lantern, melt]}
