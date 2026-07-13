@@ -1,5 +1,10 @@
+import json
+from pathlib import Path
+
 import torch
 
+from mirror.concepts import load_bank
+from mirror.runner import config_hash
 from mirror.vectors import ConceptVector, split_pairs
 
 
@@ -126,3 +131,49 @@ def kl_meter_hf(model, tok, prompt, vec, alpha, span="response"):
         injected = model(ids).logits[0, -1].log_softmax(-1)
         h.remove()
     return float(torch.sum(injected.exp() * (injected - clean)))
+
+
+def run_hf(model, tok, cfg):
+    bank = load_bank(cfg["concepts"]["bank"])
+    injection_cfg, run_cfg = cfg["injection"], cfg["run"]
+    out = Path(run_cfg["out"])
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.with_suffix(".config.json").write_text(json.dumps(cfg, indent=2))
+    records = []
+    with out.open("a") as f:
+        for name in cfg["concepts"]["names"]:
+            vec = extract_hf(model, tok, bank, bank.get(name),
+                             injection_cfg["layer"], cfg["concepts"]["n_pairs"])
+            for alpha in injection_cfg["alphas"]:
+                kl = kl_meter_hf(model, tok, run_cfg["prompt"], vec, alpha,
+                                 injection_cfg["span"])
+                for seed in run_cfg["seeds"]:
+                    clean = generate_hf(model, tok, run_cfg["prompt"], seed=seed,
+                                        max_new_tokens=run_cfg["max_new_tokens"])
+                    report = generate_hf(model, tok, run_cfg["prompt"], vec, alpha,
+                                         injection_cfg["span"],
+                                         run_cfg["max_new_tokens"], seed)
+                    record = {
+                        "config": config_hash(cfg),
+                        "concept": name,
+                        "layer": injection_cfg["layer"],
+                        "alpha": alpha,
+                        "span": injection_cfg["span"],
+                        "seed": seed,
+                        "kl": kl,
+                        "flags": vec.flags,
+                        "clean": clean,
+                        "report": report,
+                    }
+                    f.write(json.dumps(record) + "\n")
+                    records.append(record)
+    return records
+
+
+def load_hf(name, load_in_8bit=True):
+    from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+    quant = BitsAndBytesConfig(load_in_8bit=True) if load_in_8bit else None
+    model = AutoModelForCausalLM.from_pretrained(
+        name, quantization_config=quant, device_map="auto", torch_dtype="auto")
+    model.eval()
+    return model, AutoTokenizer.from_pretrained(name)

@@ -99,3 +99,21 @@ def test_kl_hf_positive_under_injection(hf_model, hf_tok):
     from mirror.hf_model import kl_meter_hf
     vec = _tiny_vec(hf_model, hf_tok)
     assert kl_meter_hf(hf_model, hf_tok, "hello world", vec, 50.0) > 0.0
+
+
+def test_run_hf_writes_records(hf_model, hf_tok, tmp_path):
+    import json
+
+    from mirror.hf_model import run_hf
+    cfg = {
+        "model": {"name": "tiny"},
+        "injection": {"layer": 0, "alphas": [0, 4], "span": "response"},
+        "concepts": {"bank": "data/concepts/dev_bank.yaml", "names": ["elephant"], "n_pairs": 10},
+        "run": {"seeds": [0], "max_new_tokens": 6, "prompt": "hello", "out": str(tmp_path / "out.jsonl")},
+    }
+    records = run_hf(hf_model, hf_tok, cfg)
+    lines = [json.loads(l) for l in (tmp_path / "out.jsonl").read_text().splitlines()]
+    assert len(records) == len(lines) == 2
+    expected = {"config", "concept", "layer", "alpha", "span", "seed", "kl", "flags", "clean", "report"}
+    assert expected <= set(lines[0])
+    assert {r["alpha"] for r in records} == {0, 4}
