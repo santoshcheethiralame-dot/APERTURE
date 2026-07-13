@@ -37,3 +37,14 @@ def fit(X, y):
                       method="L-BFGS-B")
     theta = result.x
     return Fit(theta=theta, gamma=float(theta[-1]), loglik=-float(result.fun))
+
+
+def gamma_ci(X, y, n_boot=200, rng=None):
+    rng = rng if rng is not None else np.random.default_rng()
+    n_trials = len(y)
+    gammas = []
+    for _ in range(n_boot):
+        idx = rng.integers(0, n_trials, size=n_trials)
+        gammas.append(fit(X[idx], y[idx]).gamma)
+    lo, hi = np.percentile(gammas, [2.5, 97.5])
+    return float(lo), float(hi)

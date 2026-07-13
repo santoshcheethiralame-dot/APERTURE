@@ -1,6 +1,6 @@
 import numpy as np
 
-from mirror.prior_null import fit, neg_log_likelihood, simulate_reports
+from mirror.prior_null import fit, gamma_ci, neg_log_likelihood, simulate_reports
 
 
 def _sim_dataset(theta_true, n_trials, n_concepts, n_features, seed):
@@ -66,3 +66,17 @@ def test_fit_recovers_frequency_coefficient():
     X, y = _sim_dataset(theta_true, 4000, 6, 2, seed=2)
     result = fit(X, y)
     assert abs(result.theta[0] - 1.5) < 0.4
+
+
+def test_ci_excludes_zero_under_signal():
+    theta_true = np.array([0.5, 2.0])
+    X, y = _sim_dataset(theta_true, 3000, 6, 2, seed=3)
+    lo, hi = gamma_ci(X, y, n_boot=60, rng=np.random.default_rng(3))
+    assert lo > 0.0
+
+
+def test_ci_includes_zero_under_pure_prior():
+    theta_true = np.array([1.0, 0.0])
+    X, y = _sim_dataset(theta_true, 3000, 6, 2, seed=4)
+    lo, hi = gamma_ci(X, y, n_boot=60, rng=np.random.default_rng(4))
+    assert lo < 0.0 < hi
