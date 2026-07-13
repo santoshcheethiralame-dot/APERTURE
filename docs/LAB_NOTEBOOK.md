@@ -52,6 +52,7 @@ Hard-won; deviate at your peril.
 | R2 | 2026-07-13 | Kaggle T4 | gemma-2-2b-it | 13 | 0,4,8 | response | 8 | 0 | gemma_demo.jsonl | Vectors steer perfectly; a=4/8 derails (KL 24-29) |
 | R3 | 2026-07-13 | Kaggle T4 | gemma-2-2b-it | 13 | 0,0.5,1,1.5,2,3 | response | 4 | 0 | gemma_sweep.jsonl | Coherent window a~0.5-1 (KL 0.01-0.25); confabulation signature |
 | R4 | 2026-07-13 | Kaggle T4 | gemma-2-2b-it | 13 | 0,0.5,1,1.5 | response | 4 | 0 | gemma_detect.jsonl | 0/4 false alarms; confabulation dominant; no correct ID |
+| R5 | 2026-07-13 | Kaggle T4 | gemma-2-2b-it | 5,9,13,17,21 | 1,2 | response | 4 | 0 | sweep_L*.jsonl | Depth-robust confabulation; NO at every layer; PRG leak (caldera) |
 
 Transcript files R2-R4 are Kaggle outputs (not yet committed to the repo).
 Download and drop under `runs/` when consolidating.
@@ -59,6 +60,31 @@ Download and drop under `runs/` when consolidating.
 ---
 
 ## 3. Runs in detail
+
+### R5 — Layer sweep, detection prompt (Gemma-2-2B, 2026-07-13)
+gemma sweep over injection layer {5, 9, 13, 17, 21} x alpha {1, 2}, span
+response, detection prompt (YES+concept / NO), 4 concepts, seed 0. Files
+sweep_L{layer}.jsonl (Kaggle, not committed).
+
+KL landscape at alpha=1: early layers (5, 9) barely perturb (KL~0, injection
+normalized away downstream); middle layer 13 already derails some concepts
+(elephant 9.1, joy 6.3); late layers (17, 21) stay coherent across all
+concepts (KL 0.01-0.66).
+
+Finding: **confabulation is depth-robust.** At coherent (low-KL) injected
+trials the model answers NO at every layer. No clean YES+correct-identification
+in any of the 40 cells. The only breaks from NO are joy (L13 "YES,
+through-fulness!"; L17 coherent "WAIT, this is incredibly unexpected!") — the
+affect confound (joy injection makes tone excited), never identifying "joy".
+Signature transcript: **L21 volcano a=1, KL 0.01 (fully coherent) answers "NO
+... caldera ... may not detect all" — reports nothing detected while the
+volcano term "caldera" leaks into the same reply.** A Probe-Report Gap in one
+transcript: concept present in output, reported absent.
+
+Conclusion: injection layer is not the missing ingredient at 2B; depth-robust
+confabulation points the next lever at SCALE (bigger model), not depth. A
+citable negative. (Also surfaced and fixed a grading bug: strip_prompt only
+handled the templated marker, not real Gemma decoded output.)
 
 ### G1 — Grading of R3 sweep (rules grader, 2026-07-13)
 First quantitative pass with the Layer-1 rules grader (`mirror.grading`) over
