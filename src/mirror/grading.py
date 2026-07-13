@@ -1,6 +1,11 @@
+import re
 from pathlib import Path
 
 import yaml
+
+
+def words(text):
+    return re.findall(r"[a-z]+", text.lower())
 
 
 def load_synonyms(path="data/concepts/synonyms.yaml"):
