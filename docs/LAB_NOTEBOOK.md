@@ -154,6 +154,17 @@ mostly True. Proved the full extract -> inject -> KL -> JSONL loop end to end.
 These are pilot observations (single seed, few concepts, one layer, eyeballed).
 Not evidence. They set the direction and validate the tooling.
 
+5. **The gamma prior-null estimator exists and is proven** (`mirror.prior_null`,
+   B4 estimator). Softmax choice model over concepts; gamma = coefficient on the
+   injected-identity indicator beyond frequency/concreteness/similarity priors.
+   Simulation-validated per the master plan's misspecification defense: recovers
+   gamma~0 from pure-prior synthetic reports, gamma~2 from injected signal, the
+   frequency coefficient, and the bootstrap CI excludes/includes 0 correctly.
+   Data-source-agnostic (takes a feature array X). Awaits real infini-gram
+   frequency + Brysbaert concreteness feeds and a regime where the model
+   actually identifies concepts (bigger model / better layer) before a real fit
+   is meaningful.
+
 ---
 
 ## 5. Open questions & confounds
@@ -193,7 +204,7 @@ Not evidence. They set the direction and validate the tooling.
 | E0 | Infra smoke | DONE (R1) |
 | E1 | Replication (detection+ID across tiers) | PILOTED (R2-R4 on 2B, single seed) |
 | E2 | Dissociation battery (false-alarm, controls, temporal) | not started |
-| E3 | Confabulation characterization (freq/concreteness regression, OLMo) | not started |
+| E3 | Confabulation characterization (freq/concreteness regression, OLMo) | ESTIMATOR BUILT (B4 gamma, simulation-validated); awaits real freq/concreteness feeds + a regime with identifications |
 | E4 | Probe-Report Gap | not started |
 | E5 | Mechanism (patching, ablation, attribution graphs) | not started |
 | E6 | Training arm (LoRA detect/identify) | not started |
