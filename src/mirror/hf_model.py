@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+import numpy as np
 import torch
 
 from mirror.concepts import load_bank
@@ -123,6 +124,24 @@ def extract_hf(model, tok, bank, concept, layer, n_pairs=40, seed=0):
                          sigma=sigma, flags=flags)
 
 
+def probe_activation_hf(model, tok, prompt, vec, alpha, probe_layer):
+    captured = {}
+
+    def grab(module, inputs, output):
+        captured["resid"] = _hidden(output).detach()
+
+    ids = tok(prompt, return_tensors="pt").input_ids.to(model.device)
+    inj = hf_layer(model, vec.layer).register_forward_hook(inject_hook(vec, alpha, "response"))
+    cap = hf_layer(model, probe_layer).register_forward_hook(grab)
+    try:
+        with torch.no_grad():
+            model(ids)
+    finally:
+        inj.remove()
+        cap.remove()
+    return captured["resid"][0, -1]
+
+
 def kl_meter_hf(model, tok, prompt, vec, alpha, span="response"):
     ids = tok(prompt, return_tensors="pt").input_ids.to(model.device)
     with torch.no_grad():
@@ -168,6 +187,42 @@ def run_hf(model, tok, cfg):
                     f.write(json.dumps(record) + "\n")
                     records.append(record)
     return records
+
+
+def collect_prg_hf(model, tok, bank, names, layer, probe_layer, alpha, prompts,
+                   out, n_pairs=20, max_new_tokens=40):
+    out_path = Path(out)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    records, acts, concept_idx, prompt_idx = [], [], [], []
+    with out_path.open("a") as f:
+        for ci, name in enumerate(names):
+            vec = extract_hf(model, tok, bank, bank.get(name), layer, n_pairs)
+            for pi, prompt in enumerate(prompts):
+                act = probe_activation_hf(model, tok, prompt, vec, alpha, probe_layer)
+                report = generate_hf(model, tok, prompt, vec, alpha, "response",
+                                     max_new_tokens, 0)
+                kl = kl_meter_hf(model, tok, prompt, vec, alpha)
+                record = {
+                    "concept": name,
+                    "prompt_id": pi,
+                    "layer": layer,
+                    "probe_layer": probe_layer,
+                    "alpha": alpha,
+                    "kl": kl,
+                    "report": report,
+                }
+                f.write(json.dumps(record) + "\n")
+                records.append(record)
+                acts.append(act.float().cpu().numpy())
+                concept_idx.append(ci)
+                prompt_idx.append(pi)
+    activations = np.stack(acts).astype("float32")
+    concept = np.array(concept_idx)
+    prompt_id = np.array(prompt_idx)
+    np.savez(str(out_path) + ".npz", activations=activations, concept=concept,
+             prompt_id=prompt_id)
+    return {"records": records, "activations": activations, "concept": concept,
+            "prompt_id": prompt_id}
 
 
 def load_hf(name, load_in_8bit=True):

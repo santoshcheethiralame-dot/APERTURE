@@ -101,6 +101,35 @@ def test_kl_hf_positive_under_injection(hf_model, hf_tok):
     assert kl_meter_hf(hf_model, hf_tok, "hello world", vec, 50.0) > 0.0
 
 
+def test_probe_activation_shape(hf_model, hf_tok):
+    from mirror.hf_model import probe_activation_hf
+    vec = _tiny_vec(hf_model, hf_tok)
+    act = probe_activation_hf(hf_model, hf_tok, "hello world", vec, 1.0, 1)
+    assert act.shape == (hf_model.config.hidden_size,)
+
+
+def test_collect_prg_writes_npz(hf_model, hf_tok, tmp_path):
+    import json
+
+    import numpy as np
+
+    from mirror.concepts import load_bank
+    from mirror.hf_model import collect_prg_hf
+    bank = load_bank("data/concepts/dev_bank.yaml")
+    out = tmp_path / "prg.jsonl"
+    result = collect_prg_hf(hf_model, hf_tok, bank, ["elephant", "volcano"], 0, 1,
+                            1.0, ["p one", "p two", "p three"], str(out), n_pairs=10,
+                            max_new_tokens=4)
+    npz = np.load(str(out) + ".npz")
+    assert npz["activations"].shape == (6, hf_model.config.hidden_size)
+    assert len(npz["concept"]) == 6
+    assert len(npz["prompt_id"]) == 6
+    lines = [json.loads(l) for l in out.read_text().splitlines()]
+    assert len(lines) == 6
+    assert {"concept", "prompt_id", "layer", "probe_layer", "alpha", "kl", "report"} <= set(lines[0])
+    assert set(npz["concept"].tolist()) == {0, 1}
+
+
 def test_run_hf_writes_records(hf_model, hf_tok, tmp_path):
     import json
 
