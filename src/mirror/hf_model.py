@@ -196,6 +196,7 @@ def collect_prg_hf(model, tok, bank, names, layer, probe_layer, alpha, prompts,
     records, acts, concept_idx, prompt_idx = [], [], [], []
     with out_path.open("a") as f:
         for ci, name in enumerate(names):
+            print(f"[{ci + 1}/{len(names)}] {name}", flush=True)
             vec = extract_hf(model, tok, bank, bank.get(name), layer, n_pairs)
             for pi, prompt in enumerate(prompts):
                 act = probe_activation_hf(model, tok, prompt, vec, alpha, probe_layer)
