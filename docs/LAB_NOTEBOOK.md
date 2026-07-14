@@ -55,6 +55,7 @@ Hard-won; deviate at your peril.
 | R5 | 2026-07-13 | Kaggle T4 | gemma-2-2b-it | 5,9,13,17,21 | 1,2 | response | 4 | 0 | sweep_L*.jsonl | Depth-robust confabulation; NO at every layer; PRG leak (caldera) |
 | R6 | 2026-07-13 | Kaggle T4 (8-bit) | gemma-2-9b-it | 21 | 0,1,2,4 | response | 6 | 0 | gemma9b_detect.jsonl | Scale-robust confabulation; NO at coherent KL on 5/6; joy=affect confound |
 | R7 | 2026-07-14 | Kaggle (8-bit) | gemma-2-2b-it | inj 13 / probe 20 | 1.0 | response | 10 x 6 prompts | 0 | prg.jsonl | Probe-Report Gap = 0.83 (probe 1.00, control 0.00, report 0.17) |
+| R8 | 2026-07-14 | Kaggle (8-bit) | gemma-2-2b-it | inj 13 / patch 20 | 1.0 | - | 10 | 0 | patch.jsonl | Patching: mean self-delta +6.96 vs control +0.81 -> content causally reaches output |
 
 Transcript files R2-R4 are Kaggle outputs (not yet committed to the repo).
 Download and drop under `runs/` when consolidating.
@@ -62,6 +63,34 @@ Download and drop under `runs/` when consolidating.
 ---
 
 ## 3. Runs in detail
+
+### R8 — Activation patching, 8-bit Gemma-2-2B (2026-07-14)
+Causal test (mirror.patching). Inject concept at layer 13, cache the residual at
+DOWNSTREAM layer 20, patch it into a clean run at layer 20 last position, measure
+the change in the concept token's output log-prob. Negative control = patch a
+different concept's residual, measure this concept's token. 10 concepts, alpha
+1.0, seed 0.
+
+Result (log-prob deltas, nats):
+- mean self-delta: +6.96 (patch own concept -> own token)
+- mean control-delta: +0.81 (patch other concept -> this token)
+- every concept self >> control; spider/volcano/telescope have negative control.
+
+Reading: patching the injected concept's PROCESSED (layer 20) residual into a
+clean run massively and specifically raises that concept's output probability
+(~7 nats, ~1000x), while a different concept's residual barely moves it. So the
+injected content is causally wired to the output: force it in and the model
+produces the concept. Combined with R7 (present, PRG 0.83) and R5/R6 (model says
+NO), this is the strongest form of "confabulation is a read-out gap" — the
+representation is present AND causally potent for output, yet the verbal
+self-report channel does not consult it. Three legs of evidence (behavioral,
+probe, causal) all agree.
+
+Caveats: control is +0.81 not 0 (small non-specific component; self is ~8.5x
+larger and per-concept specific). Patch layer 20 > inject 13 (processed
+representation) but still carries the injection echo -> a naturalistic / within-
+model concept (E8) is needed to fully retire the circularity objection. Pilot:
+1 seed, 10 concepts, 2B, one layer pair.
 
 ### R7 — Probe-Report Gap, 8-bit Gemma-2-2B (2026-07-14)
 First PRG run (mirror.probes + collect_prg_hf). Inject at layer 13, read the
@@ -286,7 +315,7 @@ Not evidence. They set the direction and validate the tooling.
 | E2 | Dissociation battery (false-alarm, controls, temporal) | not started |
 | E3 | Confabulation characterization (freq/concreteness regression, OLMo) | ESTIMATOR BUILT (B4 gamma, simulation-validated); awaits real freq/concreteness feeds + a regime with identifications |
 | E4 | Probe-Report Gap | PILOTED (R7: PRG 0.83 on 2B, 8-bit); probe/collect infra built |
-| E5 | Mechanism (patching, ablation, attribution graphs) | not started |
+| E5 | Mechanism (patching, ablation, attribution graphs) | PILOTED (R8: patching shows content causally reaches output); ablation/attribution not started |
 | E6 | Training arm (LoRA detect/identify) | not started |
 | E7 | Source & memory (L3 prefill) | not started |
 | E8 | Naturalistic arm | not started |
