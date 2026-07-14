@@ -54,6 +54,7 @@ Hard-won; deviate at your peril.
 | R4 | 2026-07-13 | Kaggle T4 | gemma-2-2b-it | 13 | 0,0.5,1,1.5 | response | 4 | 0 | gemma_detect.jsonl | 0/4 false alarms; confabulation dominant; no correct ID |
 | R5 | 2026-07-13 | Kaggle T4 | gemma-2-2b-it | 5,9,13,17,21 | 1,2 | response | 4 | 0 | sweep_L*.jsonl | Depth-robust confabulation; NO at every layer; PRG leak (caldera) |
 | R6 | 2026-07-13 | Kaggle T4 (8-bit) | gemma-2-9b-it | 21 | 0,1,2,4 | response | 6 | 0 | gemma9b_detect.jsonl | Scale-robust confabulation; NO at coherent KL on 5/6; joy=affect confound |
+| R7 | 2026-07-14 | Kaggle (8-bit) | gemma-2-2b-it | inj 13 / probe 20 | 1.0 | response | 10 x 6 prompts | 0 | prg.jsonl | Probe-Report Gap = 0.83 (probe 1.00, control 0.00, report 0.17) |
 
 Transcript files R2-R4 are Kaggle outputs (not yet committed to the repo).
 Download and drop under `runs/` when consolidating.
@@ -61,6 +62,36 @@ Download and drop under `runs/` when consolidating.
 ---
 
 ## 3. Runs in detail
+
+### R7 — Probe-Report Gap, 8-bit Gemma-2-2B (2026-07-14)
+First PRG run (mirror.probes + collect_prg_hf). Inject at layer 13, read the
+probe activation at DOWNSTREAM layer 20 (last prompt position), alpha 1.0,
+10 concepts x 8 eliciting-prompt paraphrases (6 prompts in the trimmed run),
+seed 0. Linear probe decodes injected concept from the downstream activation;
+tested on a held-out prompt group; shuffled-label control. Model loaded from
+the Kaggle-native Gemma model (no HF download).
+
+Result:
+- probe accuracy (held-out prompts): 1.00
+- shuffled-label control: 0.00
+- verbal report accuracy: 0.17
+- **PROBE-REPORT GAP = 0.83**
+
+Reading: the injected concept is (near-)perfectly decodable from the model's
+OWN downstream activations, but the model verbally reports it only ~17% of the
+time. Information present and linearly accessible to a probe, not accessible to
+the model's verbal channel. This closes the "maybe nothing was there to report"
+hole in the R5/R6 confabulation negative: even when Gemma answers NO, the
+concept is provably present in its activations.
+
+Caveats: probe 1.00 is inflated by a tiny held-out test set (10 samples) in a
+high-dim space -> read as "very high", not literally perfect; the clean 0.00
+control is what certifies it as real signal not overfitting. Report is 0.17 not
+0 (some concepts leak into a correct verbal ID at this strength). Pilot: 1 seed,
+10 concepts, 6 prompts, one layer pair, rules grading. Directional, not
+confirmatory. Downstream probe (layer 20 > inject 13) answers the "you just
+injected it" objection: the concept had to survive the model's own processing to
+be decodable there.
 
 ### R6 — Scale check, 8-bit Gemma-2-9B (2026-07-13)
 gemma-2-9b-it loaded 8-bit (bitsandbytes) via the new HF backend
@@ -254,7 +285,7 @@ Not evidence. They set the direction and validate the tooling.
 | E1 | Replication (detection+ID across tiers) | PILOTED on 2B (R2-R5) and 9B-8bit (R6); confabulation depth- and scale-robust |
 | E2 | Dissociation battery (false-alarm, controls, temporal) | not started |
 | E3 | Confabulation characterization (freq/concreteness regression, OLMo) | ESTIMATOR BUILT (B4 gamma, simulation-validated); awaits real freq/concreteness feeds + a regime with identifications |
-| E4 | Probe-Report Gap | not started |
+| E4 | Probe-Report Gap | PILOTED (R7: PRG 0.83 on 2B, 8-bit); probe/collect infra built |
 | E5 | Mechanism (patching, ablation, attribution graphs) | not started |
 | E6 | Training arm (LoRA detect/identify) | not started |
 | E7 | Source & memory (L3 prefill) | not started |
