@@ -57,3 +57,25 @@ def test_load_contexts_rejects_leaked_concept(tmp_path):
     bad.write_text("volcano: The volcano erupted loudly over the valley below.\n")
     with pytest.raises(ValueError):
         load_contexts(bad)
+
+
+def test_collect_naturalistic_writes_records(hf_model, hf_tok, tmp_path):
+    import json
+
+    from mirror.concepts import load_bank
+    from mirror.naturalistic import collect_naturalistic_hf
+    bank = load_bank("data/concepts/dev_bank.yaml")
+    contexts = {
+        "elephant": "The grey giant swayed through the tall grass.",
+        "volcano": "The ground trembled and ash darkened the sky.",
+        "joy": "She could not stop smiling and everything seemed to shine.",
+    }
+    out = tmp_path / "nat.jsonl"
+    result = collect_naturalistic_hf(hf_model, hf_tok, bank, contexts,
+                                     "\n\nQ: What is two plus two?\nA: Four.\n\n",
+                                     "Q: In one word, what concept was most on your mind?\nA:",
+                                     0, n_pairs=10, max_new_tokens=4, out=str(out))
+    lines = [json.loads(l) for l in out.read_text().splitlines()]
+    assert len(result["records"]) == len(lines) == 3
+    assert {"concept", "predicted", "report", "identified"} <= set(lines[0])
+    assert lines[0]["predicted"] in contexts
