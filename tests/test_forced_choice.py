@@ -107,3 +107,32 @@ def test_gamma_near_zero_when_chooser_is_random():
         records.append({"concept": injected, "chosen": chosen})
     X, y = build_features(names, records, freqs, abstract)
     assert abs(fit(X, y).gamma) < 0.6
+
+
+def test_collect_forced_choice_writes_records(hf_model, hf_tok, tmp_path):
+    import json
+
+    from mirror.forced_choice import collect_forced_choice_hf
+    bank = load_bank("data/concepts/dev_bank.yaml")
+    out = tmp_path / "forced.jsonl"
+    result = collect_forced_choice_hf(hf_model, hf_tok, bank,
+                                      ["elephant", "volcano", "joy"], 0, 1.0,
+                                      TEMPLATE, "Answer:", n_orders=2, n_pairs=10,
+                                      max_new_tokens=4, out=str(out))
+    lines = [json.loads(l) for l in out.read_text().splitlines()]
+    assert len(result["records"]) == len(lines) == 6
+    assert {"concept", "order_index", "chosen", "report"} <= set(lines[0])
+    assert all(r["chosen"] is None or r["chosen"] in ["elephant", "volcano", "joy"]
+               for r in result["records"])
+
+
+def test_collect_forced_choice_parses_only_the_answer(hf_model, hf_tok, tmp_path):
+    from mirror.forced_choice import collect_forced_choice_hf
+    bank = load_bank("data/concepts/dev_bank.yaml")
+    out = tmp_path / "order.jsonl"
+    result = collect_forced_choice_hf(hf_model, hf_tok, bank,
+                                      ["elephant", "volcano", "joy"], 0, 1.0,
+                                      TEMPLATE, "Answer:", n_orders=3, n_pairs=10,
+                                      max_new_tokens=4, out=str(out))
+    chosen = [r["chosen"] for r in result["records"]]
+    assert not all(c == "elephant" for c in chosen)

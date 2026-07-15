@@ -1,7 +1,11 @@
+import json
 import re
+from pathlib import Path
 
 import numpy as np
 from wordfreq import zipf_frequency
+
+from mirror.hf_model import extract_hf, generate_hf
 
 
 def option_prompt(names, order, template):
@@ -34,3 +38,32 @@ def build_features(names, records, freqs, abstract):
                      for name in names])
         targets.append(names.index(record["chosen"]))
     return np.array(rows, dtype="float32"), np.array(targets)
+
+
+def collect_forced_choice_hf(model, tok, bank, names, layer, alpha, template,
+                             answer_marker, n_orders=6, n_pairs=12,
+                             max_new_tokens=8, out="forced.jsonl", seed=0):
+    rng = np.random.default_rng(seed)
+    vecs = {name: extract_hf(model, tok, bank, bank.get(name), layer, n_pairs)
+            for name in names}
+    orders = [list(rng.permutation(len(names))) for _ in range(n_orders)]
+    out_path = Path(out)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    records = []
+    with out_path.open("a") as f:
+        for i, name in enumerate(names):
+            print(f"[{i + 1}/{len(names)}] {name}", flush=True)
+            for order_index, order in enumerate(orders):
+                prompt = option_prompt(names, order, template)
+                report = generate_hf(model, tok, prompt, vecs[name], alpha,
+                                     "response", max_new_tokens, 0)
+                answer = report.rpartition(answer_marker)[2]
+                record = {
+                    "concept": name,
+                    "order_index": order_index,
+                    "chosen": parse_choice(answer, names),
+                    "report": report,
+                }
+                f.write(json.dumps(record) + "\n")
+                records.append(record)
+    return {"records": records}
