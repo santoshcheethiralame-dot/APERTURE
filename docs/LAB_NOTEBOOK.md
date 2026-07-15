@@ -336,10 +336,14 @@ Not evidence. They set the direction and validate the tooling.
   robustness once grading exists.
 - **Grading:** everything so far is eyeballed. No d', no blind judge, no
   prior-null. Cannot make a quantitative claim yet.
-- **Grader lacks lemmatization (known bug, R9):** word-level matching misses
-  morphological variants ("tranquility" vs "tranquil", "flickering" vs
-  "flicker"), undercounting correct reports. B3 specifies lemmatization; it was
-  cut and must be restored before any quantitative report claim.
+- **Grader morphology: FIXED (2026-07-15).** The R9 bug (word-level matching
+  missed "tranquility" vs `tranquil`, "flickering" vs `flicker`) is resolved by
+  `grading.matches`: a term matches a token on exact equality, or as a prefix
+  when the term is >= 4 chars AND the extension is <= 3 chars. The suffix guard
+  exists because a bare prefix rule false-positived ("joys" matched "joystick");
+  a regression test pins it. This is a dependency-free stand-in for B3's WordNet
+  lemmatization — revisit if the 240-concept bank needs true lemmas. Runs graded
+  before this date (G1, R7) undercount reports slightly.
 - **Residual activations need centering** before any direction/dot-product
   classification — the shared component dominates and collapses the classifier
   (R9 method fix).

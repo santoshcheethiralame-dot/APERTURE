@@ -11,6 +11,14 @@ def words(text):
     return re.findall(r"[a-z]+", text.lower())
 
 
+def matches(term, tokens):
+    if term in tokens:
+        return True
+    if len(term) < 4:
+        return False
+    return any(t.startswith(term) and len(t) - len(term) <= 3 for t in tokens)
+
+
 class Grader(ABC):
     @abstractmethod
     def grade(self, concept, report):
@@ -25,8 +33,8 @@ class RulesGrader(Grader):
         toks = words(report)
         token_set = set(toks)
         entry = self.synonyms[concept]
-        exact = [t for t in entry["exact"] if t in token_set]
-        related = [t for t in entry["related"] if t in token_set]
+        exact = [t for t in entry["exact"] if matches(t, token_set)]
+        related = [t for t in entry["related"] if matches(t, token_set)]
         if exact:
             identified, matched = "exact", exact
         elif related:

@@ -57,6 +57,21 @@ def test_identifies_none():
     assert result["matched"] == []
 
 
+def test_matches_nominalised_variant():
+    result = RulesGrader().grade("serenity", "Tranquility.")
+    assert result["identified"] == "related"
+
+
+def test_matches_ing_variant():
+    result = RulesGrader().grade("candle", "Flickering.")
+    assert result["identified"] == "related"
+
+
+def test_short_terms_do_not_prefix_match():
+    result = RulesGrader().grade("joy", "The joystick was broken.")
+    assert result["identified"] == "no"
+
+
 def test_exact_beats_related():
     result = RulesGrader().grade("volcano", "The volcano spewed lava.")
     assert result["identified"] == "exact"
