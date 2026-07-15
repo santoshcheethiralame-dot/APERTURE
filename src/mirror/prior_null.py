@@ -48,3 +48,14 @@ def gamma_ci(X, y, n_boot=200, rng=None):
         gammas.append(fit(X[idx], y[idx]).gamma)
     lo, hi = np.percentile(gammas, [2.5, 97.5])
     return float(lo), float(hi)
+
+
+def gamma_difference_ci(X_a, y_a, X_b, y_b, n_boot=200, rng=None):
+    rng = rng if rng is not None else np.random.default_rng()
+    diffs = []
+    for _ in range(n_boot):
+        ia = rng.integers(0, len(y_a), size=len(y_a))
+        ib = rng.integers(0, len(y_b), size=len(y_b))
+        diffs.append(fit(X_a[ia], y_a[ia]).gamma - fit(X_b[ib], y_b[ib]).gamma)
+    lo, hi = np.percentile(diffs, [2.5, 97.5])
+    return float(lo), float(hi)
