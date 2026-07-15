@@ -57,6 +57,7 @@ Hard-won; deviate at your peril.
 | R7 | 2026-07-14 | Kaggle (8-bit) | gemma-2-2b-it | inj 13 / probe 20 | 1.0 | response | 10 x 6 prompts | 0 | prg.jsonl | Probe-Report Gap = 0.83 (probe 1.00, control 0.00, report 0.17) |
 | R8 | 2026-07-14 | Kaggle (8-bit) | gemma-2-2b-it | inj 13 / patch 20 | 1.0 | - | 10 | 0 | patch.jsonl | Patching: mean self-delta +6.96 vs control +0.81 -> content causally reaches output |
 | R9 | 2026-07-15 | Kaggle (8-bit) | gemma-2-2b-it | 13 (no injection) | - | - | 16 contexts | 0 | naturalistic.jsonl | Identifiability 0.688 vs 0.062 chance -> injection directions decode natural states |
+| R10 | 2026-07-15 | Kaggle (8-bit) | gemma-2-2b-it | 13 | 1.0 | response | 16 x 6 orders | 0 | forced.jsonl | Forced choice: hit 0.302 vs 0.062; GAMMA +1.99 CI [+1.48, +2.48] excludes 0 — CONFOUNDED by output steering, see entry |
 
 Transcript files R2-R4 are Kaggle outputs (not yet committed to the repo).
 Download and drop under `runs/` when consolidating.
@@ -64,6 +65,55 @@ Download and drop under `runs/` when consolidating.
 ---
 
 ## 3. Runs in detail
+
+### R10 — Forced choice and the first real gamma fit (2026-07-15)
+Closed-list forced choice: inject a concept at layer 13, alpha 1.0, present all
+16 concept names in a randomised order, force a one-word pick. 16 concepts x 6
+orders = 96 trials. Covariates: wordfreq Zipf (proxy) + binary is_abstract.
+Fitted with the existing `prior_null.fit`; CI via `gamma_ci` (200 boot).
+
+Result:
+- unparseable: 0/96 (0.0%) — the forced-choice framing worked; no refusals
+- raw hit rate: 0.302 (chance 0.062) — ~5x chance
+- beta log_freq: -0.794
+- beta is_abstract: -2.473
+- **GAMMA: +1.988, 95% CI [+1.476, +2.478] — EXCLUDES 0**
+
+NAIVE READING (rejected): "identification exceeds the prior-guessing null, so
+this is access (H2), overturning R3-R9."
+
+WHY THAT READING IS NOT SUPPORTED: R8 established that injecting a concept
+raises that concept's OUTPUT TOKEN log-prob by ~7 nats — the injection steers
+the output distribution directly. When the model is forced to emit one word from
+a list, the injected concept's word is therefore mechanically more probable with
+NO introspection involved. gamma > 0 is exactly what pure output-steering
+predicts. This result is equally consistent with:
+  (a) genuine access — the open-ended "NO" is a refusal artifact, and forcing a
+      choice reveals real self-knowledge; and
+  (b) pure steering — we made the word likely, then credited the model for
+      saying it.
+gamma alone CANNOT distinguish these. The master plan's H2 criterion requires
+identity effects PLUS a read-out path surviving anomaly-direction ablation, not
+gamma > 0 on its own.
+
+REQUIRED CONTROL (R11, next): rerun identically but with a NON-INTROSPECTIVE
+framing — "Pick any one word from this list", no mention of injection or
+thoughts. If hit rate and gamma are unchanged, the introspective framing
+contributes nothing and the effect is pure steering. If gamma is higher under
+"which was injected?", that DIFFERENCE is the introspective component. Until
+that control is run, R10 does not support an access claim.
+
+Also notable: beta log_freq is NEGATIVE (-0.794) — higher-frequency words are
+chosen LESS. That is the opposite of the Lederman-Mahowald confabulation
+signature (high-frequency guessing). Candidate explanations: the wordfreq proxy
+is a poor stand-in for pretraining frequency, the 16-concept bank is too small
+and unstratified, or the closed-list format suppresses frequency effects because
+all options are given. Do not report this coefficient as a finding.
+
+CAVEATS: frequency is wordfreq general-English Zipf, a PROXY for pretraining
+frequency (master plan requires infini-gram exact counts); concreteness is a
+binary category flag, not Brysbaert norms. Both must be replaced before any
+confirmatory claim. Pilot: 1 alpha, 1 layer, 2B, 16 concepts.
 
 ### R9 — Naturalistic arm, 8-bit Gemma-2-2B (2026-07-15)
 NO INJECTION. Each of the 16 dev concepts has an evocative passage in
