@@ -45,8 +45,8 @@ supported by the current evidence but not statistically defensible.
 | C5 | The failure to report is depth-robust across the model's layers | layer sweep {5,9,13,17,21} | R5 | PILOT (1 seed) |
 | C6 | The failure to report persists at ~4.5x scale (2B -> 9B) | 9B detection battery | R6 | PILOT (8-bit quantized, 1 seed, 6 concepts) |
 | C7 | The injected concept is present in activations while unreported (Probe-Report Gap) | probe 1.00 vs report 0.17, PRG 0.83; shuffled control 0.00 | R7 | PILOT (tiny held-out set inflates probe; graded pre-lemmatisation) |
-| C8 | The concept is causally wired to the output (patching drives the concept, concept-specifically) | self-delta +6.96 vs control +0.81 | R8 | PILOT (1 seed, 10 concepts) |
-| C9 | The injected directions are genuine concept representations, not injection artifacts | natural-state identifiability 0.688 vs 0.062 chance | R9 | PILOT (1 seed, 1 context/concept) |
+| C8 | The concept is causally wired to the output (patching drives the concept, concept-specifically) | paired self-control +6.15, CI [+4.50, +7.89] excludes 0; control CI [-0.19, +1.80] includes 0 | R8 | PILOT + **concept-level CI** (10 concepts; no extraction-seed/prompt/family variance) |
+| C9 | The injected directions are genuine concept representations, not injection artifacts | identifiability 0.688, CI [0.438, 0.875] excludes chance 0.062 | R9 | PILOT + **concept-level CI** (16 concepts, 1 context each) |
 | C10 | Apparent "detections" are an affect confound, not introspection | only `joy` ever answers YES; never names the concept | R4, R5, R6 | PILOT (qualitative) |
 | -- | Identification exceeds a fitted prior-guessing null (gamma > 0 or ~ 0) | -- | -- | **NOT SUPPORTED** — gamma estimator built and simulation-validated but NEVER fit on real data |
 | -- | Any statistical claim (effect sizes, CIs, significance) | -- | -- | **NOT SUPPORTED** — 1 seed everywhere, no CIs, no FDR |
@@ -73,8 +73,13 @@ supported by the current evidence but not statistically defensible.
 
 Ordered by how much they gate the claims above:
 
-1. **Seeds and CIs.** Every headline number is currently n=1. Re-run C3, C5-C9
-   with >= 3 seeds and report bootstrap CIs. Without this there is no paper.
+1. **Variance beyond concepts.** PARTLY DONE (2026-07-15): C8 and C9 now carry
+   95% bootstrap CIs over concepts, and both survive (patching paired CI excludes
+   0; identifiability CI excludes chance). Note "more seeds" is a non-issue on the
+   report side — generation is greedy, so generation seeds produce identical
+   output. What remains is variance from (a) extraction-pair sampling, which IS
+   seeded and does vary, (b) prompt paraphrase, and (c) model family. C7's probe
+   CI needs leave-one-prompt-out CV and is not yet computed.
 2. **Fit gamma on real data.** The prior-guessing null is the design's whole
    claim to superseding prior work, and it has never touched a real transcript.
    Needs the covariate feeds (frequency, concreteness, similarity).

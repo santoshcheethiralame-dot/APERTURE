@@ -72,10 +72,15 @@ test). Per concept: read the passage, capture the last-token residual at layer
 13, mean-center across contexts, classify by nearest injection-derived concept
 direction; separately elicit a one-word report after a distractor turn.
 
-Result:
-- activation identifiability: 11/16 = 0.688 (chance = 1/16 = 0.062) — ~11x chance
+Result (95% percentile bootstrap CI over the 16 concepts, added 2026-07-15):
+- activation identifiability: 11/16 = 0.688, CI [0.438, 0.875] — **excludes
+  chance (0.062)**; ~11x chance
 - verbal report accuracy: 11/16 = 0.688 (comprehension-confounded, see caveat)
 - naturalistic "gap": 0.000 (uninformative here, see caveat)
+
+CI LIMIT: bootstrap over CONCEPTS (n=16) — concept-level variance only, not
+extraction-seed, prompt, or model variance. Supports "robust across the concepts
+tested", not a fully seeded confirmatory claim.
 
 MAIN FINDING: concepts are linearly present in naturally induced (non-injected)
 states, and the INJECTION-DERIVED directions decode them at ~11x chance. The
@@ -116,10 +121,19 @@ the change in the concept token's output log-prob. Negative control = patch a
 different concept's residual, measure this concept's token. 10 concepts, alpha
 1.0, seed 0.
 
-Result (log-prob deltas, nats):
-- mean self-delta: +6.96 (patch own concept -> own token)
-- mean control-delta: +0.81 (patch other concept -> this token)
+Result (log-prob deltas, nats; 95% percentile bootstrap CIs over the 10 concepts,
+added 2026-07-15):
+- mean self-delta: +6.96, CI [+5.34, +8.56] — excludes 0
+- mean control-delta: +0.81, CI [-0.19, +1.80] — **includes 0**
+- paired self-minus-control: +6.15, CI [+4.50, +7.89] — **excludes 0**
 - every concept self >> control; spider/volcano/telescope have negative control.
+
+CI CORRECTION (2026-07-15): the original entry treated the +0.81 control as a
+small but real non-specific component. The bootstrap CI includes zero, so the
+control effect is statistically indistinguishable from nothing — the negative
+control behaves as designed and the patching result is cleaner than first
+described. The paired self-minus-control interval excludes 0 by a wide margin,
+so the effect is robust across concepts.
 
 Reading: patching the injected concept's PROCESSED (layer 20) residual into a
 clean run massively and specifically raises that concept's output probability
@@ -131,11 +145,17 @@ representation is present AND causally potent for output, yet the verbal
 self-report channel does not consult it. Three legs of evidence (behavioral,
 probe, causal) all agree.
 
-Caveats: control is +0.81 not 0 (small non-specific component; self is ~8.5x
-larger and per-concept specific). Patch layer 20 > inject 13 (processed
+Caveats: the "control is +0.81 not 0" caveat is RETRACTED — its CI includes zero
+(see the CI correction above). Patch layer 20 > inject 13 (processed
 representation) but still carries the injection echo -> a naturalistic / within-
-model concept (E8) is needed to fully retire the circularity objection. Pilot:
-1 seed, 10 concepts, 2B, one layer pair.
+model concept (E8, see R9) is needed to fully retire the circularity objection.
+Pilot: 10 concepts, 2B, one layer pair.
+
+CI LIMIT: intervals are 95% percentile bootstrap over CONCEPTS (n=10). They
+capture concept-level variance only — not extraction-seed, prompt, or model
+variance — so they support "robust across the concepts tested", not a fully
+seeded confirmatory claim. Generation is greedy (do_sample=False), so generation
+seeds contribute no variance.
 
 ### R7 — Probe-Report Gap, 8-bit Gemma-2-2B (2026-07-14)
 First PRG run (mirror.probes + collect_prg_hf). Inject at layer 13, read the
