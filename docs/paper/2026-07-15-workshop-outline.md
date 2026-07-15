@@ -48,8 +48,9 @@ supported by the current evidence but not statistically defensible.
 | C8 | The concept is causally wired to the output (patching drives the concept, concept-specifically) | paired self-control +6.15, CI [+4.50, +7.89] excludes 0; control CI [-0.19, +1.80] includes 0 | R8 | PILOT + **concept-level CI** (10 concepts; no extraction-seed/prompt/family variance) |
 | C9 | The injected directions are genuine concept representations, not injection artifacts | identifiability 0.688, CI [0.438, 0.875] excludes chance 0.062 | R9 | PILOT + **concept-level CI** (16 concepts, 1 context each) |
 | C10 | Apparent "detections" are an affect confound, not introspection | only `joy` ever answers YES; never names the concept | R4, R5, R6 | PILOT (qualitative) |
-| C11 | Under FORCED choice, the model's pick tracks the injected concept beyond frequency/concreteness priors | gamma +1.99, CI [+1.48, +2.48] excludes 0; hit 0.302 vs 0.062 chance; 0% unparseable | R10 | PILOT, **CONFOUNDED** — see below |
-| -- | Forced-choice gamma > 0 demonstrates introspective ACCESS | -- | R10 | **NOT SUPPORTED** — R8 shows injection raises the concept's output token by ~7 nats, so gamma > 0 is exactly what pure output-steering predicts with zero introspection. Needs the R11 non-introspective-framing control to separate steering from access. |
+| C11 | Under forced choice the model's pick tracks the injected concept far above chance (gamma > 0) | gamma +1.99 (introspective) / +2.57 (neutral), both CIs exclude 0; hit 0.302 / 0.433 vs 0.062 chance | R10, R11 | PILOT (this is a STEERING effect, not access — see C12) |
+| C12 | That effect is OUTPUT STEERING, not introspective access | neutral framing ("pick any word", no mention of introspection) gives gamma +2.57, HIGHER than the introspective framing; difference -0.59, CI [-1.15, -0.007] rules out any positive access effect | R11 | PILOT, **properly controlled** — the strongest result in the pilot |
+| -- | Forced-choice gamma > 0 demonstrates introspective ACCESS | -- | R10, R11 | **REFUTED BY OUR OWN CONTROL** — R11 shows the introspective framing adds nothing (point estimate negative). R10's apparent access signal was an artifact of output steering (R8: injection raises the concept's output token ~7 nats). |
 | -- | Any statistical claim (effect sizes, CIs, significance) | -- | -- | **NOT SUPPORTED** — 1 seed everywhere, no CIs, no FDR |
 | -- | Results generalise across model families | -- | -- | **NOT SUPPORTED** — Gemma only (2B and 9B are the same lineage) |
 | -- | Grading is trustworthy | -- | -- | **NOT SUPPORTED** — rules-only, no human gold set, no judge, no kappa |
@@ -81,14 +82,12 @@ Ordered by how much they gate the claims above:
    output. What remains is variance from (a) extraction-pair sampling, which IS
    seeded and does vary, (b) prompt paraphrase, and (c) model family. C7's probe
    CI needs leave-one-prompt-out CV and is not yet computed.
-2. **Separate steering from access (THE priority, new after R10).** gamma has now
-   been fit on real data (R10: +1.99, CI excludes 0) — but it is confounded,
-   because injection directly steers the output token distribution (R8). Run the
-   R11 control: identical setup, non-introspective framing ("Pick any one word
-   from this list"). The gamma DIFFERENCE between framings is the introspective
-   component; the shared part is steering. Until then neither the access nor the
-   confabulation claim is settled under forced choice. Also replace the covariate
-   proxies (infini-gram, Brysbaert).
+2. **Separate steering from access.** DONE (R11, 2026-07-15). The neutral-framing
+   control yields a HIGHER gamma (+2.57) than the introspective framing (+1.99);
+   the difference CI [-1.15, -0.007] rules out any positive access effect. The
+   forced-choice gamma is output steering, not introspection. Remaining: replace
+   the covariate proxies (infini-gram exact pretraining counts, Brysbaert
+   concreteness) and redo the steering/access separation once they are in place.
 3. **Human-validated grading.** Rules-only grading has already produced two
    documented errors (over-strict morphology, now fixed). Needs a human gold set
    and a judge with reported kappa, or the grading section is indefensible.

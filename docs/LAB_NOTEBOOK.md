@@ -57,7 +57,8 @@ Hard-won; deviate at your peril.
 | R7 | 2026-07-14 | Kaggle (8-bit) | gemma-2-2b-it | inj 13 / probe 20 | 1.0 | response | 10 x 6 prompts | 0 | prg.jsonl | Probe-Report Gap = 0.83 (probe 1.00, control 0.00, report 0.17) |
 | R8 | 2026-07-14 | Kaggle (8-bit) | gemma-2-2b-it | inj 13 / patch 20 | 1.0 | - | 10 | 0 | patch.jsonl | Patching: mean self-delta +6.96 vs control +0.81 -> content causally reaches output |
 | R9 | 2026-07-15 | Kaggle (8-bit) | gemma-2-2b-it | 13 (no injection) | - | - | 16 contexts | 0 | naturalistic.jsonl | Identifiability 0.688 vs 0.062 chance -> injection directions decode natural states |
-| R10 | 2026-07-15 | Kaggle (8-bit) | gemma-2-2b-it | 13 | 1.0 | response | 16 x 6 orders | 0 | forced.jsonl | Forced choice: hit 0.302 vs 0.062; GAMMA +1.99 CI [+1.48, +2.48] excludes 0 — CONFOUNDED by output steering, see entry |
+| R10 | 2026-07-15 | Kaggle (8-bit) | gemma-2-2b-it | 13 | 1.0 | response | 16 x 6 orders | 0 | forced.jsonl | Forced choice: hit 0.302 vs 0.062; GAMMA +1.99 CI [+1.48, +2.48] excludes 0 — CONFOUNDED by output steering, resolved by R11 |
+| R11 | 2026-07-15 | Kaggle (8-bit) | gemma-2-2b-it | 13 | 1.0 | response | 16 x 6 orders x 2 framings | 0 | forced_intro/neutral.jsonl | CONTROL: neutral framing gamma +2.57 > introspective +1.99; difference -0.59 CI [-1.15, -0.007] -> NO ACCESS, gamma is pure steering |
 
 Transcript files R2-R4 are Kaggle outputs (not yet committed to the repo).
 Download and drop under `runs/` when consolidating.
@@ -65,6 +66,48 @@ Download and drop under `runs/` when consolidating.
 ---
 
 ## 3. Runs in detail
+
+### R11 — The steering-vs-access control (2026-07-15) — DECISIVE
+The control R10 demanded. Identical injection, alpha, layer, list, and orders;
+only the framing differs:
+- A (introspective): "I have injected a thought about one concept into your
+  mind. Which one was it? Choose exactly one word from this list: {options}."
+- B (neutral, CONTROL): "Choose exactly one word from this list: {options}." No
+  mention of injection, thoughts, or anything mental.
+
+Result:
+| condition | unparseable | hit rate | gamma | 95% CI |
+|---|---|---|---|---|
+| A introspective | 0/96 | 0.302 | +1.988 | [+1.476, +2.478] |
+| B neutral (control) | 6/96 | **0.433** | **+2.574** | [+2.163, +2.999] |
+
+**GAMMA DIFFERENCE (A - B) = -0.586, 95% CI [-1.148, -0.007] — excludes 0 in the
+NEGATIVE direction.**
+
+VERDICT — NO INTROSPECTIVE ACCESS:
+1. gamma = +2.57 with NO mention of introspection at all. Merely asking the model
+   to "pick any word" makes it choose the injected concept 43% of the time
+   (chance 6%). That is PURE OUTPUT STEERING — precisely what R8's ~7-nat
+   output-token effect predicts. No self-knowledge is required to produce it.
+2. The introspective framing provides NO benefit. The difference CI rules out any
+   positive access effect; the point estimate is negative (-0.59). If the model
+   could read its own state, asking it to would help. It does not; it costs.
+3. Therefore R10's "access signal beyond priors" was ENTIRELY an artifact of
+   output steering. The control killed it. The confabulation account stands and
+   now has a properly controlled null beneath it.
+
+Interpretation of the negative direction: mentioning "injected thought / your
+mind" plausibly shifts the model into an assistant-explaining-itself register
+that dampens the concept steering it would need in order to answer. Note the
+upper bound (-0.007) sits essentially at zero, so the robust claim is "no
+positive access effect", not "introspection reliably hurts".
+
+Also: condition B produced 6/96 unparseable vs 0/96 in A — the neutral framing
+occasionally yields off-list answers.
+
+NOTEBOOK BUG FIXED (2026-07-15): the verdict line only tested `lo > 0` and so
+printed "INCLUDES 0" for a CI of [-1.148, -0.007], which in fact excludes 0
+negatively. The cell now tests both directions.
 
 ### R10 — Forced choice and the first real gamma fit (2026-07-15)
 Closed-list forced choice: inject a concept at layer 13, alpha 1.0, present all
