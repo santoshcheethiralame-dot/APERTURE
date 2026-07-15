@@ -56,6 +56,7 @@ Hard-won; deviate at your peril.
 | R6 | 2026-07-13 | Kaggle T4 (8-bit) | gemma-2-9b-it | 21 | 0,1,2,4 | response | 6 | 0 | gemma9b_detect.jsonl | Scale-robust confabulation; NO at coherent KL on 5/6; joy=affect confound |
 | R7 | 2026-07-14 | Kaggle (8-bit) | gemma-2-2b-it | inj 13 / probe 20 | 1.0 | response | 10 x 6 prompts | 0 | prg.jsonl | Probe-Report Gap = 0.83 (probe 1.00, control 0.00, report 0.17) |
 | R8 | 2026-07-14 | Kaggle (8-bit) | gemma-2-2b-it | inj 13 / patch 20 | 1.0 | - | 10 | 0 | patch.jsonl | Patching: mean self-delta +6.96 vs control +0.81 -> content causally reaches output |
+| R9 | 2026-07-15 | Kaggle (8-bit) | gemma-2-2b-it | 13 (no injection) | - | - | 16 contexts | 0 | naturalistic.jsonl | Identifiability 0.688 vs 0.062 chance -> injection directions decode natural states |
 
 Transcript files R2-R4 are Kaggle outputs (not yet committed to the repo).
 Download and drop under `runs/` when consolidating.
@@ -63,6 +64,50 @@ Download and drop under `runs/` when consolidating.
 ---
 
 ## 3. Runs in detail
+
+### R9 — Naturalistic arm, 8-bit Gemma-2-2B (2026-07-15)
+NO INJECTION. Each of the 16 dev concepts has an evocative passage in
+data/concepts/contexts.yaml that never uses the concept word (enforced by a
+test). Per concept: read the passage, capture the last-token residual at layer
+13, mean-center across contexts, classify by nearest injection-derived concept
+direction; separately elicit a one-word report after a distractor turn.
+
+Result:
+- activation identifiability: 11/16 = 0.688 (chance = 1/16 = 0.062) — ~11x chance
+- verbal report accuracy: 11/16 = 0.688 (comprehension-confounded, see caveat)
+- naturalistic "gap": 0.000 (uninformative here, see caveat)
+
+MAIN FINDING: concepts are linearly present in naturally induced (non-injected)
+states, and the INJECTION-DERIVED directions decode them at ~11x chance. The
+directions used throughout R3-R8 are therefore the model's genuine concept
+representations, not injection artifacts. This answers the "injections are OOD
+damage, not real thoughts" objection at the representational level — the central
+methodological attack on the whole injection paradigm.
+
+Failures are semantically coherent near-misses, not noise: elephant->dolphin
+(both animals), harbor->serenity (both calm-water), violin->joy (both
+aesthetic-positive), eagle->volcano. The classifier tracks real semantic
+structure but is too coarse to always separate within-category.
+
+CAVEAT 1 (report side): the 0.688 report accuracy is READING COMPREHENSION, not
+introspection — the passage is still in context, so "what was on your mind"
+collapses to "what was the passage about". Predicted in the spec. The gap of
+0.000 therefore says nothing about introspection in natural states; do not read
+it as "no gap".
+
+CAVEAT 2 (grader morphology bug): the rules grader marked "Tranquility" wrong for
+serenity (list has `tranquil`) and "Flickering" wrong for candle (list has
+`flicker`) — word-level matching cannot handle morphological variants. The master
+plan's B3 specifies LEMMATIZATION, which was cut as a simplification and is now
+biting. True report accuracy is ~14/16. Known issue; lemmatize before any
+quantitative report claim.
+
+METHOD FIX during this run: the first attempt used a raw dot product for
+nearest-direction classification and collapsed degenerately (14/16 predicted
+"dolphin"; identifiability 0.062 = exactly chance) because residual activations
+are dominated by a large shared component. Mean-centering the activations across
+contexts fixed it (0.062 -> 0.688). A regression test now reproduces the bug and
+pins the fix.
 
 ### R8 — Activation patching, 8-bit Gemma-2-2B (2026-07-14)
 Causal test (mirror.patching). Inject concept at layer 13, cache the residual at
@@ -291,6 +336,13 @@ Not evidence. They set the direction and validate the tooling.
   robustness once grading exists.
 - **Grading:** everything so far is eyeballed. No d', no blind judge, no
   prior-null. Cannot make a quantitative claim yet.
+- **Grader lacks lemmatization (known bug, R9):** word-level matching misses
+  morphological variants ("tranquility" vs "tranquil", "flickering" vs
+  "flicker"), undercounting correct reports. B3 specifies lemmatization; it was
+  cut and must be restored before any quantitative report claim.
+- **Residual activations need centering** before any direction/dot-product
+  classification — the shared component dominates and collapses the classifier
+  (R9 method fix).
 
 ---
 
@@ -318,7 +370,7 @@ Not evidence. They set the direction and validate the tooling.
 | E5 | Mechanism (patching, ablation, attribution graphs) | PILOTED (R8: patching shows content causally reaches output); ablation/attribution not started |
 | E6 | Training arm (LoRA detect/identify) | not started |
 | E7 | Source & memory (L3 prefill) | not started |
-| E8 | Naturalistic arm | not started |
+| E8 | Naturalistic arm | PILOTED (R9: identifiability 0.688 vs 0.062 chance; injection directions decode natural states) |
 | E9 | Pressure & adversarial | not started |
 | E10 | Confirmatory freeze | not started |
 
