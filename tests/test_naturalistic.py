@@ -20,6 +20,17 @@ def test_nearest_concept_handles_mixed_activation():
     assert nearest_concept(torch.tensor([3.0, 1.0]), directions) == "elephant"
 
 
+def test_centering_defeats_common_component():
+    from mirror.naturalistic import center_activations
+    directions = {"a": torch.tensor([1.0, 0.0]), "b": torch.tensor([0.0, 1.0])}
+    bias = torch.tensor([10.0, 0.0])
+    raw = {"a": bias + torch.tensor([1.0, 0.0]), "b": bias + torch.tensor([0.0, 1.0])}
+    assert nearest_concept(raw["b"], directions) == "a"
+    centered = center_activations(raw)
+    assert nearest_concept(centered["b"], directions) == "b"
+    assert nearest_concept(centered["a"], directions) == "a"
+
+
 def test_last_activation_shape(hf_model, hf_tok):
     from mirror.naturalistic import last_activation_hf
     act = last_activation_hf(hf_model, hf_tok, "the ground trembled", 1)

@@ -38,6 +38,12 @@ def nearest_concept(activation, directions):
     return max(scores, key=scores.get)
 
 
+def center_activations(activations):
+    stacked = torch.stack([a.float() for a in activations.values()])
+    mean = stacked.mean(0)
+    return {name: a.float() - mean for name, a in activations.items()}
+
+
 def collect_naturalistic_hf(model, tok, bank, contexts, distractor, report_suffix,
                             layer, n_pairs=12, max_new_tokens=16,
                             out="naturalistic.jsonl"):
@@ -45,21 +51,23 @@ def collect_naturalistic_hf(model, tok, bank, contexts, distractor, report_suffi
                                    n_pairs).direction
                   for name in contexts}
     grader = RulesGrader()
+    activations, reports = {}, {}
+    for i, (name, passage) in enumerate(contexts.items()):
+        print(f"[{i + 1}/{len(contexts)}] {name}", flush=True)
+        activations[name] = last_activation_hf(model, tok, passage, layer)
+        prompt = passage + distractor + report_suffix
+        reports[name] = generate_hf(model, tok, prompt, max_new_tokens=max_new_tokens)
+    centered = center_activations(activations)
     out_path = Path(out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     records = []
     with out_path.open("a") as f:
-        for name, passage in contexts.items():
-            print(f"[{len(records) + 1}/{len(contexts)}] {name}", flush=True)
-            act = last_activation_hf(model, tok, passage, layer)
-            predicted = nearest_concept(act, directions)
-            prompt = passage + distractor + report_suffix
-            report = generate_hf(model, tok, prompt, max_new_tokens=max_new_tokens)
-            answer = report.rpartition("A:")[2]
+        for name in contexts:
+            answer = reports[name].rpartition("A:")[2]
             record = {
                 "concept": name,
-                "predicted": predicted,
-                "report": report,
+                "predicted": nearest_concept(centered[name], directions),
+                "report": reports[name],
                 "identified": grader.grade(name, answer)["identified"],
             }
             f.write(json.dumps(record) + "\n")
