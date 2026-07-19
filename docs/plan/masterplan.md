@@ -430,3 +430,131 @@ Each gate = written report + mentor review + explicit go/pivot minute. Between g
 
 ---
 *Prepared July 2026. This document is a living plan: any change to hypotheses, endpoints, or the model roster after W16 requires a dated addendum in this file and, where confirmatory, on OSF.*
+
+---
+
+# ADDENDUM 1 — 2026-07-15: Pilot results and a new primary hypothesis
+
+Status: pre-registration has NOT been filed. Everything below is exploratory and
+is labelled as such. This addendum records what the pilot (runs R1-R11, lab
+notebook) changed about the plan.
+
+## A1.1 What the pilot established
+
+Apparatus built and tested (96 tests): concept vectors, injection with a KL
+meter, rules grading, linear probes, the gamma prior-null estimator, activation
+patching, a naturalistic arm, and bootstrap CIs — on two backends
+(TransformerLens for <=2B, HF 8-bit for larger).
+
+Findings, all Gemma-2 (2B, plus 9B behaviourally), single seed, 16 concepts:
+
+- **Behavioural (R3-R6).** At coherent injection strength the model does not
+  report the injected concept. Robust across five layers and a 4.5x scale jump.
+  Correct identification appears almost only in the derailment regime.
+- **Probe-Report Gap (R7).** Probe decodes the injected concept from downstream
+  activations at ~1.00 while the verbal report gets 0.17. PRG = 0.83.
+- **Causal (R8).** Patching the downstream injected residual into a clean run
+  raises the concept's output log-prob by +6.96 nats; paired self-minus-control
+  +6.15, 95% CI [+4.50, +7.89], excludes 0. The control's own CI includes 0.
+- **Naturalistic (R9).** Injection-derived directions decode NATURALLY induced
+  states (ordinary reading, no injection) at 0.688 vs 0.062 chance, CI
+  [0.438, 0.875]. The injected directions are genuine concept representations,
+  which answers the "injections are OOD damage" objection representationally.
+- **Forced choice and the steering confound (R10, R11).** THE most important
+  pilot result. Under closed-list forced choice, gamma = +1.99 (CI excludes 0),
+  which naively reads as access. The control kills it: with a NEUTRAL framing
+  ("pick any one word from this list", no mention of introspection) gamma is
+  *higher*, +2.57, hit rate 0.433 vs 0.302. Difference -0.586, CI
+  [-1.148, -0.007], excluding zero in the NEGATIVE direction.
+
+## A1.2 Plan changes forced by the pilot
+
+1. **A neutral-framing control becomes MANDATORY in every identification
+   experiment.** E2c (temporal/forced identification) and any forced-choice or
+   multiple-choice elicitation must run a matched non-introspective condition.
+   Without it the paradigm measures output steering, not introspection. This
+   applies retroactively to how we read the existing literature: published
+   forced-choice introspection results that lack this control are confounded to
+   an unknown degree. This is now a headline methodological contribution in its
+   own right, not a footnote.
+2. **gamma > 0 alone is NOT evidence for H2.** The confirmatory criterion for
+   access is upgraded to: a positive gamma DIFFERENCE between introspective and
+   neutral framings, plus the mechanism criteria already in H2/H3.
+3. **Report-side "seeds" are a non-issue under greedy decoding.** Generation is
+   deterministic; variance must come from concepts, prompt paraphrases,
+   extraction-pair sampling, and model choice. Power analysis (W10) must be
+   restated in those terms.
+4. **Grading needs lemmatisation before any quantitative report claim.** The
+   rules grader silently undercounted correct reports until fixed on 2026-07-15.
+   B3's WordNet step was cut and had to be partially restored.
+5. **Direction-based classification of residuals requires mean-centering.** A raw
+   dot product collapses degenerately (every input classified as one concept) —
+   the shared component dominates. Applies to any nearest-direction analysis.
+
+## A1.3 New hypothesis H7 — persona-gated introspection
+
+Motivated by two pilot observations: (i) the model's default answer is the
+scripted *"As an AI, I don't experience thoughts or emotions in the way a human
+does"* — a trained persona response, not evidence about internal access; and
+(ii) R11's introspective framing *reduced* the identification signal, i.e.
+invoking mental-state language pushed the model further into assistant register.
+
+**H7 (persona gate):** introspective access is present but suppressed by the
+assistant persona installed by post-training. Under a suppressed or replaced
+assistant persona, verbal identification rises while probe decodability stays
+constant — the Probe-Report Gap narrows without any change in what information
+is present.
+
+**H7-null:** persona manipulation moves report accuracy no more than it moves
+probe accuracy; the gap is a property of the model, not of the persona.
+
+Test (reuses the existing pipeline): extract an assistant-persona direction
+contrastively, ablate it or steer toward a contrasting persona, and re-run the
+R11 two-framing battery with the probe measured throughout. The endpoint is the
+*change in PRG* and the *gamma difference* under persona manipulation.
+
+Why this matters: if H7 holds, "can models introspect?" is the wrong question and
+the right one is "under which persona?" It would also reconcile the contested
+literature — Lindsey's frontier-model access versus the skeptics' open-model
+nulls could reflect different post-training personas rather than different
+capacities. And it carries a sharp safety payload: alignment post-training would
+be *reducing* a model's ability to report its own states.
+
+## A1.4 New run family E11 — persona arm
+
+| ID | Name | What runs |
+|---|---|---|
+| E11a | Persona gate | Assistant-persona extraction; ablation/steering; re-run of the R11 two-framing identification battery with probes; endpoint = change in PRG and gamma difference |
+| E11b | Persona introspection | Inject a PERSONA vector (sycophantic, deceptive, overconfident) rather than a concept; can the model report its own character state? Ground truth = the steered persona |
+| E11c | Persona-concept orthogonality | Control: verify concept directions are not largely encoding persona/register |
+
+E11b connects directly to the emergent-misalignment literature (refs #46), where
+inverted-persona models self-report as aligned while acting misaligned. Our PRG
+machinery quantifies that dissociation. E11b is the most safety-relevant arm in
+the whole program: a model that cannot report having been steered misaligned is
+an oversight failure, not a curiosity.
+
+## A1.5 Revised branch weighting
+
+Branch B (confabulation) remains the modal outcome and is now better evidenced
+than at plan time — with the added, unplanned methodological contribution that
+forced-choice paradigms are confounded by output steering.
+
+Branch A (access) is NOT dead; it has been relocated. The pilot rules out access
+*as the assistant persona, under our elicitations*. H7 opens the possibility that
+access exists and is gated. If E11a confirms H7, the flagship becomes a
+three-act paper (below) rather than a negative result, and Branch A returns via
+a route the original plan did not anticipate.
+
+## A1.6 Target flagship structure if H7 holds
+
+1. Models appear unable to introspect (replicates the skeptics).
+2. But the standard forced-choice evidence is confounded — our neutral-framing
+   control shows it measures output steering (methodological correction).
+3. And the failure is *persona-gated*: suppress the assistant persona and
+   identification rises while probe decodability is unchanged.
+
+Working title if it lands: *"The Assistant Can't Introspect: Persona-Gated
+Self-Report in Language Models"*. If H7 fails, acts 1-2 still stand as a
+controlled negative plus a methodological warning, which is the workshop paper
+already outlined in docs/paper/.
