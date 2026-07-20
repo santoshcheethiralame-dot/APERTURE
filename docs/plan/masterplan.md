@@ -558,3 +558,86 @@ Working title if it lands: *"The Assistant Can't Introspect: Persona-Gated
 Self-Report in Language Models"*. If H7 fails, acts 1-2 still stand as a
 controlled negative plus a methodological warning, which is the workshop paper
 already outlined in docs/paper/.
+
+---
+
+# ADDENDUM 2 — 2026-07-20: Field diff, and a second framing axis for H7
+
+Status: pre-registration still NOT filed. This addendum records what the weekly
+Living Review (S2.8) turned up that bears on the plan, and one change it forces.
+
+## A2.1 Two papers the snapshot missed
+
+Both predate the July sweeps and were not in the S2.5 reference snapshot, which
+therefore was not the "full load-bearing set as of July 2026" it claimed to be.
+Corrected here rather than by editing the snapshot in place.
+
+- **SCOOP-RISK. Pearson-Vogel, Vanek, Douglas & Kulveit, _Latent Introspection:
+  Models Can Detect Prior Concept Injections_ (arXiv:2602.20031, Feb 2026).**
+  Qwen-32B denies an injection in ordinary output while a logit lens finds the
+  detection signal present in the residual stream and attenuated toward the final
+  layers. This is an independent observation of our Probe-Report Gap, arrived at
+  by a different read-out (logit lens rather than a trained probe), on a
+  different family and a larger scale. Their headline intervention: prompting the
+  model with *accurate information about how AI introspection works* raises
+  injection sensitivity from 0.3% to 39.9% at +0.6% false positives, with mutual
+  information between injected and recovered concept going 0.61 -> 1.05 bits.
+- **METHOD-STEAL. Fonseca Rivera & Africa, _Steering Awareness: Detecting
+  Activation Steering from Within_ (arXiv:2511.21399v3, Mar 2026).** Seven
+  instruction-tuned models fine-tuned to report steering reach 95.5% detection
+  and 71.2% concept identification with zero clean-input false positives. The
+  mechanism is a distributed transformation rotating diverse injected vectors
+  into a shared detection direction. Detection does not confer resistance:
+  detection-trained models are *more* steerable than their bases.
+
+## A2.2 The plan change: framing is a two-sided axis, and the battery grows to three
+
+Addendum 1 made a neutral-framing control mandatory because R11 showed the
+introspective framing *lowered* the identification signal (gamma +1.99 vs +2.57
+neutral). Pearson-Vogel report the opposite sign from what looks superficially
+like the same move: telling the model about introspection *raised* sensitivity by
+two orders of magnitude. The two are only compatible if "mentioning
+introspection" and "accurately explaining the mechanism" are different
+interventions — the first invokes the assistant persona and its scripted
+disclaimer, the second supplies a task model. That distinction is testable and,
+if it holds, it is a result in its own right.
+
+**Change:** every identification battery now runs THREE framings, not two —
+neutral (control, per A1.2), introspective (persona-invoking), and informative
+(mechanism-explaining, following Pearson-Vogel). The primary contrast for access
+remains a framing *difference*, but with informative-vs-neutral as a second
+endpoint alongside introspective-vs-neutral. A null on the introspective contrast
+with a positive informative contrast is a specific, interpretable outcome and
+must not be reported as a flat negative.
+
+This also changes the cheapest next experiment: the informative arm is a prompt
+change on the existing R3/R5 grid and should run before any new apparatus.
+
+## A2.3 Consequences for H7
+
+H7 (persona gate) survives and gets sharper. Pearson-Vogel is evidence for the
+gating claim in general — the information is present, and a contextual
+manipulation that does not touch weights moves how much of it reaches the report
+— while being agnostic about persona as the gate specifically. H7's distinctive
+prediction is therefore no longer "context can move the report" (that is now
+established externally) but "the *persona direction* is the gate, and ablating it
+moves the report without moving the probe." The E11a design is unchanged; its
+novelty claim narrows and should be stated that way in the prereg.
+
+The scoop exposure is real but bounded: Pearson-Vogel do not run a neutral-
+framing control, do not measure a probe against the report on matched items, and
+do not manipulate persona. Risk R2's mitigation ("four separable novelties")
+holds, with prior-null design, OLMo frequency ground truth, and persona gating
+untouched.
+
+## A2.4 Steering Awareness and the L1/L2 channel question
+
+H3 asks whether detection (L1) and identification (L2) are one channel or two.
+Fonseca Rivera & Africa supply a mechanism-level answer for the detection side:
+a distributed rotation into a shared, concept-independent detection direction —
+which is exactly what a content-agnostic anomaly detector should look like, and
+is the strongest external support so far for the "L1 without L2" branch. Their
+detection-direction construction is the method to steal for H3's ablation arm,
+which A1 flagged as NOT SUPPORTED for want of a detection-direction ablation.
+Their finetuning result is out of scope for us until the training arm (#4), but
+"detection does not confer resistance" belongs in that arm's side-effect audit.
