@@ -88,14 +88,27 @@ Ordered by how much they gate the claims above:
    forced-choice gamma is output steering, not introspection. Remaining: replace
    the covariate proxies (infini-gram exact pretraining counts, Brysbaert
    concreteness) and redo the steering/access separation once they are in place.
-3. **Human-validated grading.** Rules-only grading has already produced two
+3. **Rule out prompt uninformativeness as the cause of the null.** Pearson-Vogel
+   et al., *Latent Introspection* (arXiv:2602.20031), report that Qwen-32B denies
+   an injection in plain output while a logit lens still finds the detection
+   signal in the residual stream — and that telling the model, accurately, how AI
+   introspection works raises injection sensitivity from 0.3% to 39.9% at +0.6%
+   false positives. If that transfers, C3/C4/C10 are underdetermined: our null may
+   be a property of our detection prompt rather than of the read-out channel. The
+   cheap test is an informative-prompt arm alongside the current detection prompt
+   on the existing R3/R5 grid; the null only survives if it holds under the prompt
+   most favourable to reporting. Note this cuts both ways — a large prompt effect
+   is itself evidence about what the self-report channel consults, and the
+   Probe-Report Gap (C7) is the measurement that does not depend on the prompt.
+4. **Human-validated grading.** Rules-only grading has already produced two
    documented errors (over-strict morphology, now fixed). Needs a human gold set
    and a judge with reported kappa, or the grading section is indefensible.
-4. **A second model family.** Qwen or Llama. "2B and 9B" is one lineage; a
-   reviewer will call this immediately.
-5. **Enlarge the concept bank** beyond the 16 dev concepts toward the 240-concept
+5. **A second model family.** Qwen or Llama. "2B and 9B" is one lineage; a
+   reviewer will call this immediately. Note Pearson-Vogel et al. run Qwen-32B,
+   so the Qwen arm doubles as the replication target for item 3.
+6. **Enlarge the concept bank** beyond the 16 dev concepts toward the 240-concept
    stratified bank, so frequency/concreteness effects can be separated.
-6. **Pre-registration.** Everything so far is exploratory by definition. The
+7. **Pre-registration.** Everything so far is exploratory by definition. The
    masterplan's confirmatory-freeze discipline is what makes a negative citable.
 
 ## Honest read
