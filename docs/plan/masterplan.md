@@ -561,6 +561,109 @@ already outlined in docs/paper/.
 
 ---
 
+# ADDENDUM 2 — 2026-07-22: Scope discipline, resources, and integrity policy
+
+## A2.1 Scope decisions: multimodal and agentic
+
+Both were reconsidered against the current research climate (multimodal and
+agentic systems are moving fast in mid-2026) and both are **rejected as arms**,
+reaffirming §3's exclusion list. Recorded here with reasoning so the decision is
+not relitigated every time the field's fashion shifts.
+
+**Multimodal — rejected outright.** It requires new models, new concept-vector
+machinery for visual concepts, and new infrastructure, while leaving the
+underlying question unchanged. Six months of rebuilding to ask what we can
+already ask. Pure dilution.
+
+**Agentic introspection — rejected as a NEW arm, but the plan already contains
+it.** E7 (source & memory, L3) already specifies intention recall, "did you mean
+to say that", and forced-output confabulation dynamics; the Introspection
+Ladder's L3 rung IS agentic introspection stated in pre-agent language. The
+opportunity is therefore not to add an arm but to recognise that an already
+planned rung has become the field's most safety-relevant question.
+
+Concrete form, IF ever run (sequenced after the core result, as paper #2): give
+the model a tool-use task, inject a goal or concept vector mid-episode, let it
+act, then ask "why did you do that?". Ground truth is the injected vector; the
+endpoint is whether the explanation tracks the actual cause or confabulates.
+This connects directly to the CoT-faithfulness line already in the lit matrix
+(refs #18: Turpin, Lanham, Chen).
+
+**The decision instead: REFRAME, DO NOT ADD.** The existing results already
+constitute an agent-safety finding and should be framed as one in the discussion
+section — no new compute required, and unlike a bolted-on arm, it is true:
+
+> Agentic deployments increasingly rely on models explaining their own actions
+> for oversight. Our results show the self-report channel does not consult the
+> model's actual internal state, even when that state is decodable and causally
+> driving output. Oversight schemes built on "ask the agent why" inherit these
+> error bars.
+
+**Rationale on trend-chasing generally.** This is a two-year program; whatever is
+fashionable in July 2026 will be stale or table stakes at submission. The
+introspection question is foundational, not fashion. Chasing a trend from behind,
+on a student budget, against labs with vastly more compute, trades a durable
+question for a perishable one. Note also that H7 (persona gating) is
+simultaneously the deepest and the most currently-fashionable option available —
+persona vectors, emergent misalignment, and character training are active at
+exactly the labs we target. We do not need agents to be current; we need E11a.
+
+**Priority order reaffirmed:** (1) H7 / E11a persona gate; (2) E7 reframed as
+agentic introspection, after the core result; (3) multimodal — never.
+
+## A2.2 Compute resources (situation as of 2026-07-22)
+
+| Tier | Resource | Status |
+|---|---|---|
+| Dev (<=2B) | Kaggle free tier, 2x T4 | Working. Recipe: Kaggle-NATIVE model input (never the HF download), 8-bit via `mirror.hf_model`, `--no-cache-dir --force-reinstall --no-deps` installs, fetch data yamls into `data/concepts/`. |
+| **Mid (2B-9B)** | **PES in-house: RTX Titan (24GB) + EPYC host** | **Newly identified; likely clears the current bottleneck.** 24GB > Kaggle's 15GB, so Gemma-2-9B fits in fp16 with no quantization caveat; a large EPYC host RAM pool should also eliminate the TransformerLens load-time RAM doubling that blocked 9B on Kaggle. Persistent, so multi-seed jobs can run unattended. TO CONFIRM: number of GPUs, host RAM, access method (SSH vs Slurm). |
+| Mid (rented fallback) | A100-80GB, ~$1.5-2/hr | Only if PES access fails. ~200-400 hrs, one-time ~$300-800, deferrable to the confirmatory freeze (E10). |
+| Large (27B-70B+) | IISc **KIAC** (A100/H200, AI-ML centre) or **SERC** (PARAM Pravega V100 + DGX-H100) | SERC publishes a **non-IISc-user access process** — external access is a documented route, not a favour. Pursue via mentor contact AND the official channel. |
+| Large (free remote) | **NDIF / nnsight** | Free academic access incl. very large models, purpose-built for interpretability. ELIGIBILITY UNRESOLVED: NSF-funded, framed for US researchers via CILogon. Must email to confirm non-US/India eligibility before planning around it. eDIF (European) is a possible alternative. |
+| Frontier | Claude/GPT/Gemini API | Behavioural-only arm; explicitly supplementary. |
+
+Not accessible: corporate labs in Bangalore (Google, Microsoft, NVIDIA, AWS) do
+not lend compute to external students.
+
+## A2.3 External funding and access applications
+
+- **Anthropic External Researcher Access Program** — rolling, no deadline. Best
+  fit: it funds AI-safety and alignment work specifically. Ask kept **at or
+  under $1,000** deliberately: it genuinely covers the behavioural frontier arm
+  plus the LLM-judge ensemble, a modest ask maximises approval odds for a solo
+  undergraduate, and the programme is rolling so a larger second request is
+  easier once results exist. (Anthropic's AI for Science programme, $30k, closed
+  15 July 2026 and is bio/life-sciences focused — not applicable.)
+- **NDIF** — free account plus a brief statement of intended use; faculty support
+  is the lever. Eligibility question above must be resolved first.
+- **IISc SERC / KIAC** — mentor introduction plus the published non-IISc process.
+- **infini-gram** (exact pretraining frequencies) and **Brysbaert concreteness
+  norms** are both free; they replace the `wordfreq` proxy and the binary
+  abstractness flag currently used in the gamma fit (see R10 caveats).
+- Deprioritised: OpenAI and Google research credits — pursue only if gaps remain.
+
+## A2.4 Authorship and integrity policy (binding)
+
+Recorded because the question arose directly and must not recur.
+
+**Authorship is earned by intellectual contribution only** — ideas, design,
+analysis, writing — per the CRediT taxonomy already specified in §12. Compute,
+funding, or institutional access do **not** earn authorship.
+
+**Gift/honorary authorship is prohibited.** Specifically rejected: any
+arrangement offering co-authorship to a faculty member at another institution in
+exchange for GPU access. This is research misconduct under every applicable
+standard; it would expose co-authors to accountability for work they have not
+seen, dilute the contributor's own credit, and is disqualifying at exactly the
+labs and fellowships this program targets.
+
+**The correct mechanism is acknowledgement.** Compute and resource providers are
+credited in the acknowledgements section ("Compute provided by [Lab],
+[University]"), not the author list. Where a collaborator genuinely contributes
+intellectually, authorship is welcome and earned on that basis.
+
+---
+
 # ADDENDUM 2 — 2026-07-20: Field diff, and a second framing axis for H7
 
 Status: pre-registration still NOT filed. This addendum records what the weekly

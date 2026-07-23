@@ -463,7 +463,40 @@ Not evidence. They set the direction and validate the tooling.
 
 ---
 
+## 5b. Decisions log (non-experimental)
+
+Strategic and policy decisions that shape what gets run. Full reasoning in the
+master plan addenda.
+
+| Date | Decision | Where |
+|---|---|---|
+| 2026-07-15 | Neutral-framing control is MANDATORY in every identification experiment; gamma > 0 alone is NOT evidence for H2 | Addendum 1, §A1.2 |
+| 2026-07-15 | New hypothesis **H7 (persona-gated introspection)** + run family **E11**; E11a is the next priority | Addendum 1, §A1.3-4 |
+| 2026-07-22 | **Multimodal arm rejected outright** — new infra, unchanged question, pure dilution | Addendum 2, §A2.1 |
+| 2026-07-22 | **Agentic arm rejected as an addition**; it already exists as E7 / ladder L3. Instead REFRAME the discussion toward agent oversight (free, and true of current data). Agentic experiment sequenced as paper #2 | Addendum 2, §A2.1 |
+| 2026-07-22 | PES in-house RTX Titan (24GB) + EPYC identified as the likely mid-tier unblock; IISc KIAC/SERC and NDIF for large tier | Addendum 2, §A2.2; `docs/RESOURCES.md` |
+| 2026-07-22 | Anthropic External Researcher credit ask deliberately capped at **<= $1,000** | Addendum 2, §A2.3 |
+| 2026-07-22 | **Authorship policy binding:** compute/funding/access never earn authorship; gift authorship prohibited; resource providers go in acknowledgements | Addendum 2, §A2.4 |
+
 ## 6. Planned runs
+
+### Next priority: E11a — the H7 persona-gate test
+
+The highest-ceiling experiment available, and it reuses the existing pipeline
+(extraction, injection, probes, grading, gamma, the difference statistic).
+
+Design: extract an assistant-persona direction contrastively; ablate it or steer
+toward a contrasting persona; re-run the R11 two-framing identification battery
+with the probe measured throughout. Endpoints: change in PRG, and the gamma
+difference between framings under persona manipulation.
+
+PRE-REGISTER BEFORE RUNNING: the H7 prediction is that verbal report accuracy
+RISES while probe accuracy stays FLAT — information unchanged, reportability
+gated. Writing this down first is what makes a confirmation credible.
+
+If H7 holds the flagship becomes a three-act paper (appear unable to introspect →
+the standard evidence is confounded → the failure is persona-gated). If it fails,
+acts 1-2 stand as a controlled negative plus a methodological warning.
 
 ### Near-term (concrete, next sessions)
 - **Layer sweep** on Gemma-2-2B: find which layer maximizes coherent injection

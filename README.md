@@ -23,4 +23,7 @@ Tests run on pythia-70m on CPU.
 (Kaggle T4/P100, HF token required — Gemma is gated).
 
 Plans and specs live in `docs/`. Experimental history is in
-`docs/LAB_NOTEBOOK.md` (run registry + findings, updated after every run).
+`docs/LAB_NOTEBOOK.md` (run registry, findings, and a decisions log, updated
+after every run). Compute and funding status is in `docs/RESOURCES.md`. The
+master plan and its dated addenda are in `docs/plan/masterplan.md`; the current
+paper skeleton and claims table are in `docs/paper/`.

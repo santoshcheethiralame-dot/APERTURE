@@ -110,6 +110,35 @@ Ordered by how much they gate the claims above:
    stratified bank, so frequency/concreteness effects can be separated.
 7. **Pre-registration.** Everything so far is exploratory by definition. The
    masterplan's confirmatory-freeze discipline is what makes a negative citable.
+   For H7 specifically, the prediction ("report accuracy rises while probe
+   accuracy stays flat under persona suppression") must be registered in writing
+   BEFORE E11a is run — a confirmed pre-registered prediction is far stronger
+   evidence than the same result found and explained afterwards.
+
+Resource-gated items (see `docs/RESOURCES.md`): items 2 and 5 need the free
+infini-gram API and Brysbaert norms; item 4 (second family) and the multi-seed
+work need the PES Titan box or rented mid-tier hours; item 3 needs ~200 in-team
+human labels.
+
+## Discussion framing — agent oversight (no new experiments required)
+
+Decided 2026-07-22 (masterplan Addendum 2): rather than adding an agentic arm, the
+existing results are framed as an agent-safety finding in the discussion. This is
+free, and unlike a bolted-on arm it is true of the data we have.
+
+> Agentic deployments increasingly rely on models explaining their own actions
+> for oversight. Our results show the self-report channel does not consult the
+> model's actual internal state — even when that state is decodable (R7) and
+> causally driving the output (R8). Oversight schemes built on "ask the agent
+> why" inherit these error bars. Our forced-choice control (R11) further shows
+> that the obvious way to test this — forcing the model to name a cause —
+> measures output steering rather than self-knowledge unless a neutral-framing
+> condition is included.
+
+The agentic experiment proper (inject a goal mid-episode during tool use, then
+ask "why did you do that?", ground-truthed against the injected vector) is
+sequenced as paper #2, after the core result. It maps onto E7 / ladder rung L3,
+which the plan already contains.
 
 ## Honest read
 
