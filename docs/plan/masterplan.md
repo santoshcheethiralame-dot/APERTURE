@@ -752,3 +752,36 @@ detection-direction construction is the method to steal for H3's ablation arm,
 which A1 flagged as NOT SUPPORTED for want of a detection-direction ablation.
 Their finetuning result is out of scope for us until the training arm (#4), but
 "detection does not confer resistance" belongs in that arm's side-effect audit.
+
+---
+
+# ADDENDUM 4 — 2026-07-24: Publication target is conference-only
+
+The workshop paper is dropped. The single publication target is now a full
+conference paper at an interp/safety venue (NeurIPS / ICML / ICLR). This
+supersedes the W44 "Workshop paper" row in the §week-by-week schedule and the
+"workshop paper" phrasing in A1.6, R2, and R7.
+
+## A4.1 Why, and what replaces the workshop paper's function
+
+The W44 workshop paper existed for one strategic reason: scoop insurance. It
+planted a citable flag early so R2 (being scooped on the dissociation) could not
+kill a two-year project. Dropping it without replacement would leave the flagship
+claim unprotected for ~44 weeks — unacceptable given Pearson-Vogel and the
+Fonseca Rivera & Africa results already circling this space (Addendum 2).
+
+The flag-plant function moves to an **arXiv preprint** posted at the same
+schedule point (~W44). A preprint gives the same citable, timestamped priority
+claim as a workshop paper, needs no separate peer-review cycle, and then hardens
+directly into the conference submission rather than forking a second writeup.
+Risk R2's mitigation is otherwise unchanged (four separable novelties: prior-null
+design, OLMo frequency ground truth, PRG, persona gating).
+
+## A4.2 Consequence: the evidence bar rises
+
+Conference review is stricter than workshop review. Every `PILOT` row in the
+claims table (docs/paper/2026-07-15-paper-outline.md) must reach statistical
+defensibility before submission: multiple seeds, >=2 model families (not two
+sizes of one lineage), infini-gram + Brysbaert covariates replacing the R10/R12
+proxies, and human-checked grading (kappa). The pre-registration discipline
+established with R12 applies to every confirmatory claim from here on.

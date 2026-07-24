@@ -534,6 +534,8 @@ master plan addenda.
 | 2026-07-22 | Anthropic External Researcher credit ask deliberately capped at **<= $1,000** | Addendum 3, §A3.3 |
 | 2026-07-22 | **Authorship policy binding:** compute/funding/access never earn authorship; gift authorship prohibited; resource providers go in acknowledgements | Addendum 3, §A3.4 |
 | 2026-07-22 | **Next experiment reprioritised:** informative-framing arm (prompt-only) BEFORE E11a persona gate, per Addendum 2 §A2.2 | this log |
+| 2026-07-22 | **First pre-registered run (R12):** three-framing battery scored against a git-frozen prediction; primary hypothesis FALSIFIED (informative framing hurt not helped); non-replication of Pearson-Vogel on Gemma-2-2B; recorded as clean pre-registered negative | prereg 2026-07-22; R12 |
+| 2026-07-24 | **Workshop paper DROPPED; single target is a full conference paper** (interp/safety venue). Scoop-insurance flag-plant moves to an arXiv preprint at ~W44. Evidence bar rises: every PILOT claim needs seeds + >=2 model families + real covariates + human-checked grading before submission | Addendum 4 |
 
 ## 6. Planned runs
 

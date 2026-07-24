@@ -1,8 +1,13 @@
-# Workshop Paper Outline — draft from the R3-R9 pilot
+# Conference Paper Outline — draft from the R3-R12 pilot
 
-Status: DRAFT SKELETON, 2026-07-15. Nothing here is submittable yet. The point of
-this document is the claims table: it makes visible which claims the current
-evidence can carry and which it cannot, so the hardening work is targeted.
+Status: DRAFT SKELETON, started 2026-07-15. TARGET: a full conference paper
+(interp/safety venue — NeurIPS / ICML / ICLR), NOT a workshop paper. The workshop
+target was dropped 2026-07-24; scoop-insurance moves to an arXiv preprint at the
+same schedule point (see masterplan Addendum 4). The conference bar is higher:
+every `PILOT` row below must reach statistical defensibility (multiple seeds,
+>=2 model families, real covariates, human-checked grading) before submission.
+The point of this document is the claims table: it makes visible which claims the
+current evidence can carry and which it cannot, so the hardening work is targeted.
 
 ## Working title
 

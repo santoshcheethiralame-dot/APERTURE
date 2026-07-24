@@ -76,7 +76,12 @@ does not hold 27B+ in fp16; that remains IISc/NDIF territory.
 
 ---
 
-## 5. Minimum viable path to a workshop paper
+## 5. Minimum viable path to the arXiv preprint (flag-plant)
+
+The workshop paper is dropped; the single target is a full conference paper, with
+an arXiv preprint at ~W44 as the scoop-insurance flag-plant (masterplan Addendum
+4). This near-zero-cash path is what gets the preprint out; the conference version
+then adds the confirmatory hardening (multi-seed, >=2 families, kappa).
 
 Achievable on **near-zero cash**:
 
