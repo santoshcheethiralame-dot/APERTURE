@@ -1104,3 +1104,134 @@ our null from uninterpretable to publishable.
 Note E11-pilot is listed at 2B on the free tier deliberately: the curve is worth
 measuring even below threshold, provided the write-up states that a below-threshold
 curve cannot settle H7 on its own.
+
+---
+
+# ADDENDUM 7 — 2026-07-25: The departmental phase structure, and the internship squeeze
+
+Addendum 6 anchored the plan to dates. This addendum maps it onto the **department's
+actual four-phase capstone structure**, which has its own required deliverables and
+its own vocabulary. Getting this mapping wrong means delivering the right work
+under the wrong name at review time.
+
+## A7.1 The departmental structure (as given)
+
+| Phase | Semester | Required deliverables |
+|---|---|---|
+| I | Sem 5 (Aug-Dec 2026) | Team formation; mentor allocation; problem statement; literature survey; requirements specification; system design; initial prototype |
+| II | Sem 6 (Jan-May 2027) | Extended literature review; detailed architectural design; module implementation; experimental evaluation; preliminary results |
+| III | Sem 7 (Aug-Dec 2027) | System testing; validation and verification; deployment; final experimental results; performance analysis with tables and graphs; complete research paper draft |
+| IV | Sem 8 (Jan-May 2028) | Final consolidation; research paper submission; final report; project demonstration and presentation; dissemination of outcomes |
+
+## A7.2 THE STRUCTURAL CONFLICT: internships begin in Sem 7
+
+**Internships start in Sem 7**, and departmental norm is that most students
+front-load the substance into Sems 5-6 for exactly that reason. But the department
+requires the **Complete Research Paper Draft in Sem 7** and **Submission in Sem 8** —
+i.e. it asks for peak intellectual output precisely when bandwidth collapses.
+
+This is Risk R7 (bandwidth) made concrete and dated, and it is now the binding
+constraint on the whole schedule.
+
+**Governing decision: all SCIENCE finishes by the end of Sem 6 (May 2027). Sems 7-8
+are writing, hardening, deployment, and dissemination — NOT discovery.**
+
+Consequences that follow and are binding:
+1. **Any experiment not started by ~March 2027 does not happen.** New arms proposed
+   after that date are paper #2, not this paper.
+2. **Compute must be LIVE by January 2027** (start of Sem 6), not merely requested.
+   This sharpens A6.4: the Aug-Sept ask is not early, it is the last comfortable
+   moment for a January need given multi-month institutional lead times.
+3. **The confirmatory freeze (E10) must sit inside Sem 6**, not drift into Sem 7.
+4. **No experiment may be load-bearing for a Sem 7/8 deadline.** If a result is
+   still pending when the internship starts, the paper must be writable without it.
+
+## A7.3 The lucky alignment: hold the W30 preprint date
+
+Addendum 5 moved the preprint from W44 to W30 (Gate B) for scoop reasons. Anchored
+to the real calendar, **W30 is approximately April 2027 — the end of Sem 6.**
+
+That means the preprint **is** the Phase III "Complete Research Paper Draft"
+deliverable. One artifact satisfies both the scoop-insurance need and the
+departmental requirement, and it lands before the internship squeeze rather than
+during it. This is now a second, independent reason to hold that date; it should not
+slip.
+
+Sem 8's "Research Paper Submission" then becomes the conference submission of a
+paper that has already been public, reviewed informally, and hardened — a
+consolidation task compatible with reduced bandwidth, which is exactly what A7.2
+requires.
+
+## A7.4 Translating our artifacts into departmental vocabulary
+
+The department's template is a **software-engineering** template ("requirements
+specification", "module implementation", "system testing", "deployment"). Ours is an
+**empirical research** project. The work maps cleanly, but it must be *presented*
+under their names or reviews will stall on "where is your requirements
+specification?".
+
+| Departmental deliverable | Our artifact | Status |
+|---|---|---|
+| Mentor allocation | mentor secured | DONE |
+| Problem statement | RQ1-RQ6 + the Introspection Ladder (section 1) | DONE |
+| Literature survey | lit matrix (~67 refs, section 2) + Living Review Protocol | DONE (owes the 6 Addendum-5 papers) |
+| Requirements specification | `docs/specs/` (10 milestone design specs) + the pre-registration format | DONE |
+| System design | two-backend apparatus architecture (TransformerLens dev + HF 8-bit) | DONE |
+| Initial prototype | Milestone 1 injection core; R1/R2 green (KL=0 at alpha=0) | DONE |
+| Extended literature review | Addendum 5 field diff + structured lit notes | IN PROGRESS |
+| Detailed architectural design | full pipeline: extract -> inject -> KL -> grade -> probe/PRG -> gamma -> patch -> naturalistic | DONE |
+| Module implementation | 10 TDD milestones, 98 tests green | DONE |
+| Experimental evaluation | runs R1-R12 | DONE |
+| Preliminary results | PRG 0.83; patching +6.15 CI excl. 0; the R11 steering control; R12 pre-registered negative | DONE |
+| System testing | pytest suite + regression tests pinning past bugs | DONE (extend as modules land) |
+| Validation and verification | neutral-framing control, shuffled-label probe control, negative-control patches, pre-registration discipline, seed-stability gates | PARTIAL |
+| **Deployment** | **PLANTED benchmark public release + the interactive demo** | NOT STARTED |
+| Final experimental results | E10 confirmatory freeze | NOT STARTED |
+| Performance analysis (tables and graphs) | the 5-figure list in the paper outline | NOT STARTED |
+| Complete research paper draft | the W30 preprint (see A7.3) | NOT STARTED |
+| Research paper submission | conference submission | NOT STARTED |
+| **Project demonstration** | **the interactive demo (build spec B13)** | NOT STARTED |
+| Dissemination of outcomes | arXiv, Alignment Forum post, benchmark release, Zenodo DOI | NOT STARTED |
+
+## A7.5 Consequence: the public demo is REQUIRED, not optional reach
+
+Build spec B13 (the hosted interactive demo where a visitor injects a concept and
+watches the probe read-out against the model's verbal report) was classed as a
+"reach" upgrade, and under Addendum 5's bandwidth discipline it was a candidate to
+cut.
+
+**It cannot be cut.** The department requires **"Deployment"** (Phase III) and
+**"Project Demonstration and Presentation"** (Phase IV) as graded deliverables. The
+demo and the public benchmark release are the natural — arguably the only sensible —
+way an empirical interpretability project satisfies those two lines.
+
+Reclassified from optional to **required**, and budgeted into Sem 7-8, where it is a
+good fit: it is engineering work against already-frozen results, so it does not
+violate A7.2's "no discovery after Sem 6" rule and it survives reduced bandwidth.
+
+## A7.6 We arrive at Phase I having already done Phase II
+
+Per Addendum 6, the pilot is pre-semester work. Against the departmental table
+specifically: **every Phase I deliverable is already complete**, and most of Phase
+II (detailed architectural design, module implementation, experimental evaluation,
+preliminary results) is complete as well.
+
+Two cautions, recorded so the advantage is not squandered:
+1. **Pace the reveal.** Presenting Phase II material at a Phase I review invites
+   either confusion about the process or an expectation ratchet we must then exceed
+   for three more semesters. Lead Phase I reviews with the Phase I deliverables
+   (problem statement, survey, spec, design, prototype), and hold the R7-R12 results
+   as evidence of feasibility rather than as the headline.
+2. **The head start is spent on debt, not scope.** Addendum 5's list (six papers to
+   digest, domain-stratified bank, prereg drafting, H3 rewrite, H8 test) consumes it
+   productively. R7 bandwidth discipline is unchanged: additions remain
+   substitutions.
+
+## A7.7 Revised semester-level plan
+
+| Semester | Departmental phase | What we actually do |
+|---|---|---|
+| Sem 5 (Aug-Dec 2026) | Phase I | Formalise the Phase I deliverables from existing work; digest the 6 Addendum-5 papers; stand up the Living Review Protocol; domain-stratify and expand the concept bank; draft the pre-registration (rewritten H7, new H8, H3 rewrite); H8 test on existing data; **secure compute** (must be live by Jan 2027); E11-pilot at 2B on free tier |
+| Sem 6 (Jan-May 2027) | Phase II | **The science semester.** 32B tier arm; second model family; E11a confirmatory; human-validated grading + kappa; infini-gram/Brysbaert covariates; E10 confirmatory freeze; **W30 preprint (= Phase III paper draft) by ~April** |
+| Sem 7 (Aug-Dec 2027) | Phase III | Internship squeeze. Writing, hardening, validation/verification write-up, figures and tables, **deployment: PLANTED release + demo**. No new experiments. |
+| Sem 8 (Jan-May 2028) | Phase IV | Conference submission of the already-public paper; final report; demonstration; dissemination. Consolidation only. |

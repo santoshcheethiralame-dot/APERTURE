@@ -2038,6 +2038,64 @@ below-threshold null?"** — and that is a *compute* question, not a replication
 It is why the 32B tier (§10.3) outranks everything else, and why the compute request
 goes out in August for a January need: institutional access takes months to arrange.
 
+## 9.1c The departmental structure — and the one deadline that shapes everything
+
+The project runs inside the university's four-phase capstone structure, one phase per
+semester, each with graded deliverables:
+
+| Phase | Semester | The department requires |
+|---|---|---|
+| I | Sem 5 (Aug–Dec 2026) | Problem statement, literature survey, requirements spec, system design, initial prototype |
+| II | Sem 6 (Jan–May 2027) | Extended lit review, detailed architecture, module implementation, experimental evaluation, preliminary results |
+| III | Sem 7 (Aug–Dec 2027) | System testing, validation & verification, **deployment**, final results, tables and graphs, **complete research paper draft** |
+| IV | Sem 8 (Jan–May 2028) | Consolidation, **paper submission**, final report, **demonstration**, dissemination |
+
+**Now spot the trap.** Internships start in **Sem 7** — and Sem 7 is exactly when the
+department wants the complete paper draft, with submission in Sem 8. The heaviest
+intellectual output is demanded precisely when your available hours collapse.
+
+So the single governing rule of this project's schedule is:
+
+> **All science finishes by the end of Sem 6 (May 2027). Sems 7 and 8 are writing,
+> hardening, deployment, and dissemination — never discovery.**
+
+Four consequences you should treat as hard constraints:
+1. **Any experiment not started by roughly March 2027 does not happen** in this paper.
+   It becomes paper #2. Say so out loud when someone proposes a new arm late.
+2. **Compute must be *live* by January 2027**, not merely requested — which is why the
+   mentor ask goes out in August for a January need (institutional access takes
+   months).
+3. **The confirmatory freeze sits inside Sem 6**, not Sem 7.
+4. **No experiment may be load-bearing for a Sem 7/8 deadline.** If a result is still
+   pending when the internship starts, the paper has to be writable without it.
+
+**One piece of luck worth protecting.** The preprint was moved to W30 for scoop
+reasons — and W30 lands at roughly April 2027, the end of Sem 6. That means the
+preprint *is* the Phase III "complete research paper draft." One artifact satisfies
+both the field-priority need and the departmental requirement, and it lands *before*
+the internship squeeze instead of during it. That date should not slip.
+
+**And one thing that is not optional, despite looking like a luxury.** The public
+benchmark release and the interactive demo might read as nice-to-have reach items. They
+are not: the department grades **"Deployment"** and **"Project Demonstration"** as
+required deliverables, and those two artifacts are how an empirical interpretability
+project satisfies them. They are budgeted into Sems 7–8, where they fit well — they are
+engineering work against already-frozen results, so they don't violate the
+no-discovery-after-Sem-6 rule.
+
+**A presentation note.** Because the pilot was done pre-semester, *every* Phase I
+deliverable is already complete and most of Phase II is too. Resist the urge to dump all
+of it into a Phase I review: leading with Phase II material either confuses the process
+or sets an expectation ratchet you then have to exceed for three more semesters. Lead
+with the Phase I items, and hold R7–R12 as evidence that the approach works.
+
+Finally, a translation habit. The departmental template is a **software-engineering**
+one ("requirements specification," "module implementation," "system testing,"
+"deployment") while this is an **empirical research** project. The work maps cleanly, but
+present it under *their* names or reviews stall on "where is your requirements
+specification?" (Answer: `docs/specs/` plus the pre-registration.) The full mapping table
+is in masterplan Addendum 7.
+
 ## 9.2 The six phases and four gates
 
 The 100-week plan runs in six phases, punctuated by four formal **gates** (Gate A–D) —
