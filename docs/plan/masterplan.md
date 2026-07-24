@@ -561,9 +561,13 @@ already outlined in docs/paper/.
 
 ---
 
-# ADDENDUM 2 — 2026-07-22: Scope discipline, resources, and integrity policy
+# ADDENDUM 3 — 2026-07-22: Scope discipline, resources, and integrity policy
 
-## A2.1 Scope decisions: multimodal and agentic
+(Filed after Addendum 2 of 2026-07-20, which appears further down this file;
+addenda are read in date order, not file order. Renumbered 2026-07-22 to resolve
+a duplicate "Addendum 2" heading.)
+
+## A3.1 Scope decisions: multimodal and agentic
 
 Both were reconsidered against the current research climate (multimodal and
 agentic systems are moving fast in mid-2026) and both are **rejected as arms**,
@@ -608,10 +612,14 @@ simultaneously the deepest and the most currently-fashionable option available �
 persona vectors, emergent misalignment, and character training are active at
 exactly the labs we target. We do not need agents to be current; we need E11a.
 
-**Priority order reaffirmed:** (1) H7 / E11a persona gate; (2) E7 reframed as
-agentic introspection, after the core result; (3) multimodal — never.
+**Priority order (superseding A1.3, and reconciled with Addendum 2 of 07-20):**
+(1) the **informative-framing arm** — a prompt-only change on the existing
+detection/forced-choice grid, testing the Pearson-Vogel reconciliation; cheapest
+and runs before any new apparatus; (2) H7 / **E11a persona gate**; (3) E7
+reframed as agentic introspection, after the core result; (4) multimodal —
+never.
 
-## A2.2 Compute resources (situation as of 2026-07-22)
+## A3.2 Compute resources (situation as of 2026-07-22)
 
 | Tier | Resource | Status |
 |---|---|---|
@@ -625,7 +633,7 @@ agentic introspection, after the core result; (3) multimodal — never.
 Not accessible: corporate labs in Bangalore (Google, Microsoft, NVIDIA, AWS) do
 not lend compute to external students.
 
-## A2.3 External funding and access applications
+## A3.3 External funding and access applications
 
 - **Anthropic External Researcher Access Program** — rolling, no deadline. Best
   fit: it funds AI-safety and alignment work specifically. Ask kept **at or
@@ -642,7 +650,7 @@ not lend compute to external students.
   abstractness flag currently used in the gamma fit (see R10 caveats).
 - Deprioritised: OpenAI and Google research credits — pursue only if gaps remain.
 
-## A2.4 Authorship and integrity policy (binding)
+## A3.4 Authorship and integrity policy (binding)
 
 Recorded because the question arose directly and must not recur.
 

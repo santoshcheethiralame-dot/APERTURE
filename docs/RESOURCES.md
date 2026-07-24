@@ -96,4 +96,4 @@ plus labour.
 
 Compute, funding, or institutional access **never** earn authorship. Resource
 providers are credited in the **acknowledgements**. Trading co-authorship for GPU
-access is prohibited (masterplan Addendum 2, §A2.4).
+access is prohibited (masterplan Addendum 3, §A3.4).

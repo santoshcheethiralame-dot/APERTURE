@@ -472,11 +472,14 @@ master plan addenda.
 |---|---|---|
 | 2026-07-15 | Neutral-framing control is MANDATORY in every identification experiment; gamma > 0 alone is NOT evidence for H2 | Addendum 1, §A1.2 |
 | 2026-07-15 | New hypothesis **H7 (persona-gated introspection)** + run family **E11**; E11a is the next priority | Addendum 1, §A1.3-4 |
-| 2026-07-22 | **Multimodal arm rejected outright** — new infra, unchanged question, pure dilution | Addendum 2, §A2.1 |
-| 2026-07-22 | **Agentic arm rejected as an addition**; it already exists as E7 / ladder L3. Instead REFRAME the discussion toward agent oversight (free, and true of current data). Agentic experiment sequenced as paper #2 | Addendum 2, §A2.1 |
-| 2026-07-22 | PES in-house RTX Titan (24GB) + EPYC identified as the likely mid-tier unblock; IISc KIAC/SERC and NDIF for large tier | Addendum 2, §A2.2; `docs/RESOURCES.md` |
-| 2026-07-22 | Anthropic External Researcher credit ask deliberately capped at **<= $1,000** | Addendum 2, §A2.3 |
-| 2026-07-22 | **Authorship policy binding:** compute/funding/access never earn authorship; gift authorship prohibited; resource providers go in acknowledgements | Addendum 2, §A2.4 |
+| 2026-07-20 | **Three-framing battery** (neutral / introspective / informative) after Pearson-Vogel field diff; **informative-framing arm is the cheapest next experiment**, before any new apparatus | Addendum 2, §A2.2 |
+| 2026-07-20 | Pearson-Vogel (arXiv:2602.20031) partially SCOOPS the PRG (Qwen-32B, logit lens); H7 novelty narrows to "the *persona direction* is the gate — ablate it, report moves, probe doesn't" | Addendum 2, §A2.3 |
+| 2026-07-22 | **Multimodal arm rejected outright** — new infra, unchanged question, pure dilution | Addendum 3, §A3.1 |
+| 2026-07-22 | **Agentic arm rejected as an addition**; it already exists as E7 / ladder L3. Instead REFRAME the discussion toward agent oversight (free, and true of current data). Agentic experiment sequenced as paper #2 | Addendum 3, §A3.1 |
+| 2026-07-22 | PES in-house RTX Titan (24GB) + EPYC identified as the likely mid-tier unblock; IISc KIAC/SERC and NDIF for large tier | Addendum 3, §A3.2; `docs/RESOURCES.md` |
+| 2026-07-22 | Anthropic External Researcher credit ask deliberately capped at **<= $1,000** | Addendum 3, §A3.3 |
+| 2026-07-22 | **Authorship policy binding:** compute/funding/access never earn authorship; gift authorship prohibited; resource providers go in acknowledgements | Addendum 3, §A3.4 |
+| 2026-07-22 | **Next experiment reprioritised:** informative-framing arm (prompt-only) BEFORE E11a persona gate, per Addendum 2 §A2.2 | this log |
 
 ## 6. Planned runs
 
