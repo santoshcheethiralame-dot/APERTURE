@@ -1289,3 +1289,56 @@ This is a real paper — a methods-and-measurement paper rather than the full
 dissociation verdict. It loses the headline claim and keeps the contributions no
 one else has. The existence of this fallback is also the correct answer if a mentor
 or reviewer asks "what if you never get the GPUs?"
+
+## A7.10 Benchmarking against departmental output — and the rubric-mismatch risk
+
+Survey of PES CS capstone output, July 2026. Caveat: student publications are not
+comprehensively indexed, so this is directional, not an audit.
+
+**What the department produces.** 194-210 CS capstone projects per year, of which
+53-75 are shortlisted for the capstone fair. Domains skew healthcare, generative AI,
+robotics, security, cloud, IoT, and social impact. Recent shortlisted work includes a
+dual-modal speech-therapy system, post-quantum cryptography analysis, pollution-based
+navigation, IoT outage prediction, crop-combination ML, and NFT
+generation/authentication. The standard publication route is **IEEE conference
+proceedings, Scopus-indexed**, including conferences PES itself hosts. Judging panels
+combine a professor, an alumnus, and an industry expert (VISA, Reliance Jio, Baxter,
+ArtPark). No PES undergraduate publication at NeurIPS/ICML/ICLR/ACL was found, and no
+interpretability or AI-safety group at PES was found.
+
+**Where this project sits, honestly, on three separate axes:**
+
+1. **Methodology — well outside the local distribution.** Pre-registration (filed,
+   falsified, and reported as falsified), a reported null with its apparent positive
+   signal shown to be an artifact, three distinct control conditions, causal evidence
+   via patching, bootstrap CIs throughout, and a claims table that enumerates what
+   the evidence does NOT support. Most of these are rare in published ML papers, not
+   merely in capstones.
+2. **Venue tier — a larger gap than it appears.** IEEE/Scopus proceedings commonly
+   accept 40-60%+; our target venues run ~20-27% in a subfield actively worked by
+   frontier labs. This is several tiers up, not one, and the ambition carries
+   corresponding risk.
+3. **Completeness — currently BEHIND a typical Sem-7 capstone.** They demo a working
+   system; we have a pilot plus a compute dependency. This inverts only if Sem 6
+   delivers.
+
+**RISK IDENTIFIED — the departmental rubric may not reward what makes this good.**
+The phase deliverables ("module implementation", "deployment", "project
+demonstration") and the industry-inclusive judging panel are built to evaluate
+**systems**. This project delivers a **finding**, and a negative one, in a subfield
+with no local expertise. "We injected concepts and the model failed to notice, and
+the apparent success was an artifact" can read to a systems-oriented panel as *the
+project did not work* — the precise opposite of the truth.
+
+**Mitigations (presentation, not science; all cheap):**
+1. **Lead reviews with the apparatus, not the null.** A tested, working measurement
+   instrument IS a system, and it demonstrates well. The null is the finding the
+   instrument produced.
+2. **The public demo is rubric insurance**, reinforcing A7.5: it converts an abstract
+   result into something a panel can watch happen live.
+3. **State the safety framing first and plainly** — "this tests whether we can trust
+   AI systems that explain their own behaviour" — before any mention of probe-report
+   gaps or gamma. Industry judges price relevance, not machinery.
+4. **Expect the mentor not to be a domain specialist** (no interpretability group was
+   found at PES). All external-facing material must be written for an informed
+   non-specialist; the 2026-07-25 pilot summary is deliberately pitched that way.
