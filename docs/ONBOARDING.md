@@ -2006,6 +2006,38 @@ The program aims to produce:
    abilities?)
 5. **The thesis + companion papers + public writeups.**
 
+## 9.1b Where we actually are on the calendar (read this before the week numbers)
+
+The week numbers below (W1, W12, Gate A…) are **relative to the capstone's formal
+start, which is August–September 2026** — so W1 is roughly September 2026 and Gate A
+lands around December 2026. Two things follow that are easy to misread otherwise.
+
+**First: everything described in Part 5 happened *before* week 1.** The whole apparatus,
+both backends, the 98 tests, runs R1–R12, and the first pre-registration were built
+ahead of the official start. In the plan's own terms, the work scheduled for W1–W12
+(infrastructure, vector extraction, injection harness, grading, first replication) is
+already done, and parts of Phase II are too. That is a genuinely unusual position for a
+capstone at kickoff, and it is the reason a compute request from an undergraduate is
+credible here — there is a working pilot behind it.
+
+**Second: the head start must not turn into scope inflation.** The saved months go to
+paying down the Addendum 5 debt (digesting the six newly surfaced papers, stratifying
+the concept bank, drafting the pre-registration), *not* to adding new experimental arms.
+Bandwidth is still the thing most likely to kill this project.
+
+**The first semester (Aug–Dec) is departmental literature review and groundwork — and
+that suits us.** None of the work we owe right now needs a GPU: lit notes, the Living
+Review Protocol, bank expansion, the pre-registration draft, the H3 rewrite, and the H8
+test on existing data. The institutional timeline and our actual needs coincide this
+semester rather than competing.
+
+One consequence worth understanding, because it changes what Gate A even asks. Gate A
+was written as "does the base effect replicate on open models?" We already know it does
+not, at 2B/9B, on L2. So Gate A's real question is now **"is our null a real null, or a
+below-threshold null?"** — and that is a *compute* question, not a replication question.
+It is why the 32B tier (§10.3) outranks everything else, and why the compute request
+goes out in August for a January need: institutional access takes months to arrange.
+
 ## 9.2 The six phases and four gates
 
 The 100-week plan runs in six phases, punctuated by four formal **gates** (Gate A–D) —

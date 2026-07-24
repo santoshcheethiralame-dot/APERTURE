@@ -1024,3 +1024,83 @@ the final channel." When this arm is taken up, **PRG becomes a three-way
 decomposition — probe-decodable / thinking-token-reported / answer-text-reported** —
 which converts the metric into a channel analysis and connects directly to CoT
 monitorability. Not now; bandwidth.
+
+---
+
+# ADDENDUM 6 — 2026-07-25: Anchoring the 100-week plan to the real calendar
+
+The week-numbered plan (section 7) was written without an anchor date. Anchoring it
+changes what "we are behind / ahead" means and reorders the near term.
+
+## A6.1 The real institutional calendar
+
+The capstone formally begins **August-September 2026**, and the departmental norm is
+that the **first semester (roughly Aug-Dec 2026) is literature review and
+groundwork**, not experiments. W1 of section 7 therefore maps to approximately
+**September 2026**, and Gate A (W12) lands around **December 2026**.
+
+## A6.2 Consequence 1: we are substantially AHEAD, and the pilot is pre-semester work
+
+Everything logged as R1-R12, the entire apparatus, both backends, 98 tests, the
+first pre-registration, and Addenda 1-5 were completed **before the capstone
+officially started**. In section 7's terms, work nominally scheduled for W1-W12
+(infrastructure, vector extraction, injection harness, grading apparatus, first
+replication, failure analysis) is already done, and parts of Phase II (the
+dissociation controls, the PRG, the prior-null estimator) are done as well.
+
+This is recorded plainly because it changes three things:
+1. **Gate A's question is already answered in part.** We know the base effect does
+   not reproduce at 2B/9B on L2. What Gate A must now decide is whether that is a
+   real null or a below-threshold null (A5.4) — which is a compute question, not a
+   replication question.
+2. **The credibility position with mentors and reviewers is unusually strong** for a
+   capstone at kickoff: a working apparatus and a falsified pre-registration in hand
+   before week 1.
+3. **Do not let the head start become schedule inflation.** The saved time is spent
+   on the Addendum 5 debt (six papers to digest, domain-stratified bank,
+   pre-registration drafting), not on adding arms. R7 (bandwidth) is unchanged.
+
+## A6.3 Consequence 2: the lit-review semester is an asset, and it is already loaded
+
+The Aug-Dec semester requires no GPU, and Addendum 5 generated exactly enough
+non-GPU work to fill it productively:
+- Structured lit notes for the six newly surfaced papers (Assistant Axis, the CMU
+  Introspect-Bench, the MIRROR calibration bench, Masked by Consensus, the
+  evaluation-awareness confound line, Ji-An et al.).
+- Stand up the Living Review Protocol properly, including the new name-collision
+  search step.
+- Domain-stratify and expand the concept bank (A5.5) — labour, not compute.
+- Draft the pre-registration, including the rewritten H7 and the new H8.
+- Rewrite the H3 detection-direction ablation around distributed features (A5.5).
+- The H8 test on existing pilot data (cheap, no new runs).
+
+The institutional timeline and the project's actual needs therefore **coincide**
+this semester rather than competing.
+
+## A6.4 Consequence 3: the compute ask goes out NOW, for a January need
+
+The GPU requirement is real from **~January 2027**, not August. But institutional
+access (PES lab allocation, IISc KIAC/SERC external-user process) typically takes
+**weeks to months**. Requesting in August-September for a January need is correct
+lead time, not impatience, and the request is framed that way.
+
+The ask itself is unchanged from A5.4: confirm the PES RTX Titan configuration, and
+open a route to a 32B-capable tier (A100-class), because a 32B arm is what converts
+our null from uninterpretable to publishable.
+
+## A6.5 Revised near-term ordering (July-December 2026)
+
+| When | Item | Needs GPU? |
+|---|---|---|
+| Now (Jul-Aug) | Compute ask to mentor: PES config + IISc route | no |
+| Now | H8 test on existing pilot data | no |
+| Aug-Oct | Lit notes for the six Addendum-5 papers; Living Review Protocol live | no |
+| Aug-Oct | Domain-stratified concept bank expansion (toward 120) | no |
+| Sep-Nov | Pre-registration draft (rewritten H7, new H8, H3 rewrite) | no |
+| Sep-Dec | E11-pilot (Assistant Axis dose-response) as Kaggle allows at 2B | free tier |
+| ~Dec | Gate A: is the 2B/9B null real or below-threshold? | needs the 32B answer |
+| Jan 2027 onward | 32B arm, second family, confirmatory work | yes |
+
+Note E11-pilot is listed at 2B on the free tier deliberately: the curve is worth
+measuring even below threshold, provided the write-up states that a below-threshold
+curve cannot settle H7 on its own.
