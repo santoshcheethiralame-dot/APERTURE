@@ -1685,8 +1685,8 @@ passing, and an understanding of how we run real experiments on a GPU.
 You need Python 3.11+ and git. Then:
 
 ```bash
-git clone https://github.com/santoshcheethiralame-dot/MIRROR.git
-cd MIRROR
+git clone https://github.com/santoshcheethiralame-dot/APERTURE.git
+cd APERTURE
 python -m venv .venv
 ```
 

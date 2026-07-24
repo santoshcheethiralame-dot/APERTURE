@@ -21,7 +21,7 @@ registry. A run that isn't reproducible from its config does not exist.
 ### Kaggle (GPU) — the working recipe
 Hard-won; deviate at your peril.
 - Accelerator: **GPU T4 x2** (only GPU 0 is used; ~15GB).
-- Install cell: `%pip install -q https://github.com/santoshcheethiralame-dot/MIRROR/archive/refs/heads/main.zip`
+- Install cell: `%pip install -q https://github.com/santoshcheethiralame-dot/APERTURE/archive/refs/heads/main.zip`
   (NOT `git+https://` — that hangs forever on a git credential prompt).
 - HF auth cell (Gemma is gated — accept the license on the model page first,
   and add `HF_TOKEN` as a Kaggle secret):
