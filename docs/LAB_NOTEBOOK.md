@@ -536,6 +536,7 @@ master plan addenda.
 | 2026-07-22 | **Next experiment reprioritised:** informative-framing arm (prompt-only) BEFORE E11a persona gate, per Addendum 2 §A2.2 | this log |
 | 2026-07-22 | **First pre-registered run (R12):** three-framing battery scored against a git-frozen prediction; primary hypothesis FALSIFIED (informative framing hurt not helped); non-replication of Pearson-Vogel on Gemma-2-2B; recorded as clean pre-registered negative | prereg 2026-07-22; R12 |
 | 2026-07-24 | **Workshop paper DROPPED; single target is a full conference paper** (interp/safety venue). Scoop-insurance flag-plant moves to an arXiv preprint at ~W44. Evidence bar rises: every PILOT claim needs seeds + >=2 model families + real covariates + human-checked grading before submission | Addendum 4 |
+| 2026-07-25 | **ARTIFACT-PERSISTENCE GAP FOUND + H8 COST CORRECTED.** Audit of `runs/` shows only R1 (dev.jsonl) and R3 (gemma_sweep) survive locally; the PRG `.npz` present is a 16-dim/2-layer CPU deepcheck of the pipeline, NOT R7 (Gemma-2-2B is 2304-dim/26-layer). **Raw data for R7-R12 was never downloaded off Kaggle and is gone.** Consequence: the earlier claim that H8 is "mostly testable on existing pilot data" (A5.5) is WRONG — H8 needs per-concept PRG from R7, so it is a cheap Kaggle RE-RUN (free tier, 2B), not a free local analysis. **PROCESS FIX (mandatory): download and archive run artifacts at the end of every Kaggle session before it expires.** Same root cause as the A5.3 finding that forced-choice activations were never saved | this log; §7 gotchas |
 | 2026-07-25 | **Scheduling principle: Sem 5 takes everything GPU-FREE, Sem 6 takes everything GPU-BOUND.** Front-loads compute-independent work into the semester spent waiting on hardware. RISK NAMED: Sem 6 is overloaded (7 major deliverables, all gated on compute landing on time); if 32B slips to ~Mar 2027 the work spills into Sem 7, which the schedule cannot absorb | Addendum 7, §A7.8 |
 | 2026-07-25 | **FALLBACK REGISTERED IN ADVANCE (trigger: no working 32B access by ~Feb 2027).** Paper becomes methodological contribution + PRG + explicitly scoped null: the steering-vs-access confound & decorrelation protocol (complete, zero extra compute, speaks to 2 literatures), PRG/patching/naturalistic (complete), an honest "we cannot adjudicate the threshold question" limitation, and R12 as a pre-registered negative. Registered NOW so a compute failure costs ambition not the degree, and so the call isn't made under deadline pressure. Also the correct answer to "what if you never get the GPUs?" | Addendum 7, §A7.9 |
 | 2026-07-25 | **BINDING: all SCIENCE finishes by end of Sem 6 (May 2027); Sems 7-8 are writing/hardening/deployment, NOT discovery.** Internships start Sem 7, but the dept requires the Complete Paper Draft in Sem 7 and Submission in Sem 8 — peak output at the bandwidth trough. Follows: any experiment not started by ~Mar 2027 becomes paper #2; **compute must be LIVE by Jan 2027** (not merely requested); E10 confirmatory freeze sits inside Sem 6; no experiment may be load-bearing for a Sem 7/8 deadline | Addendum 7, §A7.2 |
@@ -604,6 +605,30 @@ acts 1-2 stand as a controlled negative plus a methodological warning.
 ---
 
 ## 7. Gotchas solved (so we never lose the time again)
+
+### Kaggle run artifacts must be downloaded before the session dies (found 2026-07-25)
+**We lost the raw data for R7-R12.** A `runs/` audit found only R1 (`dev.jsonl`) and
+R3 (`gemma_sweep*.jsonl`) locally. The `deepcheck_prg.jsonl.npz` that looks like R7
+is a **16-dimension, 2-layer CPU deepcheck** of the PRG pipeline — Gemma-2-2B
+activations are 2304-dimensional across 26 layers, so it is not R7.
+
+Kaggle session outputs are ephemeral: when the session expires, anything not
+downloaded is gone. Every GPU run since R7 wrote its transcripts and `.npz` into the
+session filesystem only.
+
+Cost of the lapse: any re-analysis of a past run now requires re-running it. This is
+what corrected H8 from "free local analysis" to "cheap Kaggle re-run" (A5.5), and it
+compounds the related A5.3 finding that `collect_forced_choice_hf` never captured
+activations at all.
+
+**Mandatory process fix — part of a run's definition of done:**
+1. Before the Kaggle session ends, download every `.jsonl`, `.npz`, and config the
+   run produced.
+2. Archive them under `runs/` locally (gitignored) AND to a durable off-machine copy.
+3. Only then mark the run complete in the registry.
+
+A run whose artifacts died with its session is not reproducible, and by this
+notebook's own standard it barely happened.
 
 - **git+https install hangs** on Kaggle (credential prompt) -> install from the
   `/archive/refs/heads/main.zip` URL instead.

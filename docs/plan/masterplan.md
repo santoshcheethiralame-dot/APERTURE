@@ -950,10 +950,18 @@ arm around their evidence-carrier/gate construction before it is run.
 **New hypothesis H8 — the constrained metacognitive space.** Ji-An et al. find
 introspective success depends on the injected direction's interpretability and
 explained variance, suggesting access exists only for directions meeting such
-criteria. This is a third account alongside H1/H2, and it makes a sharp prediction
-on data we largely already have: **PRG should vary systematically with the injected
-direction's explained variance.** Cheap to test (R7 saved activations; directions
-are cheap to recompute). Added as **H8**, first test scheduled against pilot data.
+criteria. This is a third account alongside H1/H2, and it makes a sharp prediction:
+**PRG should vary systematically with the injected direction's explained variance.**
+Added as **H8**.
+
+**COST CORRECTED 2026-07-25.** This was first written as "cheap to test on data we
+largely already have." That was wrong. An audit of `runs/` found only R1 and R3
+survive locally, and the PRG `.npz` on disk is a 16-dimension, 2-layer CPU deepcheck
+of the pipeline — not R7, whose Gemma-2-2B activations are 2304-dimensional.
+**R7-R12 raw data was never downloaded off Kaggle and no longer exists.** H8
+therefore needs a Kaggle re-run to regenerate per-concept PRG: still cheap (free
+tier, 2B, one session), but a GPU task belonging in the Sem 5 free-tier queue
+alongside E11-pilot, not in the GPU-free column.
 
 **Concept bank: domain becomes a first-class factor.** "Masked by Consensus"
 (arXiv:2604.12373) finds self-representations beat peer representations only on
@@ -1003,7 +1011,7 @@ Enforcing that discipline, the priority stack is:
 
 | Tier | Item | Cost |
 |---|---|---|
-| **Do now, cheap** | Both renames; R10/R11 cross-literature reframe; H8 test on pilot data; SAE demotion + seed-stability gate; domain stratification of the bank | ~0 GPU |
+| **Do now, cheap** | Both renames; R10/R11 cross-literature reframe; SAE demotion + seed-stability gate; domain stratification of the bank | ~0 GPU |
 | **Do now, expensive, load-bearing** | 32B tier acquisition (unblocks threshold + free Assistant Axis) | resource ask |
 | **Next experiment** | E11-pilot (axis dose-response) -> then E11a | 1 build + 1 run |
 | **Rewrite before running** | H3 detection-direction ablation (distributed, not single-direction) | design only |
@@ -1072,7 +1080,7 @@ non-GPU work to fill it productively:
 - Domain-stratify and expand the concept bank (A5.5) — labour, not compute.
 - Draft the pre-registration, including the rewritten H7 and the new H8.
 - Rewrite the H3 detection-direction ablation around distributed features (A5.5).
-- The H8 test on existing pilot data (cheap, no new runs).
+- The H8 test (cheap Kaggle re-run at 2B on the free tier; NOT local — R7 data is gone).
 
 The institutional timeline and the project's actual needs therefore **coincide**
 this semester rather than competing.
@@ -1093,7 +1101,7 @@ our null from uninterpretable to publishable.
 | When | Item | Needs GPU? |
 |---|---|---|
 | Now (Jul-Aug) | Compute ask to mentor: PES config + IISc route | no |
-| Now | H8 test on existing pilot data | no |
+| Sep-Dec | H8 test (regenerate per-concept PRG at 2B) | free tier |
 | Aug-Oct | Lit notes for the six Addendum-5 papers; Living Review Protocol live | no |
 | Aug-Oct | Domain-stratified concept bank expansion (toward 120) | no |
 | Sep-Nov | Pre-registration draft (rewritten H7, new H8, H3 rewrite) | no |
@@ -1231,7 +1239,7 @@ Two cautions, recorded so the advantage is not squandered:
 
 | Semester | Departmental phase | What we actually do |
 |---|---|---|
-| Sem 5 (Aug-Dec 2026) | Phase I | Formalise the Phase I deliverables from existing work; digest the 6 Addendum-5 papers; stand up the Living Review Protocol; domain-stratify and expand the concept bank; draft the pre-registration (rewritten H7, new H8, H3 rewrite); H8 test on existing data; **secure compute** (must be live by Jan 2027); E11-pilot at 2B on free tier |
+| Sem 5 (Aug-Dec 2026) | Phase I | Formalise the Phase I deliverables from existing work; digest the 6 Addendum-5 papers; stand up the Living Review Protocol; domain-stratify and expand the concept bank; draft the pre-registration (rewritten H7, new H8, H3 rewrite); H8 test (free-tier re-run); **secure compute** (must be live by Jan 2027); E11-pilot at 2B on free tier |
 | Sem 6 (Jan-May 2027) | Phase II | **The science semester.** 32B tier arm; second model family; E11a confirmatory; human-validated grading + kappa; infini-gram/Brysbaert covariates; E10 confirmatory freeze; **W30 preprint (= Phase III paper draft) by ~April** |
 | Sem 7 (Aug-Dec 2027) | Phase III | Internship squeeze. Writing, hardening, validation/verification write-up, figures and tables, **deployment: PLANTED release + demo**. No new experiments. |
 | Sem 8 (Jan-May 2028) | Phase IV | Conference submission of the already-public paper; final report; demonstration; dissemination. Consolidation only. |
@@ -1243,7 +1251,7 @@ that does.** This front-loads all compute-independent work into the semester spe
 waiting on hardware, and it is the main lever for surviving the Sem 7 squeeze.
 
 GPU-free and therefore Sem 5: pre-registration drafting, the six lit notes, Living
-Review Protocol, domain-stratified bank expansion, the H8 test on existing data,
+Review Protocol, domain-stratified bank expansion,
 ~200 human gold labels, the infini-gram/Brysbaert covariate pipeline, packaging the
 Phase I deliverables. E11-pilot also sits in Sem 5 on the Kaggle free tier at 2B.
 
