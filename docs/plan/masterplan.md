@@ -785,3 +785,242 @@ defensibility before submission: multiple seeds, >=2 model families (not two
 sizes of one lineage), infini-gram + Brysbaert covariates replacing the R10/R12
 proxies, and human-checked grading (kappa). The pre-registration discipline
 established with R12 applies to every confirmatory claim from here on.
+
+---
+
+# ADDENDUM 5 — 2026-07-25: Field diff, name collisions, and the H7 rewrite
+
+A targeted field sweep surfaced four published results that change the plan. All
+load-bearing claims below were verified directly against the sources before this
+addendum was written; two of the sweep's own claims were found overstated and are
+corrected here. This is the largest single revision since Addendum 1.
+
+## A5.1 Two name collisions — both names must change
+
+**INTROSPECT-Bench is taken.** *Me, Myself, and pi: Evaluating and Explaining LLM
+Introspection* (CMU; Naphade, Bhargav, Lim, Shah), ICLR 2026 Workshop HCAIR,
+arXiv:2603.20276, ships **Introspect-Bench**. Their framing overlaps ours: they
+formalize introspection as latent reasoning over the model's own policy, find
+frontier models show privileged access to their policies that does not transfer
+across models or tasks, and give mechanistic evidence via attention diffusion.
+
+**MIRROR is taken, and the collision is deeper than the name.** *MIRROR: A
+Hierarchical Benchmark for Metacognitive Calibration in Large Language Models*,
+arXiv:2604.19809, is not merely our L4 rung — it is a **four-level metacognitive
+hierarchy (Level 0 Atomic Self-Knowledge, Level 1 Cross-Domain Transfer, Level 2
+Compositional Prediction, Level 3 Adaptive Self-Regulation)** across 16 models and
+~250k instances. Both the project name AND the laddered-levels structure collide.
+
+Neither collision is fatal on substance. Theirs are behavioral policy-prediction
+and calibration benchmarks; ours is injection-based content identification with a
+fitted prior-null and causal mechanism. But we cannot ship under either name.
+
+**Decisions:**
+1. Rename the project and the benchmark before anything is public. PENDING owner
+   decision; candidates recorded in the lab notebook decisions log.
+2. When the ladder is next described in writing, state explicitly how L0-L4
+   differs from arXiv:2604.19809's Level 0-3: ours indexes **content access**
+   (can it report WHAT is in its state), theirs indexes **calibration and
+   control** (can it predict and act on its own competence). Different axis, and
+   we say so before a reviewer says it for us.
+3. Add a **name-collision search** step to the Living Review Protocol (2.8):
+   before any public artifact name is fixed, search arXiv + OpenReview + GitHub
+   for the exact string.
+4. **Reposition deliverable #2.** We are no longer building "the introspection
+   benchmark." We are building the **injection/identification** benchmark with a
+   fitted prior-guessing null and mechanistic grounding, which neither of the
+   above has. Say this explicitly in the paper outline.
+
+## A5.2 The Assistant Axis tension — H7 is rewritten to predict a SHAPE
+
+*The Assistant Axis: Situating and Stabilizing the Default Persona of Language
+Models* (Lu et al., arXiv:2601.10387, repo safety-research/assistant-axis) builds
+a persona space from 275 character archetypes and identifies the **Assistant
+Axis** as its leading component. Verified quote on what moves a model along it:
+
+> "prompts pushing for meta-reflection on the model's processes, demanding
+> phenomenological accounts, requiring specific creative writing that involve
+> inhabiting a voice, or disclosing emotional vulnerability caused it to drift"
+
+away from the Assistant, whereas "bounded task requests, technical questions,
+editing and refinement, practical how-to's" keep it in the default persona.
+Steering far from the Assistant induces a mystical, theatrical register.
+
+**This contradicts our A1.2 interpretation of R11.** We read R11's lower gamma
+under introspective framing as the prompt pushing the model *into* an
+assistant-explaining-itself register. Our introspective prompt is precisely a
+meta-reflection prompt, which per Lu et al. pushes *away* from the Assistant.
+
+Scope the damage precisely: **R11's result is untouched.** The neutral-framing
+control, the negative gamma difference, and the steering-not-access verdict all
+stand — they are behavioral facts. What is contradicted is our *post-hoc
+mechanistic story* about why gamma dropped, which was exploratory and was the seed
+of H7. A published result now contests it.
+
+**Three live possibilities, all testable:**
+- (a) H7 is wrong in sign: drift *away* from the Assistant destabilizes reporting,
+  so persona ablation would make identification WORSE, not better.
+- (b) Both are right and the axis is **non-monotonic**: small drift degrades
+  reporting; large drift reaches the theatrical register Lu et al. describe.
+- (c) Our framing manipulation and theirs move different components of the same
+  persona space.
+
+**H7 (rewritten).** Old form: "access exists but is gated by the assistant persona;
+suppress the persona and identification rises while the probe stays flat."
+New form:
+
+> **H7:** Identification performance is a **non-monotonic function of position on
+> the Assistant Axis**, while probe decodability of the injected concept is
+> **invariant** to that position. The persona-gate claim is the special case where
+> identification rises at some axis position with the probe flat.
+
+The **probe-flat clause is the load-bearing half** and is unchanged: if
+identification and probe decodability move together, we have merely made the model
+globally better or worse, not opened a read-out gate. Only identification moving
+while the probe holds flat is evidence for gating.
+
+**Sequencing change: measure the shape before registering it.**
+- **E11-pilot (exploratory, new, runs BEFORE E11a):** construct a reduced
+  Assistant Axis on our model, steer along it across a range in BOTH directions,
+  and plot identification / gamma AND probe accuracy against axis position.
+  Output: the measured dose-response curve.
+- **E11a (confirmatory, unchanged in apparatus):** pre-register the *measured
+  shape* from E11-pilot and test it on fresh data.
+
+Registering a direction before measuring the shape would have repeated R12's
+error at higher cost. R12 taught this lesson cheaply; we apply it here.
+
+## A5.3 Two corrections to the sweep that produced this addendum
+
+Recorded because they change cost estimates, and because uncorrected they would
+have produced a plan we could not execute:
+
+1. **The Assistant Axis is NOT off-the-shelf for our models.** Lu et al. report
+   Gemma-2-**27B**, Qwen-3-32B, and Llama-3.3-70B. There is no published axis for
+   Gemma-2-2B or 9B. E11-pilot must **generate** the axis on our model using their
+   pipeline (a reduced archetype set and rollout count), or move to a tier they
+   cover. This is a build, not a download.
+2. **We cannot project "existing R3/R5/R11 activations" onto the axis — we never
+   saved them.** `collect_forced_choice_hf` records concept, order index, choice,
+   and report only. E11-pilot requires a re-run with activation capture. Cheap,
+   but not free.
+
+## A5.4 The convergence: a 32B tier unlocks two blockers at once
+
+Field state on the base effect is now clear enough to forecast Gate A rather than
+gamble on it. L1 detection replicates in open models **at ~32B with appropriate
+prompting** (Vogel 2025 on Qwen2.5-Coder-32B; Rivera & Africa reach 95.5% detection
+at 0% false positives on a finetuned Qwen-2.5-32B; Macar et al. find moderate true
+positive rates at 0% false positives, emerging from **post-training** not
+pretraining). Our Gemma-2 2B/9B L2 null is consistent with everyone.
+
+**The risk this creates:** our lower tiers may sit **below the effect threshold
+entirely**, in which case a null at 2B/9B means nothing and Gate A cannot be
+passed on it. This is now the single largest threat to the program's headline
+claim, and it independently matches R12's failure to replicate Pearson-Vogel's
+32B result at 2B.
+
+**The convergence:** Qwen-3-32B has BOTH a published Assistant Axis AND sits above
+the replication threshold. Acquiring a 32B-capable tier therefore unblocks the
+threshold problem and hands us the persona axis for free. **This is now the top
+resource priority**, ahead of everything else in RESOURCES.md. Note PES's RTX
+Titan (24GB) does not comfortably clear 32B; this points at IISc A100-80GB or
+rented mid-tier hours.
+
+## A5.5 Other adopted changes
+
+**Mechanism arm: patching promoted, SAE demoted.** The SAE ground has weakened
+(diffuse concepts, underperformance vs simple baselines on safety-relevant tasks,
+and documented seed-dependence of features). For a pre-registered project, a
+mechanism claim resting on a feature that does not survive a reseed is not a
+claim. **Activation patching becomes the primary mechanism evidence** — it is
+already our strongest pilot result (R8, +6.15 nats, CI excluding 0, no SAE
+required) — with SAE features demoted to secondary/corroborating and a
+**seed-stability check pre-registered as a gating criterion** for any SAE-based
+claim. Cross-layer transcoders / circuit-tracing remain the preferred route for
+attribution graphs.
+
+**Detection-direction ablation (H3) is underspecified and must be rewritten.**
+Macar et al. find anomaly detection relies on **distributed MLP computation across
+multiple directions** implemented by evidence-carrier and gate features — not a
+single linear direction. Our planned "ablate the shared anomaly direction" arm
+cannot test what it claims if detection is not a single direction. Rewrite that
+arm around their evidence-carrier/gate construction before it is run.
+
+**New hypothesis H8 — the constrained metacognitive space.** Ji-An et al. find
+introspective success depends on the injected direction's interpretability and
+explained variance, suggesting access exists only for directions meeting such
+criteria. This is a third account alongside H1/H2, and it makes a sharp prediction
+on data we largely already have: **PRG should vary systematically with the injected
+direction's explained variance.** Cheap to test (R7 saved activations; directions
+are cheap to recompute). Added as **H8**, first test scheduled against pilot data.
+
+**Concept bank: domain becomes a first-class factor.** "Masked by Consensus"
+(arXiv:2604.12373) finds self-representations beat peer representations only on
+**disagreement subsets**, and only in factual-knowledge tasks, not math — pooling
+across all items masks a real effect. Non-transfer across domains is now reported
+by three independent groups. Two consequences: (i) the gamma estimator gets a
+**matched-disagreement stratification**; (ii) our 16 pilot concepts are
+predominantly concrete nouns, so **we may be sampling the domain where access is
+weakest** — the bank must be stratified by domain type and the stratification
+**pre-registered**, because bank composition could determine the headline result.
+
+**Definitional engagement (do at prereg freeze, not now).** Song, Lederman, Hu &
+Mahowald argue for a "thick" definition: introspection is a process yielding
+information about internal states **more reliably than any process of equal or
+lower computational cost available to a third party**. None of our rungs encode a
+cost criterion, and it is operationalizable via cost-matched peer-model probes.
+Add **L2.5 — privileged access** between L2 and L3 on that criterion. Separately,
+the Reality Check paper holds that a strong notion of introspection cannot be
+established behaviorally alone, since introspection is a second-order process over
+first-order representations, so evidence must show the two are **distinct
+computations**. State in section 1 that our mechanism arm is the field's requested
+answer to exactly that objection — converting a definitional attack into
+positioning.
+
+## A5.6 Scope: what this buys and what it costs
+
+**The R10/R11 result is bigger than we scoped it.** The evaluation-awareness
+literature has independently hit the identical confound: standard single-contrast
+probes track **prompt format** rather than evaluation context, and the fix is a
+paired design that decorrelates format from context (Devbunova 2026,
+arXiv:2606.23583). Same disease, different organ. Reframe our contribution from
+"forced-choice introspection results are confounded" to **"a general confound in
+self-knowledge probing, demonstrated across two literatures, with a decorrelation
+protocol."** That reaches the evaluation-awareness and CoT-monitoring communities
+rather than only the concept-injection subfield, and it raises the preprint's
+ceiling at zero experimental cost.
+
+**Preprint moves earlier: W44 -> W30 (Gate B).** R2 (scoop) is worse than
+originally rated — between Pearson-Vogel, the CMU bench, the MIRROR bench, Macar,
+Rivera & Africa, Reality Check, and the Assistant Axis line, this space went from
+thin to crowded in roughly six months. The R10/R11 confound is **already complete**
+and is the one thing nobody else has. Scope the preprint narrowly to **the confound
++ PRG**, not the full dissociation, so it does not inherit the breadth gaps.
+
+**R7 (bandwidth) remains the real killer, and every addition is a substitution.**
+Enforcing that discipline, the priority stack is:
+
+| Tier | Item | Cost |
+|---|---|---|
+| **Do now, cheap** | Both renames; R10/R11 cross-literature reframe; H8 test on pilot data; SAE demotion + seed-stability gate; domain stratification of the bank | ~0 GPU |
+| **Do now, expensive, load-bearing** | 32B tier acquisition (unblocks threshold + free Assistant Axis) | resource ask |
+| **Next experiment** | E11-pilot (axis dose-response) -> then E11a | 1 build + 1 run |
+| **Rewrite before running** | H3 detection-direction ablation (distributed, not single-direction) | design only |
+| **Defer (real, but not now)** | Reasoning-model tier + three-way PRG decomposition; OLMo-3 developmental arm; L2.5 formalization (at prereg freeze) | Year 2 |
+
+**What gets cut to pay for it:** the breadth ambition of ">=10 models in >=4
+families" is dropped for the preprint and re-scoped to **2B (dev) + one 32B
+(threshold) + one second family**. Multimodal stays rejected; the agentic arm
+stays deferred to paper #2; the training arm (E6) and developmental arm (B9/U2)
+stay Year-2 and are explicitly NOT pulled forward.
+
+**Deferred but flagged as genuinely important:** reasoning models change what "the
+report" even is. Thinking tokens acknowledge influential signals at ~87.5% while
+stated outputs acknowledge at ~28.6%, and a monitor reading only answer text misses
+~55.4% of cases where thinking tokens acknowledge a misleading hint. On a reasoning
+model, PRG is ambiguous between "inaccessible" and "accessible but unverbalized in
+the final channel." When this arm is taken up, **PRG becomes a three-way
+decomposition — probe-decodable / thinking-token-reported / answer-text-reported** —
+which converts the metric into a channel analysis and connects directly to CoT
+monitorability. Not now; bandwidth.

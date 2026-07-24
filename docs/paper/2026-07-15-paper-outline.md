@@ -9,6 +9,32 @@ every `PILOT` row below must reach statistical defensibility (multiple seeds,
 The point of this document is the claims table: it makes visible which claims the
 current evidence can carry and which it cannot, so the hardening work is targeted.
 
+## POSITIONING UPDATE (2026-07-25, masterplan Addendum 5)
+
+Two names are taken and must change before anything is public: **Introspect-Bench**
+(arXiv:2603.20276) and **MIRROR** (arXiv:2604.19809, which also collides on the
+laddered-levels structure). New names PENDING owner decision.
+
+**Deliverable #2 repositioned.** We are not building "the introspection benchmark"
+— that name and space are occupied. We are building the **injection/identification
+benchmark with a fitted prior-guessing null and causal mechanism grounding**, which
+neither the CMU policy-prediction bench nor the metacognitive-calibration bench
+has. State this explicitly rather than letting a reviewer discover the overlap.
+
+**Ladder differentiation.** When L0-L4 is described, distinguish it from
+arXiv:2604.19809's Level 0-3: ours indexes **content access** (can the model report
+WHAT is in its state), theirs indexes **calibration and control** (can it predict
+and act on its own competence). Different axis — say so first.
+
+**The C11/C12 contribution is bigger than "a methodological note to the injection
+literature."** The evaluation-awareness field independently hit the same confound —
+single-contrast probes tracking surface prompt format rather than the construct,
+fixed by a paired decorrelating design (arXiv:2606.23583). Reframe as **"a general
+confound in self-knowledge probing, demonstrated across two literatures, with a
+decorrelation protocol."** Costs nothing; reaches the evaluation-awareness and
+CoT-monitoring communities, not just the concept-injection subfield. This becomes
+the **centrepiece of the W30 preprint** (moved earlier from W44 — see Addendum 5).
+
 ## Working title
 
 Confabulation, Not Introspection: Injected Concepts Are Present, Causal, and
@@ -112,6 +138,27 @@ Ordered by how much they gate the claims above:
 5. **A second model family.** Qwen or Llama. "2B and 9B" is one lineage; a
    reviewer will call this immediately. Note Pearson-Vogel et al. run Qwen-32B,
    so the Qwen arm doubles as the replication target for item 3.
+
+5b. **A 32B TIER — now the single largest threat to the headline claim**
+   (2026-07-25, Addendum 5 §A5.4). The field's L1 detection results replicate in
+   open models at **~32B with appropriate prompting** (Vogel on Qwen2.5-Coder-32B;
+   Rivera & Africa 95.5% at 0% FP on a finetuned Qwen-2.5-32B; Macar et al.
+   moderate TPR at 0% FP, capability emerging from post-training). Our Gemma-2
+   2B/9B null is consistent with all of them — which means **our tiers may sit
+   below the effect threshold entirely, and a null below threshold means nothing.**
+   R12's failure to replicate Pearson-Vogel at 2B is the same signal. Without a
+   32B arm, the central negative is not defensible and Gate A cannot be passed on
+   it. Convergence: **Qwen-3-32B has both a published Assistant Axis and clears the
+   threshold**, so one acquisition unblocks this AND E11-pilot. Top resource
+   priority.
+
+5c. **Domain stratification of the concept bank** (Addendum 5 §A5.5). Privileged
+   access appears **domain-conditional**, and self-representations beat peer
+   representations only on **disagreement subsets** (arXiv:2604.12373) — pooling
+   masks the effect. Our 16 pilot concepts are predominantly concrete nouns, so we
+   may be sampling the domain where access is **weakest**, which would make our
+   null an artifact of bank composition. Stratify by domain and pre-register the
+   stratification; add matched-disagreement stratification to the gamma estimator.
 6. **Enlarge the concept bank** beyond the 16 dev concepts toward the 240-concept
    stratified bank, so frequency/concreteness effects can be separated.
 7. **Pre-registration.** Everything so far is exploratory by definition. The

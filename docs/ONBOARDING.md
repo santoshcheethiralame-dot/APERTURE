@@ -834,6 +834,54 @@ prompt-only probe at a neighboring idea; it did not confirm the mechanism story 
 Part 5 — which is exactly why the real test, ablating the persona *direction* inside
 the model, still needs to be run.)
 
+### H7 was rewritten in July 2026 — and the story of why is worth your time
+
+**Update (2026-07-25).** H7 as stated above predicted a *direction*: suppress the
+persona and identification goes **up**. A published paper — *The Assistant Axis*
+(arXiv:2601.10387) — forced us to rewrite it, and the episode is a good lesson in how
+this project is supposed to work.
+
+That paper builds a map of "persona space" from 275 character archetypes and finds its
+main axis: how strongly the model is sitting in its default Assistant character. Then
+comes the finding that hit us — prompts **pushing the model to reflect on its own
+processes make it drift AWAY from the Assistant persona**, while ordinary bounded tasks
+("technical questions," "practical how-to's") keep it anchored there.
+
+Now compare that with our own R11 (Part 5.10). We found that introspective framing
+*lowered* identification, and we explained it by saying the prompt pushes the model
+*into* an assistant-explaining-itself register. But our introspective prompt is exactly
+the kind of self-reflective prompt that the Assistant Axis paper says pushes the model
+the **other** way. **Both stories cannot be the mechanism.**
+
+Be precise about what is damaged here, because the distinction matters:
+- **R11's actual result is untouched.** Introspective framing did not help; the γ is
+  steering. Those are measurements, and they stand.
+- **Our post-hoc explanation of *why* is contested** — and that explanation was the seed
+  H7 grew from. It was exploratory (found and explained after the fact), which is exactly
+  the class of claim that is allowed to be overturned like this.
+
+So H7 now predicts a **shape** rather than a direction:
+
+> **H7 (rewritten):** identification performance is a **non-monotonic** function of
+> where the model sits on the Assistant Axis, while **probe decodability stays flat**
+> across that range.
+
+The **probe-flat half is the load-bearing part**. If identification and the probe move
+*together*, we have merely made the model globally better or worse — that is not a gate.
+Only **identification moving while the probe holds steady** shows a read-out gate being
+opened or closed.
+
+The sequencing changed to match: we now run **E11-pilot** (steer along the axis in
+*both* directions and *measure* the curve, exploratory) **before** E11a pre-registers a
+shape. Pre-registering a direction before measuring the shape is precisely the mistake
+R12 taught us — cheaply — not to repeat.
+
+Two practical notes a newcomer would otherwise trip on: the published axis exists for
+Gemma-2-**27B**, Qwen-3-32B and Llama-3.3-70B — **not** for our Gemma-2-2B, so we have
+to *build* the axis on our model. And we cannot reuse our old runs for it, because our
+forced-choice code never saved activations; E11-pilot needs a fresh run that captures
+them.
+
 ## 4.4 The trap that everything hinges on: steering vs access
 
 This is the most important subtlety in the entire project. If you understand nothing
@@ -1258,6 +1306,15 @@ the verdict line only checked whether the CI was above 0, so it mislabeled a
 cleanly-negative CI as "includes 0." The *statistic* was right; the *human-readable
 verdict* was wrong. We fixed it to check both directions. Lesson: a correct number with
 a wrong label is still a wrong result — check your verdict logic, not just your math.
+
+**And a second lesson, added 2026-07-25.** We originally explained *why* γ dropped
+under introspective framing by saying the prompt pushes the model into an
+assistant-explaining-itself register. Published work (*The Assistant Axis*) now
+contests that explanation — it finds self-reflective prompts push models the opposite
+way. **The result above is unaffected; only our story about the mechanism is.** This is
+the difference between a measurement and an interpretation, and it is why we label
+post-hoc explanations as exploratory. See §4.3 for the full episode and the rewritten
+H7.
 
 ## 5.11 R12: our first pre-registered experiment (and our hypothesis was wrong)
 
@@ -2077,17 +2134,32 @@ reviewed before it lands.
 
 If you want to aim at the heart of the project, these are the live scientific questions:
 
-- **The H7 persona-gate test (E11a).** The pilot shows the information is present and
-  active but unreported. Is the report *blocked by the assistant persona*? The real test
-  is to extract the "assistant persona" direction and **ablate it inside the model**
-  (not just change the prompt, as R12 did), then see whether the report improves while
-  the probe stays the same. If it does, that is genuine access that was being gated — a
-  headline result. This is the single highest-value experiment on the board.
-- **Does the Pearson-Vogel effect appear at scale?** Their informative-framing benefit
-  showed up on a 32B model and reversed on our 2B. Re-run the informative arm on a bigger
-  model and find out. A clean scale threshold would be a real finding.
+- **E11-pilot, then the H7 test (E11a).** The pilot shows the information is present and
+  active but unreported. Is the report *gated by the assistant persona*? The test is to
+  build the "Assistant Axis" direction, steer the model along it **inside the model**
+  (not just reword the prompt, as R12 did), and watch whether identification moves
+  **while the probe stays flat**. As of 2026-07-25 we run **E11-pilot first** — measure
+  the dose-response curve across the axis in both directions, exploratory — and only
+  then pre-register the measured shape as E11a. See §4.3 for why the direction-predicting
+  version of H7 was withdrawn. Still the highest-ceiling experiment on the board.
+- **Get to a 32B tier — now the top priority, and it unblocks two things at once.**
+  Field-wide, L1 detection replicates at around 32B. Our 2B/9B null may therefore sit
+  *below the effect threshold*, and a null below threshold means nothing — this is the
+  single biggest threat to our headline claim. Separately, **Qwen-3-32B already has a
+  published Assistant Axis**, so the same acquisition also hands E11-pilot its direction
+  for free. (Related: does the Pearson-Vogel informative-framing benefit appear at that
+  scale? Their result was 32B; ours reversed at 2B. A clean scale threshold is a real
+  finding.)
 - **A second model family.** Everything so far is Gemma. Does the whole story replicate
   on Qwen or Llama? Until it does, we cannot generalize.
+- **Is our concept bank hiding the effect?** Access looks **domain-conditional**, and
+  our 16 concepts are mostly concrete nouns — we may be sampling the domain where access
+  is *weakest*, which would make our null an artifact of bank composition. Stratify by
+  domain and pre-register the stratification.
+- **H8 — the constrained metacognitive space.** A third account beside H1/H2: access may
+  exist only for directions that are interpretable / high-explained-variance. It predicts
+  the Probe–Report Gap varies with the injected direction's explained variance — cheap,
+  and mostly testable on data we already have.
 - **Human-validated grading.** Unglamorous but gating: without it, the grading section is
   indefensible.
 
@@ -2437,9 +2509,17 @@ Results → `docs/LAB_NOTEBOOK.md`. Claims and their status → the claims table
 Compute/funding → `docs/RESOURCES.md`.
 
 **Q: What is the highest-value experiment we could run next?**
-The H7 persona-gate test (E11a): ablate the assistant-persona direction *inside* the model
-and see whether the report improves while the probe stays flat. If it does, that is gated
-access — a headline result.
+**E11-pilot**, then E11a: steer the model along the Assistant Axis *inside* the model and
+measure whether identification moves **while the probe stays flat**. We measure the curve
+first (exploratory) and pre-register the shape second — see §4.3. Running close behind,
+and arguably more urgent: **getting to a 32B tier**, because our 2B/9B null may sit below
+the field's replication threshold, and a null below threshold means nothing.
+
+**Q: Is the project really called MIRROR?**
+Not for much longer. As of 2026-07-25 both **MIRROR** and **INTROSPECT-Bench** were found
+to collide with published work (arXiv:2604.19809 and arXiv:2603.20276), so both names are
+being changed before anything goes public. The repo and docs still use the old names until
+the rename lands. A name-collision search is now part of the Living Review Protocol.
 
 ## 12.2 The pilot results at a glance
 
