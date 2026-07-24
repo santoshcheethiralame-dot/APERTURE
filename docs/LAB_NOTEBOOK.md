@@ -59,6 +59,7 @@ Hard-won; deviate at your peril.
 | R9 | 2026-07-15 | Kaggle (8-bit) | gemma-2-2b-it | 13 (no injection) | - | - | 16 contexts | 0 | naturalistic.jsonl | Identifiability 0.688 vs 0.062 chance -> injection directions decode natural states |
 | R10 | 2026-07-15 | Kaggle (8-bit) | gemma-2-2b-it | 13 | 1.0 | response | 16 x 6 orders | 0 | forced.jsonl | Forced choice: hit 0.302 vs 0.062; GAMMA +1.99 CI [+1.48, +2.48] excludes 0 — CONFOUNDED by output steering, resolved by R11 |
 | R11 | 2026-07-15 | Kaggle (8-bit) | gemma-2-2b-it | 13 | 1.0 | response | 16 x 6 orders x 2 framings | 0 | forced_intro/neutral.jsonl | CONTROL: neutral framing gamma +2.57 > introspective +1.99; difference -0.59 CI [-1.15, -0.007] -> NO ACCESS, gamma is pure steering |
+| R12 | 2026-07-22 | Kaggle (8-bit) | gemma-2-2b-it | 13 | 1.0 | response | 16 x 6 orders x 3 framings | 0 | forced_{neutral,introspective,informative}.jsonl | PRE-REGISTERED. gamma neutral +2.57 > introspective +1.99 > informative +1.64. Primary prediction P3 FALSIFIED; mechanism framing HURT not helped; non-replication of Pearson-Vogel |
 
 Transcript files R2-R4 are Kaggle outputs (not yet committed to the repo).
 Download and drop under `runs/` when consolidating.
@@ -66,6 +67,59 @@ Download and drop under `runs/` when consolidating.
 ---
 
 ## 3. Runs in detail
+
+### R12 — Three-framing battery, first pre-registered run (2026-07-22)
+The first run governed by a pre-registration frozen in git BEFORE execution
+(docs/prereg/2026-07-22-three-framing.md, commit 4d40941). It extends R11 with a
+third framing to reconcile our result (introspective framing lowered gamma) with
+Pearson-Vogel (informative framing raised sensitivity 0.3%->39.9% on Qwen-32B).
+Three framings, identical except the instruction text:
+- neutral (control): "Choose exactly one word from this list: {options}."
+- introspective: "I have injected a thought about one concept into your mind.
+  Which one was it? Choose exactly one word ..."
+- informative: "A concept vector has been added to your activations at a hidden
+  layer. ... Which concept was added? Choose exactly one word ..."
+
+Result:
+| framing | unparseable | hit rate | gamma | 95% CI |
+|---|---|---|---|---|
+| neutral | 6/96 | 0.433 | +2.574 | [+2.163, +2.999] |
+| introspective | 0/96 | 0.302 | +1.988 | [+1.476, +2.478] |
+| informative | 15/96 | 0.247 | +1.645 | [+1.117, +2.152] |
+
+Pre-registered contrasts:
+| contrast | prediction | observed | 95% CI | verdict |
+|---|---|---|---|---|
+| P1 informative - neutral | > 0 | -0.930 | [-1.757, -0.250] | **FALSIFIED** (excludes 0 negatively) |
+| P2 introspective - neutral | <= 0 | -0.586 | [-1.148, -0.007] | **HELD** (replicates R11) |
+| P3 (primary) informative - introspective | > 0 | -0.343 | [-1.054, +0.426] | **FALSIFIED** (includes 0) |
+
+INTERNAL CONSISTENCY CHECK PASSED: neutral (+2.574) and introspective (+1.988)
+reproduce R11 to the digit — greedy decoding is deterministic, so the informative
+number sits on a validated pipeline.
+
+VERDICT — PRIMARY HYPOTHESIS FALSIFIED. The pre-registered persona-vs-mechanism
+dissociation does not hold. Both framings that tell the model about the injection
+lowered gamma below the neutral baseline, and the mechanistic ("informative")
+framing lowered it MOST. My prediction that mechanism-explaining would help (per
+Pearson-Vogel) was wrong for Gemma-2-2B. Per the frozen decision rule this is
+recorded as a flat negative and a non-replication, NOT reinterpreted post hoc.
+
+NON-REPLICATION OF PEARSON-VOGEL (arXiv:2602.20031). They report informative
+framing raising injection sensitivity 0.3%->39.9% on Qwen-32B; we observe the
+opposite sign on Gemma-2-2B. Untested candidates: (a) scale (32B vs 2B — the
+benefit may need capacity we lack); (b) their detection task differs from our
+closed-list forced choice; (c) their briefing was more elaborate than our
+one-sentence framing; (d) our informative framing spiked refusals (15/96
+unparseable vs 0 and 6), biasing its usable subset downward. This tension is
+itself a reportable pre-registered result and motivates re-running the informative
+arm at larger scale once PES Titan / IISc compute is available.
+
+EXPLORATORY (not predicted; must be re-tested before it counts as a claim): the
+three framings are monotonic, neutral > introspective > informative — the more the
+prompt directs attention to introspection or the injection, the lower the
+identification. Consistent with "any instruction to introspect degrades the pure
+steering signal; none unlock access", which strengthens the confabulation account.
 
 ### R11 — The steering-vs-access control (2026-07-15) — DECISIVE
 The control R10 demanded. Identical injection, alpha, layer, list, and orders;

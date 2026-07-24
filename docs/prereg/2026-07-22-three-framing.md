@@ -50,3 +50,43 @@ This tests one wording of each framing on one model, one seed, 16 concepts, one
 layer/strength, with proxy covariates. The framing CONTRAST is robust to the
 covariate proxy (priors held fixed across framings); the gamma LEVELS are not.
 A null does not establish that no mechanistic explanation helps.
+
+---
+
+## OUTCOME (appended 2026-07-22, after the run — predictions above UNEDITED)
+
+Run R12. Internal consistency check passed: neutral gamma +2.574 and
+introspective +1.988 reproduce R10/R11 exactly (greedy decoding).
+
+Fitted gamma: neutral +2.574 [+2.163, +2.999], introspective +1.988
+[+1.476, +2.478], informative +1.645 [+1.117, +2.152]. Hit rates 0.433 / 0.302 /
+0.247. Unparseable 6 / 0 / 15 (of 96).
+
+Scored against the frozen rule:
+- **P1 FALSIFIED.** Predicted gInfo - gN > 0; observed -0.930, CI [-1.757,
+  -0.250], excluding 0 NEGATIVELY. Mechanism-explaining did not help; it hurt.
+- **P2 HELD.** Predicted gIntro - gN <= 0; observed -0.586, CI [-1.148, -0.007].
+  Replicates R11.
+- **P3 (primary) FALSIFIED.** Predicted gInfo - gIntro > 0; observed -0.343, CI
+  [-1.054, +0.426], includes 0 (and the point estimate is negative).
+
+Verdict: the pre-registered persona-vs-mechanism dissociation does NOT hold. Both
+framings lowered gamma relative to neutral, and the mechanistic framing lowered
+it most. The primary hypothesis is falsified.
+
+EXPLORATORY (not predicted; must be re-tested before it is a claim): the three
+framings are monotonic, neutral > introspective > informative — the more the
+prompt directs attention to introspection or the injection, the lower the
+identification. Consistent with "any instruction to introspect degrades the pure
+steering signal; none unlock access", which strengthens the confabulation
+account. Treated as exploratory per the frozen rule.
+
+NON-REPLICATION OF PEARSON-VOGEL. arXiv:2602.20031 reported informative framing
+raising injection sensitivity 0.3% -> 39.9% on Qwen-32B; we observe the opposite
+sign on Gemma-2-2B. Candidate explanations, none yet tested: (a) scale (32B vs
+2B); (b) their detection task differs from our closed-list forced choice; (c)
+their briefing was more elaborate than our single-sentence mechanistic framing;
+(d) our informative framing raised refusals (15/96 unparseable), biasing its
+usable subset. This tension is a reportable pre-registered result and directly
+motivates re-running the informative arm at larger scale (PES Titan / IISc)
+once available.

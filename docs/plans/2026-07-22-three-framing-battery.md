@@ -202,26 +202,26 @@ contrast lines.
 **Files:**
 - Modify: `docs/LAB_NOTEBOOK.md`, `docs/prereg/2026-07-22-three-framing.md`, `docs/paper/2026-07-15-workshop-outline.md`
 
-- [ ] **Step 1: Record R12**
+- [x] **Step 1: Record R12**
 
 Add an `R12` registry row (gemma-2-2b-it 8-bit, layer 13, alpha 1.0, 16 concepts
 x 6 orders x 3 framings, forced_{framing}.jsonl) and a detail entry with the
 three gammas + CIs, the three contrast CIs, per-framing hit rates, unparseable
 rates, and the internal consistency check (neutral/introspective vs R10/R11).
 
-- [ ] **Step 2: Score against the pre-registration**
+- [x] **Step 2: Score against the pre-registration**
 
 Append an "Outcome" section to `docs/prereg/2026-07-22-three-framing.md` stating,
 for each of P1/P2/P3, whether it held per the frozen decision rule — with NO
 edits to the predictions or rule above it.
 
-- [ ] **Step 3: Update the claims table**
+- [x] **Step 3: Update the claims table**
 
 In `docs/paper/2026-07-15-workshop-outline.md`, add a claim row for the
 persona-vs-mechanism framing dissociation citing R12 and the prereg, with the
 honest status (pilot; pre-registered; one model/seed).
 
-- [ ] **Step 4: Commit and push**
+- [x] **Step 4: Commit and push**
 
 ```bash
 git add docs/LAB_NOTEBOOK.md docs/prereg/2026-07-22-three-framing.md docs/paper/2026-07-15-workshop-outline.md
