@@ -20,6 +20,13 @@ def parse_choice(answer, names):
     return None
 
 
+def report_hit_rate(records):
+    parsed = [r for r in records if r["chosen"] is not None]
+    if not parsed:
+        return 0.0
+    return sum(r["chosen"] == r["concept"] for r in parsed) / len(parsed)
+
+
 def concept_frequencies(names):
     return {name: float(zipf_frequency(name, "en")) for name in names}
 

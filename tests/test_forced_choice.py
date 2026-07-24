@@ -126,6 +126,23 @@ def test_collect_forced_choice_writes_records(hf_model, hf_tok, tmp_path):
                for r in result["records"])
 
 
+def test_hit_rate_counts_matches_over_parsed():
+    from mirror.forced_choice import report_hit_rate
+    records = [
+        {"concept": "joy", "chosen": "joy"},
+        {"concept": "joy", "chosen": "fear"},
+        {"concept": "volcano", "chosen": None},
+        {"concept": "volcano", "chosen": "volcano"},
+    ]
+    assert report_hit_rate(records) == 2 / 3
+
+
+def test_hit_rate_zero_when_none_parsed():
+    from mirror.forced_choice import report_hit_rate
+    records = [{"concept": "joy", "chosen": None}]
+    assert report_hit_rate(records) == 0.0
+
+
 def test_collect_forced_choice_parses_only_the_answer(hf_model, hf_tok, tmp_path):
     from mirror.forced_choice import collect_forced_choice_hf
     bank = load_bank("data/concepts/dev_bank.yaml")
