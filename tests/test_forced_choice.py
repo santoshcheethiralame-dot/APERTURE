@@ -1,7 +1,7 @@
 import numpy as np
 
-from mirror.concepts import load_bank
-from mirror.forced_choice import (
+from aperture.concepts import load_bank
+from aperture.forced_choice import (
     build_features,
     concept_abstractness,
     concept_frequencies,
@@ -81,7 +81,7 @@ def _many_names(n):
 
 
 def test_gamma_positive_when_chooser_is_perfect():
-    from mirror.prior_null import fit
+    from aperture.prior_null import fit
     names = _many_names(8)
     freqs = {n: 3.0 for n in names}
     abstract = {n: 0.0 for n in names}
@@ -95,7 +95,7 @@ def test_gamma_positive_when_chooser_is_perfect():
 
 
 def test_gamma_near_zero_when_chooser_is_random():
-    from mirror.prior_null import fit
+    from aperture.prior_null import fit
     names = _many_names(8)
     freqs = {n: 3.0 for n in names}
     abstract = {n: 0.0 for n in names}
@@ -112,7 +112,7 @@ def test_gamma_near_zero_when_chooser_is_random():
 def test_collect_forced_choice_writes_records(hf_model, hf_tok, tmp_path):
     import json
 
-    from mirror.forced_choice import collect_forced_choice_hf
+    from aperture.forced_choice import collect_forced_choice_hf
     bank = load_bank("data/concepts/dev_bank.yaml")
     out = tmp_path / "forced.jsonl"
     result = collect_forced_choice_hf(hf_model, hf_tok, bank,
@@ -127,7 +127,7 @@ def test_collect_forced_choice_writes_records(hf_model, hf_tok, tmp_path):
 
 
 def test_hit_rate_counts_matches_over_parsed():
-    from mirror.forced_choice import report_hit_rate
+    from aperture.forced_choice import report_hit_rate
     records = [
         {"concept": "joy", "chosen": "joy"},
         {"concept": "joy", "chosen": "fear"},
@@ -138,13 +138,13 @@ def test_hit_rate_counts_matches_over_parsed():
 
 
 def test_hit_rate_zero_when_none_parsed():
-    from mirror.forced_choice import report_hit_rate
+    from aperture.forced_choice import report_hit_rate
     records = [{"concept": "joy", "chosen": None}]
     assert report_hit_rate(records) == 0.0
 
 
 def test_collect_forced_choice_parses_only_the_answer(hf_model, hf_tok, tmp_path):
-    from mirror.forced_choice import collect_forced_choice_hf
+    from aperture.forced_choice import collect_forced_choice_hf
     bank = load_bank("data/concepts/dev_bank.yaml")
     out = tmp_path / "order.jsonl"
     result = collect_forced_choice_hf(hf_model, hf_tok, bank,

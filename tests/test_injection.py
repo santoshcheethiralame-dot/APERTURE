@@ -1,4 +1,4 @@
-from mirror.injection import generate
+from aperture.injection import generate
 
 PROMPT = "The weather today is"
 
@@ -26,8 +26,8 @@ def test_spans_differ(model, vec):
 def test_injection_touches_only_last_position(model, vec):
     import torch
 
-    from mirror.injection import make_hook
-    from mirror.vectors import hook_name
+    from aperture.injection import make_hook
+    from aperture.vectors import hook_name
 
     tokens = model.to_tokens(PROMPT)
     with torch.no_grad():
@@ -45,8 +45,8 @@ def test_injection_touches_only_last_position(model, vec):
 def test_upstream_layers_untouched(model, vec):
     import torch
 
-    from mirror.injection import make_hook
-    from mirror.vectors import hook_name
+    from aperture.injection import make_hook
+    from aperture.vectors import hook_name
 
     tokens = model.to_tokens(PROMPT)
     with torch.no_grad():

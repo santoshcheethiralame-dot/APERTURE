@@ -3,7 +3,7 @@ from pathlib import Path
 
 import torch
 
-from mirror.hf_model import _hidden, extract_hf, hf_layer, probe_activation_hf
+from aperture.hf_model import _hidden, extract_hf, hf_layer, probe_activation_hf
 
 
 def concept_token(tok, name):

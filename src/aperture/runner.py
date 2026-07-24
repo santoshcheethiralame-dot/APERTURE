@@ -4,10 +4,10 @@ from pathlib import Path
 
 import yaml
 
-from mirror.concepts import load_bank
-from mirror.injection import generate
-from mirror.metrics import kl_meter
-from mirror.vectors import extract
+from aperture.concepts import load_bank
+from aperture.injection import generate
+from aperture.metrics import kl_meter
+from aperture.vectors import extract
 
 
 def load_config(path):

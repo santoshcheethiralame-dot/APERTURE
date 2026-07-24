@@ -1,6 +1,6 @@
 import torch
 
-from mirror.patching import baseline_logprob, concept_token
+from aperture.patching import baseline_logprob, concept_token
 
 
 def test_concept_token_is_int(hf_tok):
@@ -15,7 +15,7 @@ def test_baseline_logprob_is_nonpositive(hf_model, hf_tok):
 
 
 def test_patched_logprob_changes_output(hf_model, hf_tok):
-    from mirror.patching import patched_logprob
+    from aperture.patching import patched_logprob
     t = concept_token(hf_tok, "elephant")
     base = baseline_logprob(hf_model, hf_tok, "hello world", t)
     big = torch.ones(hf_model.config.hidden_size) * 50.0
@@ -24,12 +24,12 @@ def test_patched_logprob_changes_output(hf_model, hf_tok):
 
 
 def _tiny_vec(hf_model, hf_tok):
-    from mirror.hf_model import extract_hf_vector
+    from aperture.hf_model import extract_hf_vector
     return extract_hf_vector(hf_model, hf_tok, [("a cat", "a dog")], 0)
 
 
 def test_patch_effect_zero_alpha_is_noop(hf_model, hf_tok):
-    from mirror.patching import patch_effect_hf
+    from aperture.patching import patch_effect_hf
     vec = _tiny_vec(hf_model, hf_tok)
     t = concept_token(hf_tok, "elephant")
     base, patched, delta = patch_effect_hf(hf_model, hf_tok, "hello world", vec,
@@ -38,7 +38,7 @@ def test_patch_effect_zero_alpha_is_noop(hf_model, hf_tok):
 
 
 def test_patch_effect_nonzero_alpha_moves(hf_model, hf_tok):
-    from mirror.patching import patch_effect_hf
+    from aperture.patching import patch_effect_hf
     vec = _tiny_vec(hf_model, hf_tok)
     t = concept_token(hf_tok, "elephant")
     base, patched, delta = patch_effect_hf(hf_model, hf_tok, "hello world", vec,
@@ -49,8 +49,8 @@ def test_patch_effect_nonzero_alpha_moves(hf_model, hf_tok):
 def test_collect_patch_writes_records(hf_model, hf_tok, tmp_path):
     import json
 
-    from mirror.concepts import load_bank
-    from mirror.patching import collect_patch_hf
+    from aperture.concepts import load_bank
+    from aperture.patching import collect_patch_hf
     bank = load_bank("data/concepts/dev_bank.yaml")
     out = tmp_path / "patch.jsonl"
     result = collect_patch_hf(hf_model, hf_tok, bank,

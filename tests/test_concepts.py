@@ -1,6 +1,6 @@
 import pytest
 
-from mirror.concepts import load_bank
+from aperture.concepts import load_bank
 
 
 def test_bank_loads(bank):

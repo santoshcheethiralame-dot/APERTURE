@@ -1,6 +1,6 @@
 import json
 
-from mirror.runner import config_hash, run
+from aperture.runner import config_hash, run
 
 
 def make_cfg(tmp_path):

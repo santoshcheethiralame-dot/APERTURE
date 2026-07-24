@@ -1,6 +1,6 @@
 import numpy as np
 
-from mirror.probes import prg, train_probe
+from aperture.probes import prg, train_probe
 
 
 def _separable(n_classes, per_class, groups, seed):

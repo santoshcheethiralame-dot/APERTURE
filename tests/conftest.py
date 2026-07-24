@@ -3,7 +3,7 @@ import pytest
 
 @pytest.fixture(scope="session")
 def bank():
-    from mirror.concepts import load_bank
+    from aperture.concepts import load_bank
     return load_bank("data/concepts/dev_bank.yaml")
 
 
@@ -15,7 +15,7 @@ def model():
 
 @pytest.fixture(scope="session")
 def vec(model, bank):
-    from mirror.vectors import extract
+    from aperture.vectors import extract
     return extract(model, bank, bank.get("elephant"), layer=3, n_pairs=10)
 
 

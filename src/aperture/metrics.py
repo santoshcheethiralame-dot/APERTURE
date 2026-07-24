@@ -1,7 +1,7 @@
 import torch
 
-from mirror.injection import make_hook
-from mirror.vectors import hook_name
+from aperture.injection import make_hook
+from aperture.vectors import hook_name
 
 
 def kl_meter(model, prompt, vec, alpha, span="response"):

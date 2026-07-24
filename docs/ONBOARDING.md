@@ -1,4 +1,4 @@
-# PROJECT MIRROR — The Complete From-Zero Guide
+# PROJECT APERTURE — The Complete From-Zero Guide
 
 **Welcome to the team.** This one document is designed to take you from knowing
 *nothing* about this project to understanding what we are doing, why it matters,
@@ -44,7 +44,7 @@ keep it open in a second tab.
   hinges on.
 - **Part 5 — The story so far.** Every experiment we have run (R1–R12), told as a
   story, in plain language.
-- **Part 6 — The code.** A guided tour of every file in `src/mirror/`.
+- **Part 6 — The code.** A guided tour of every file in `src/aperture/`.
 - **Part 7 — Getting set up and running things.** Install, test, and the hard-won
   Kaggle recipe.
 - **Part 8 — How we work.** The workflow, pre-registration, the lab notebook, git,
@@ -74,7 +74,7 @@ real reason was that it was slightly closer. Psychologists call this
 **confabulation**: a sincere, fluent explanation that is not actually based on the
 true cause.
 
-**PROJECT MIRROR is a two-year research program to settle which one is happening.**
+**PROJECT APERTURE is a two-year research program to settle which one is happening.**
 We do it with a clean trick: we can reach *inside* a language model and physically
 plant a specific concept into its "mind" (say, the concept *volcano*) while it is
 talking. Because we planted it, **we know the ground truth**. Then we ask the model
@@ -410,7 +410,7 @@ Why this matters so much to us:
 
 So the residual stream is both our **microscope** (we read it to see what the model
 represents) and our **injection site** (we write to it to plant concepts). Almost
-every file in `src/mirror/` is ultimately about reading from or writing to the
+every file in `src/aperture/` is ultimately about reading from or writing to the
 residual stream. If you remember one thing from Part 2, remember the conveyor belt.
 
 The technical way we grab or modify the residual stream is called a **hook** — a
@@ -465,13 +465,13 @@ Purely practical, because you will see both in the codebase.
 
 - **Hugging Face (HF) Transformers** is the standard industry library for loading
   and running models. It is robust and supports **quantization** (see below) so we
-  can fit bigger models on small GPUs. We use it (via `mirror/hf_model.py`) for our
+  can fit bigger models on small GPUs. We use it (via `aperture/hf_model.py`) for our
   real experiments on Gemma-2-2B and larger. We attach our hooks manually to the
   model's layers.
 
 - **TransformerLens** is a research library specifically built for *looking inside*
   transformers. It gives clean, named access to the residual stream and makes hooks
-  very convenient. We use it (via `mirror/vectors.py`, `injection.py`, `metrics.py`,
+  very convenient. We use it (via `aperture/vectors.py`, `injection.py`, `metrics.py`,
   `runner.py`) for small models during development and testing, where its
   convenience shines. Its downside: it does not play well with quantization, so it
   cannot fit the bigger models on our small GPUs.
@@ -1412,7 +1412,7 @@ piece does. Open the repo alongside this section.
 ## 6.1 The shape of the repository
 
 ```
-mirror/
+aperture/
 ├── README.md                 # 30-second orientation
 ├── pyproject.toml            # how the package installs, and its dependencies
 ├── configs/
@@ -1422,7 +1422,7 @@ mirror/
 │       ├── dev_bank.yaml     # the 16 dev concepts + prompt templates
 │       ├── synonyms.yaml     # per-concept exact/related words, for grading
 │       └── contexts.yaml     # the 16 naturalistic passages (R9)
-├── src/mirror/               # THE ACTUAL LIBRARY  (all the .py files below)
+├── src/aperture/               # THE ACTUAL LIBRARY  (all the .py files below)
 ├── tests/                    # one test file per module (test-first, always)
 ├── notebooks/
 │   └── kaggle_demo.ipynb     # runs the full loop on a real GPU (Kaggle)
@@ -1431,7 +1431,7 @@ mirror/
 
 Two structural facts to absorb:
 
-- **`src/mirror/` is the library; `tests/` mirrors it one-to-one.** Every module
+- **`src/aperture/` is the library; `tests/` mirrors it one-to-one.** Every module
   `foo.py` has a `test_foo.py`. We write the test *first* (Part 8). If you add a
   module, you add its test file in the same breath.
 - **There are two parallel backends** (recall 2.10). The **TransformerLens** backend
@@ -1823,14 +1823,14 @@ means, in code, in docs, in commit messages, and in git history:
 
 Why this rule exists: this is a research paper's codebase. Its provenance needs to be
 clean and human. Several of the team's repos carry this same flag (it is a standing
-convention, not specific to MIRROR). When in doubt, treat it as strict. If you normally
+convention, not specific to APERTURE). When in doubt, treat it as strict. If you normally
 let a tool write commit messages or code comments for you, **turn that off for this
 repo**, and review every commit message and every comment before it lands. This is the
 single easiest rule to break by accident and the one we care most about.
 
 ## 8.2 Code style: terse, tested, comment-free
 
-Look at any file in `src/mirror/` and you will notice: **there are essentially no
+Look at any file in `src/aperture/` and you will notice: **there are essentially no
 comments and no docstrings.** This is deliberate. The style here is:
 
 - **Small, focused functions with clear names.** The name and the code carry the
@@ -1969,7 +1969,7 @@ interpret. Skepticism toward your own exciting results is the job.
 A few hard constraints from how the team operates:
 
 - **Human-authored repos** (this one, plus others like lineup, glassbox, tessera,
-  mirror) carry the no-AI-mentions flag (8.1). When in doubt, assume a repo is guarded.
+  aperture) carry the no-AI-mentions flag (8.1). When in doubt, assume a repo is guarded.
 - **The laptop is often closed** — anything that must run on a schedule reliably is a
   *cloud* job, not a local one.
 - **Do not commit private material** (internship trackers, multi-account notes) into any
@@ -1996,7 +1996,7 @@ The program aims to produce:
 1. **The dissociation result** — the main paper: does genuine self-access exist, or is
    it confabulation? — resolved with pre-registered experiments across many models and
    families.
-2. **INTROSPECT-Bench** — a public, reusable benchmark so *other* researchers can
+2. **PLANTED** — a public, reusable benchmark so *other* researchers can
    measure introspection in *their* models the way we do. (Benchmarks are citation
    engines and field-shapers.)
 3. **The mechanism** — a causal, circuit-level account of *how* detection/identification
@@ -2026,7 +2026,7 @@ breathe.
   compute. **Gate C (W60):** lock the flagship claim; freeze the confirmatory runs.
 - **Phase V — Confirmation & Benchmark (W61–W74).** Run the frozen confirmatory
   experiments from clean seeds (the numbers that go in the abstract); package
-  INTROSPECT-Bench.
+  PLANTED.
 - **Phase VI — Publication, Thesis, Defense (W75–W100).** Hostile internal reviews,
   de-overclaiming passes, preprint + public release, submission, thesis, defense. **Gate
   D (W84):** where does it publish?
@@ -2515,11 +2515,26 @@ first (exploratory) and pre-register the shape second — see §4.3. Running clo
 and arguably more urgent: **getting to a 32B tier**, because our 2B/9B null may sit below
 the field's replication threshold, and a null below threshold means nothing.
 
-**Q: Is the project really called MIRROR?**
-Not for much longer. As of 2026-07-25 both **MIRROR** and **INTROSPECT-Bench** were found
-to collide with published work (arXiv:2604.19809 and arXiv:2603.20276), so both names are
-being changed before anything goes public. The repo and docs still use the old names until
-the rename lands. A name-collision search is now part of the Living Review Protocol.
+**Q: Why is the project called APERTURE, and what were the old names?**
+It was called **MIRROR**, and the benchmark was **INTROSPECT-Bench**, until 2026-07-25 —
+when both turned out to collide with published work (arXiv:2604.19809 and
+arXiv:2603.20276). Both were renamed before anything went public: the project is now
+**APERTURE**, the benchmark is **PLANTED**.
+
+The names were chosen against two rules worth knowing, because they will apply to
+anything else we name:
+1. **The name must survive every branch of the contingency tree.** Our plan pre-commits
+   to four possible outcomes (access found / confabulation everywhere / mixed / no
+   replication), so a name that bakes in today's finding — "LACUNA," "GAP," "SILENT" —
+   would read as embarrassing if we end up *finding* introspection. Name the
+   **instrument or the question**, never the answer. "Aperture" works because an aperture
+   can be wide open or shut: it names the read-out channel without asserting its width.
+2. **Search before you commit.** A name-collision search (arXiv + OpenReview + GitHub) is
+   now a required step in the Living Review Protocol. It is not theoretical — the first
+   replacement we shortlisted, CALIPER, was *also* taken (arXiv:2606.04915).
+
+Note for searchers: an unrelated company, ApertureData/ApertureDB, exists in the AI-data
+infrastructure space. Different field; the research namespace is clear.
 
 ## 12.2 The pilot results at a glance
 
@@ -2576,7 +2591,7 @@ the rename lands. A name-collision search is now part of the Living Review Proto
 - We work **test-first**, **pre-register** confirmatory claims, **log every run**, and keep
   the repo **human-authored**.
 
-Welcome to MIRROR. Now go read `docs/LAB_NOTEBOOK.md` and get `pytest` green.
+Welcome to APERTURE. Now go read `docs/LAB_NOTEBOOK.md` and get `pytest` green.
 
 *This guide is a living document. If anything here is unclear, out of date, or missing,
 that is a bug — flag it and it gets fixed.*

@@ -1,4 +1,4 @@
-# MIRROR Lab Notebook
+# APERTURE Lab Notebook
 
 Append-only record of every run (done and planned), its config, and what it
 showed. This is the single source of truth for experimental history. Update
@@ -262,7 +262,7 @@ contexts fixed it (0.062 -> 0.688). A regression test now reproduces the bug and
 pins the fix.
 
 ### R8 — Activation patching, 8-bit Gemma-2-2B (2026-07-14)
-Causal test (mirror.patching). Inject concept at layer 13, cache the residual at
+Causal test (aperture.patching). Inject concept at layer 13, cache the residual at
 DOWNSTREAM layer 20, patch it into a clean run at layer 20 last position, measure
 the change in the concept token's output log-prob. Negative control = patch a
 different concept's residual, measure this concept's token. 10 concepts, alpha
@@ -305,7 +305,7 @@ seeded confirmatory claim. Generation is greedy (do_sample=False), so generation
 seeds contribute no variance.
 
 ### R7 — Probe-Report Gap, 8-bit Gemma-2-2B (2026-07-14)
-First PRG run (mirror.probes + collect_prg_hf). Inject at layer 13, read the
+First PRG run (aperture.probes + collect_prg_hf). Inject at layer 13, read the
 probe activation at DOWNSTREAM layer 20 (last prompt position), alpha 1.0,
 10 concepts x 8 eliciting-prompt paraphrases (6 prompts in the trimmed run),
 seed 0. Linear probe decodes injected concept from the downstream activation;
@@ -336,7 +336,7 @@ be decodable there.
 
 ### R6 — Scale check, 8-bit Gemma-2-9B (2026-07-13)
 gemma-2-9b-it loaded 8-bit (bitsandbytes) via the new HF backend
-(`mirror.hf_model`), layer 21, alphas {0,1,2,4}, detection prompt, 6 concepts,
+(`aperture.hf_model`), layer 21, alphas {0,1,2,4}, detection prompt, 6 concepts,
 seed 0, single T4. This is the first run on the HF backend and the first above
 2B.
 
@@ -382,7 +382,7 @@ citable negative. (Also surfaced and fixed a grading bug: strip_prompt only
 handled the templated marker, not real Gemma decoded output.)
 
 ### G1 — Grading of R3 sweep (rules grader, 2026-07-13)
-First quantitative pass with the Layer-1 rules grader (`mirror.grading`) over
+First quantitative pass with the Layer-1 rules grader (`aperture.grading`) over
 the R3 sweep transcripts. Identification = exact/related/no by concept+synonym
 word match; detection = yes/no/None from a leading token (all None here, the
 sweep prompt is open-ended). Note: input reconstructed from the session's
@@ -475,7 +475,7 @@ mostly True. Proved the full extract -> inject -> KL -> JSONL loop end to end.
 These are pilot observations (single seed, few concepts, one layer, eyeballed).
 Not evidence. They set the direction and validate the tooling.
 
-5. **The gamma prior-null estimator exists and is proven** (`mirror.prior_null`,
+5. **The gamma prior-null estimator exists and is proven** (`aperture.prior_null`,
    B4 estimator). Softmax choice model over concepts; gamma = coefficient on the
    injected-identity indicator beyond frequency/concreteness/similarity priors.
    Simulation-validated per the master plan's misspecification defense: recovers
@@ -536,6 +536,7 @@ master plan addenda.
 | 2026-07-22 | **Next experiment reprioritised:** informative-framing arm (prompt-only) BEFORE E11a persona gate, per Addendum 2 §A2.2 | this log |
 | 2026-07-22 | **First pre-registered run (R12):** three-framing battery scored against a git-frozen prediction; primary hypothesis FALSIFIED (informative framing hurt not helped); non-replication of Pearson-Vogel on Gemma-2-2B; recorded as clean pre-registered negative | prereg 2026-07-22; R12 |
 | 2026-07-24 | **Workshop paper DROPPED; single target is a full conference paper** (interp/safety venue). Scoop-insurance flag-plant moves to an arXiv preprint at ~W44. Evidence bar rises: every PILOT claim needs seeds + >=2 model families + real covariates + human-checked grading before submission | Addendum 4 |
+| 2026-07-25 | **RENAME EXECUTED: project MIRROR -> APERTURE, benchmark INTROSPECT-Bench -> PLANTED.** Python package `mirror` -> `aperture` (98 tests green after). Two naming rules adopted: (1) the name must survive EVERY branch of the contingency tree — name the instrument or the question, never the answer (this rules out LACUNA/GAP/SILENT, which bake in Branch B); (2) collision-search arXiv+OpenReview+GitHub before committing — our first replacement pick, CALIPER, was also taken (arXiv:2606.04915). Noted: unrelated ApertureData/ApertureDB exists in AI-data infra; different field, research namespace clear | this log |
 | 2026-07-25 | **BOTH NAMES COLLIDE, must change before anything is public.** INTROSPECT-Bench taken (arXiv:2603.20276, CMU, ICLR 2026 W-HCAIR). MIRROR taken (arXiv:2604.19809) — and that one also collides on the LADDER (their Level 0-3 metacognitive hierarchy). Verified directly. Name-collision search added to the Living Review Protocol. **PENDING: owner picks new names** | Addendum 5, §A5.1 |
 | 2026-07-25 | **H7 REWRITTEN to predict a SHAPE, not a direction.** Assistant Axis (arXiv:2601.10387) finds meta-reflection prompts drift AWAY from the Assistant — contradicting our A1.2 post-hoc story that introspective framing pushes INTO assistant register. R11's result stands; only the mechanistic interpretation is contested. New H7: identification is non-monotonic in Assistant-Axis position while probe decodability stays invariant | Addendum 5, §A5.2 |
 | 2026-07-25 | **E11-pilot inserted BEFORE E11a:** measure the axis dose-response curve (exploratory) before pre-registering the shape. Registering a direction before measuring the shape would repeat R12's error at higher cost | Addendum 5, §A5.2 |
@@ -609,7 +610,7 @@ acts 1-2 stand as a controlled negative plus a methodological warning.
 - **TransformerLens caps at ~6B on Kaggle:** TL rebuilds weights full-precision
   and doubles CPU RAM during load, so gemma-2-9b fp16 OOMs the 30GB RAM (weights
   load 100% then the kernel dies with no CUDA error). Use the HF backend
-  (`mirror.hf_model`) with 8-bit bitsandbytes for models above ~6B.
+  (`aperture.hf_model`) with 8-bit bitsandbytes for models above ~6B.
 - **Stale pip cache on Kaggle:** `%pip install <main.zip>` serves a cached old
   archive from the same URL -> use `--no-cache-dir --force-reinstall --no-deps`
   to pick up fresh pushes.

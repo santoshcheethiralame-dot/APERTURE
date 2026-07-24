@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 from wordfreq import zipf_frequency
 
-from mirror.hf_model import extract_hf, generate_hf
+from aperture.hf_model import extract_hf, generate_hf
 
 
 def option_prompt(names, order, template):

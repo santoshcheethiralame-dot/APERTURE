@@ -1,4 +1,4 @@
-# MIRROR — Resource Ledger
+# APERTURE — Resource Ledger
 
 What the program needs, what the floor is, and what is already secured. Update
 alongside the lab notebook whenever access status changes.

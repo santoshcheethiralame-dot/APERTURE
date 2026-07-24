@@ -1,6 +1,6 @@
 import json
 
-from mirror.grading import (
+from aperture.grading import (
     RulesGrader,
     grade_file,
     load_synonyms,
@@ -11,7 +11,7 @@ from mirror.grading import (
 
 
 def test_synonyms_cover_dev_bank():
-    from mirror.concepts import load_bank
+    from aperture.concepts import load_bank
     syn = load_synonyms()
     bank = load_bank("data/concepts/dev_bank.yaml")
     for concept in bank.concepts:

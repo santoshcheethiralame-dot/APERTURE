@@ -1,6 +1,6 @@
 import torch
 
-from mirror.vectors import hook_name
+from aperture.vectors import hook_name
 
 
 def make_hook(vec, alpha, span):

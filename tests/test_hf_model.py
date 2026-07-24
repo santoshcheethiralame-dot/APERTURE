@@ -1,6 +1,6 @@
 import torch
 
-from mirror.hf_model import hf_layer, raw_direction_hf, resid_stats_hf
+from aperture.hf_model import hf_layer, raw_direction_hf, resid_stats_hf
 
 
 def test_hf_layer_returns_decoder_block(hf_model):
@@ -22,12 +22,12 @@ def test_raw_direction_shape(hf_model, hf_tok):
 
 
 def _tiny_vec(hf_model, hf_tok):
-    from mirror.hf_model import extract_hf_vector
+    from aperture.hf_model import extract_hf_vector
     return extract_hf_vector(hf_model, hf_tok, [("a cat", "a dog")], 0)
 
 
 def test_generate_alpha_zero_is_golden(hf_model, hf_tok):
-    from mirror.hf_model import generate_hf
+    from aperture.hf_model import generate_hf
     vec = _tiny_vec(hf_model, hf_tok)
     clean = generate_hf(hf_model, hf_tok, "hello", seed=0, max_new_tokens=8)
     zeroed = generate_hf(hf_model, hf_tok, "hello", vec, alpha=0.0, seed=0, max_new_tokens=8)
@@ -35,7 +35,7 @@ def test_generate_alpha_zero_is_golden(hf_model, hf_tok):
 
 
 def test_generate_huge_alpha_changes(hf_model, hf_tok):
-    from mirror.hf_model import generate_hf
+    from aperture.hf_model import generate_hf
     vec = _tiny_vec(hf_model, hf_tok)
     clean = generate_hf(hf_model, hf_tok, "hello", seed=0, max_new_tokens=8)
     injected = generate_hf(hf_model, hf_tok, "hello", vec, alpha=500.0, seed=0, max_new_tokens=8)
@@ -43,7 +43,7 @@ def test_generate_huge_alpha_changes(hf_model, hf_tok):
 
 
 def test_injection_only_last_position(hf_model, hf_tok):
-    from mirror.hf_model import inject_hook
+    from aperture.hf_model import inject_hook
     vec = _tiny_vec(hf_model, hf_tok)
     ids = hf_tok("hello world", return_tensors="pt").input_ids
     captured = {}
@@ -79,8 +79,8 @@ def test_injection_only_last_position(hf_model, hf_tok):
 
 
 def test_extract_hf_flags(hf_model, hf_tok):
-    from mirror.concepts import load_bank
-    from mirror.hf_model import extract_hf
+    from aperture.concepts import load_bank
+    from aperture.hf_model import extract_hf
     bank = load_bank("data/concepts/dev_bank.yaml")
     vec = extract_hf(hf_model, hf_tok, bank, bank.get("elephant"), 0, n_pairs=10)
     assert vec.concept == "elephant"
@@ -90,19 +90,19 @@ def test_extract_hf_flags(hf_model, hf_tok):
 
 
 def test_kl_hf_zero_at_alpha_zero(hf_model, hf_tok):
-    from mirror.hf_model import kl_meter_hf
+    from aperture.hf_model import kl_meter_hf
     vec = _tiny_vec(hf_model, hf_tok)
     assert abs(kl_meter_hf(hf_model, hf_tok, "hello world", vec, 0.0)) < 1e-4
 
 
 def test_kl_hf_positive_under_injection(hf_model, hf_tok):
-    from mirror.hf_model import kl_meter_hf
+    from aperture.hf_model import kl_meter_hf
     vec = _tiny_vec(hf_model, hf_tok)
     assert kl_meter_hf(hf_model, hf_tok, "hello world", vec, 50.0) > 0.0
 
 
 def test_probe_activation_shape(hf_model, hf_tok):
-    from mirror.hf_model import probe_activation_hf
+    from aperture.hf_model import probe_activation_hf
     vec = _tiny_vec(hf_model, hf_tok)
     act = probe_activation_hf(hf_model, hf_tok, "hello world", vec, 1.0, 1)
     assert act.shape == (hf_model.config.hidden_size,)
@@ -113,8 +113,8 @@ def test_collect_prg_writes_npz(hf_model, hf_tok, tmp_path):
 
     import numpy as np
 
-    from mirror.concepts import load_bank
-    from mirror.hf_model import collect_prg_hf
+    from aperture.concepts import load_bank
+    from aperture.hf_model import collect_prg_hf
     bank = load_bank("data/concepts/dev_bank.yaml")
     out = tmp_path / "prg.jsonl"
     result = collect_prg_hf(hf_model, hf_tok, bank, ["elephant", "volcano"], 0, 1,
@@ -133,7 +133,7 @@ def test_collect_prg_writes_npz(hf_model, hf_tok, tmp_path):
 def test_run_hf_writes_records(hf_model, hf_tok, tmp_path):
     import json
 
-    from mirror.hf_model import run_hf
+    from aperture.hf_model import run_hf
     cfg = {
         "model": {"name": "tiny"},
         "injection": {"layer": 0, "alphas": [0, 4], "span": "response"},

@@ -1,4 +1,4 @@
-from mirror.metrics import kl_meter
+from aperture.metrics import kl_meter
 
 PROMPT = "The weather today is"
 

@@ -4,8 +4,8 @@ from pathlib import Path
 import torch
 import yaml
 
-from mirror.grading import RulesGrader
-from mirror.hf_model import _hidden, extract_hf, generate_hf, hf_layer
+from aperture.grading import RulesGrader
+from aperture.hf_model import _hidden, extract_hf, generate_hf, hf_layer
 
 
 def load_contexts(path="data/concepts/contexts.yaml"):

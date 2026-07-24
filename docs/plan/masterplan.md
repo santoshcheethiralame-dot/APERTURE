@@ -1,4 +1,4 @@
-# PROJECT MIRROR — Master Plan
+# PROJECT APERTURE — Master Plan
 ## Dissociating Genuine Introspection from Confabulation in Large Language Models
 ### A 2-year, 5-person capstone research program (100 working weeks)
 
@@ -6,7 +6,7 @@
 
 **Flagship deliverables:**
 1. **The dissociation result** — the main paper: direct access vs. inference/confabulation, resolved with pre-registered confirmatory experiments across ≥10 open models in ≥4 families.
-2. **INTROSPECT-Bench** — a public, reusable benchmark + harness for measuring introspective access (detection, identification, source attribution, metacognitive calibration), with human-validated grading.
+2. **PLANTED** — a public, reusable benchmark + harness for measuring introspective access (detection, identification, source attribution, metacognitive calibration), with human-validated grading.
 3. **The mechanism** — a causal circuit-level account of *how* detection/identification happens (or fails), via activation patching, SAE features, and attribution graphs.
 4. **The training result** — whether fine-tuning for introspection creates genuine access or better confabulation, with side-effect audit.
 5. Capstone thesis + 1–2 companion papers (benchmark/D&B track; mechanism/interp venue) + Alignment Forum posts.
@@ -192,7 +192,7 @@ Flagship: *"Conditions for Genuine Machine Introspection"* — the regime map (s
 Flagship: *"Machine Introspection Is Confabulation: A Pre-Registered Dissociation"* — anomaly detection is real but content-agnostic; identification is prior-guessing (frequency regression + OLMo exact-count evidence); PRG stays large (information present, not accessible); training closes nothing that generalizes. Explicit safety payload: self-report-based oversight and welfare assessments inherit these error bars. This branch is only strong because of pre-registration + breadth — which is exactly what we built.
 
 **Branch C — Graded/mixed (most likely a priori).**
-Flagship: *"The Introspection Ladder: What Models Can and Cannot Know About Themselves"* — L1 robust, L2 partial in identified regimes, L3/L4 dissociations, dose–response curves, cross-family meta-analysis (random-effects, I² heterogeneity). The ladder + INTROSPECT-Bench becomes the field's measurement standard. This is the "reference paper" branch and is fully pre-planned, not a consolation.
+Flagship: *"The Introspection Ladder: What Models Can and Cannot Know About Themselves"* — L1 robust, L2 partial in identified regimes, L3/L4 dissociations, dose–response curves, cross-family meta-analysis (random-effects, I² heterogeneity). The ladder + PLANTED becomes the field's measurement standard. This is the "reference paper" branch and is fully pre-planned, not a consolation.
 
 **Branch D — Base effect fails to replicate at accessible scale.**
 If E1 shows no reliable L1 detection in ≤72B open models (possible: Lindsey's strongest results were frontier Claude models): pivot weighting at Gate B toward (i) the scale/emergence question via NDIF Llama-405B + frontier behavioral-only arms, and (ii) the training arm as the main event (can detection be *created*, and is created detection real?). Publication: *"Introspective Awareness Does Not Come for Free"* + bench. The W25–W44 plan is written so ≥70% of it survives this pivot unchanged.
@@ -284,7 +284,7 @@ Conventions: every week ends with a Friday memo (1 page: what ran, what it means
 | 37 | E7a prefill discrimination | Source-attribution harness; graded-plausibility prefills across mid tier |
 | 38 | E7b intention recall | Recall-of-prior-representations replication + our extensions (delay length, distractor turns) |
 | 39 | E7c forced-output dynamics | "Did you mean to say that?" apology/confabulation dynamics under forced outputs; taxonomy of self-justifications |
-| 40 | Battery consolidation | INTROSPECT-Bench alpha spec: task list, metrics, grading standards, API design |
+| 40 | Battery consolidation | PLANTED alpha spec: task list, metrics, grading standards, API design |
 | 41 | E-L4 calibration | Second-order confidence experiments; meta-d′ estimates per model; calibration curves for introspective reports |
 | 42 | Judge robustness study | 3-judge ensemble vs. 1,000-item human gold (κ audit #2); finalize evaluation standards document |
 | 43 | Buffer / replication debt | Every cell below 3 seeds re-run; flaky results resolved or flagged; registry audit |
@@ -319,7 +319,7 @@ Conventions: every week ends with a Friday memo (1 page: what ran, what it means
 | 64 | E10 batch 3 | Confirmatory 70B subset + OLMo arm |
 | 65 | Locked analysis | Primary-endpoint analysis run once, results notarized; no-peeking log published internally |
 | 66 | Exploratory follow-ups | Chase surprises from E10 (clearly labeled exploratory); prompt-paraphrase robustness battery |
-| 67 | Bench beta | INTROSPECT-Bench beta: packaged tasks, harness, judges, gold labels, docs |
+| 67 | Bench beta | PLANTED beta: packaged tasks, harness, judges, gold labels, docs |
 | 68 | External pilot | 2–3 friendly external researchers run the bench cold; bug bash; usability fixes |
 | 69 | Bench v1.0 RC | Leaderboard scripts; datasheet; license; versioning policy |
 | 70 | Paper architecture | Claims table (claim → evidence → run IDs → figure); figure list; writing kickoff |
@@ -338,7 +338,7 @@ Conventions: every week ends with a Friday memo (1 page: what ran, what it means
 | 79 | Statistics audit | Clean-room re-derivation of every number from raw logs by a non-author-of-the-analysis; fresh-machine repro test |
 | 80 | Draft v3 + mock review #2 | Second blind internal review round (different reviewer assignments) |
 | 81 | De-overclaiming pass | Abstract/claims audit against evidence table (the LINEUP lesson); revision sprint 2 |
-| 82 | **Preprint + release** | arXiv preprint; INTROSPECT-Bench public; Alignment Forum post; code + transcripts released (Zenodo DOI) |
+| 82 | **Preprint + release** | arXiv preprint; PLANTED public; Alignment Forum post; code + transcripts released (Zenodo DOI) |
 | 83 | Community triage | Feedback/issues triage; bench hotfixes; response log |
 | 84 | **GATE D** | Venue decision by calendar (NeurIPS / ICLR / ICML / COLM / D&B track); format to template; mentor review #6 |
 | 85 | Venue polish | Checklist, reproducibility statement, ethics statement, anonymization |
@@ -391,7 +391,7 @@ Conventions: every week ends with a Friday memo (1 page: what ran, what it means
 ## 10. Publication & Dissemination Strategy
 
 - **W44–45:** workshop paper (nearest interp/safety workshop at NeurIPS/ICLR) — flag-plant + feedback.
-- **W82:** arXiv preprint + Alignment Forum long-post + INTROSPECT-Bench public release (adoption is impact; the bench is our citation engine).
+- **W82:** arXiv preprint + Alignment Forum long-post + PLANTED public release (adoption is impact; the bench is our citation engine).
 - **W86:** main paper → NeurIPS or ICLR main track (backup: ICML, COLM).
 - **W91:** companion → NeurIPS Datasets & Benchmarks (bench) *or* mechanism paper to an interpretability venue — split decided at W86 by which story is stronger.
 - Continuous: monthly public build-log optional (fits the team's existing public-technical-content habit) — decided by team vote at W16; if yes, never leak confirmatory results before freeze.

@@ -4,9 +4,9 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from mirror.concepts import load_bank
-from mirror.runner import config_hash
-from mirror.vectors import ConceptVector, split_pairs
+from aperture.concepts import load_bank
+from aperture.runner import config_hash
+from aperture.vectors import ConceptVector, split_pairs
 
 
 def hf_layer(model, layer):

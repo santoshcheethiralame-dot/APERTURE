@@ -21,7 +21,7 @@ def test_flags_present_and_boolean(vec):
 
 
 def test_probe_split_shares_no_prompts(bank):
-    from mirror.vectors import split_pairs
+    from aperture.vectors import split_pairs
 
     pairs = bank.pairs(bank.get("elephant"), n_pairs=20)
     train, test = split_pairs(pairs, len(bank.templates))

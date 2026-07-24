@@ -1,6 +1,6 @@
 import numpy as np
 
-from mirror.prior_null import fit, gamma_ci, neg_log_likelihood, simulate_reports
+from aperture.prior_null import fit, gamma_ci, neg_log_likelihood, simulate_reports
 
 
 def _sim_dataset(theta_true, n_trials, n_concepts, n_features, seed):
@@ -83,7 +83,7 @@ def test_ci_includes_zero_under_pure_prior():
 
 
 def test_gamma_difference_detects_a_real_gap():
-    from mirror.prior_null import gamma_difference_ci
+    from aperture.prior_null import gamma_difference_ci
     Xa, ya = _sim_dataset(np.array([0.5, 2.0]), 1500, 6, 2, seed=10)
     Xb, yb = _sim_dataset(np.array([0.5, 0.0]), 1500, 6, 2, seed=11)
     lo, hi = gamma_difference_ci(Xa, ya, Xb, yb, n_boot=40,
@@ -92,7 +92,7 @@ def test_gamma_difference_detects_a_real_gap():
 
 
 def test_gamma_difference_is_null_for_matched_conditions():
-    from mirror.prior_null import gamma_difference_ci
+    from aperture.prior_null import gamma_difference_ci
     Xa, ya = _sim_dataset(np.array([0.5, 1.0]), 1500, 6, 2, seed=13)
     Xb, yb = _sim_dataset(np.array([0.5, 1.0]), 1500, 6, 2, seed=14)
     lo, hi = gamma_difference_ci(Xa, ya, Xb, yb, n_boot=40,

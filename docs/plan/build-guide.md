@@ -1,4 +1,4 @@
-# PROJECT MIRROR — Ceiling Upgrades & Complete Build Guide
+# PROJECT APERTURE — Ceiling Upgrades & Complete Build Guide
 ### Companion to the Master Plan. Part 1: what turns a reference paper into a field-defining one. Part 2: how to build every component, concretely.
 
 A note pinned to the top, team-to-team: "best paper of all time" is not a plannable property — it is what happens when a rigorous design collides with a surprising result. What IS plannable is maximizing surface area for surprise while making every branch bulletproof. Every upgrade below does one of four jobs: adds a **theory anchor**, adds a **new empirical axis**, adds **credibility**, or adds **reach**. Legendary papers usually have all four.
@@ -39,7 +39,7 @@ Run a human choice-blindness/confabulation paradigm (established, cheap, survey-
 Fit the scaling curve for L1/L2 on open models (W57), **publicly register a quantitative prediction** for frontier-model behavioral performance (the API-testable subset), then test it. A pre-registered prediction that lands is the single most persuasive rhetorical object in empirical science. If it misses, the miss is a registered discovery about what frontier post-training changes. Cost: free — it reorders work you already do.
 
 ### U10. Own the vocabulary (reach — costs nothing, worth citations forever)
-Name everything once, early, consistently: the **Introspection Ladder (L0–L4)**, the **Probe–Report Gap (PRG)**, the **prior-guessing null**, the **Rosetta trials**, **ThoughtLab**, and the bench (**INTROSPECT-Bench**). Fields adopt the vocabulary of whoever measured first and cleanest. Write the glossary box in the paper; make the bench docs use the same terms.
+Name everything once, early, consistently: the **Introspection Ladder (L0–L4)**, the **Probe–Report Gap (PRG)**, the **prior-guessing null**, the **Rosetta trials**, **ThoughtLab**, and the bench (**PLANTED**). Fields adopt the vocabulary of whoever measured first and cleanest. Write the glossary box in the paper; make the bench docs use the same terms.
 
 **What we consciously do NOT add:** multimodal arms, more than ~14 models, agentic-task introspection, RL training arms. Every one is a real paper, and every one added now dilutes the two claims that must be airtight. Depth beats surface area; the graveyard of "best paper" attempts is full of projects that added a seventh arm.
 
@@ -110,7 +110,7 @@ LoRA r=16, α=32, lr 1e-4, 3 epochs, applied to attn+MLP; datasets: (a) detectio
 ### B11. Naturalistic arm (E8)
 Two ground-truth generators: (i) "think silently about X while answering" instructions — verify compliance with a probe on the *unmanipulated* run (probe fires = state genuinely present), then test verbal read-out on request; (ii) context-induced states (narratives that provably move a probe) with the report elicited after a distractor turn. Access test identical in form to B4 — γ on true state identity beyond priors. This arm answers "injections are OOD damage" with data, not argument.
 
-### B12. INTROSPECT-Bench packaging
+### B12. PLANTED packaging
 Task schema (JSON): {task_id, ladder_level, setup (injection spec or naturalistic spec), elicitation prompt, grading (rules + judge rubric + gold refs), metrics}. Harness: single CLI (`introspect-bench run --model X --tasks L1,L2`), model adapters for HF/vLLM/API, judge adapters, report card generator (d′, γ-style access score where activations are available, PRG if probes possible, meta-d′). Versioned (semver), datasheet, license, Zenodo DOI, leaderboard as a static page regenerated from submitted result JSONs. Design principle: an API-only frontier model must be benchmarkable on the behavioral subset (L1 false-alarm-corrected, L3, L4) so labs can run it on their own models — that is how the bench escapes academia.
 
 ### B13. ThoughtLab demo (U5)

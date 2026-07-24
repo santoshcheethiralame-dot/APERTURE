@@ -1,4 +1,4 @@
-# MIRROR
+# APERTURE
 
 Dissociating genuine introspection from confabulation in language models.
 

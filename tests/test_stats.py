@@ -1,6 +1,6 @@
 import numpy as np
 
-from mirror.stats import bootstrap_ci
+from aperture.stats import bootstrap_ci
 
 
 def test_ci_contains_known_mean():
