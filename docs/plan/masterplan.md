@@ -1235,3 +1235,49 @@ Two cautions, recorded so the advantage is not squandered:
 | Sem 6 (Jan-May 2027) | Phase II | **The science semester.** 32B tier arm; second model family; E11a confirmatory; human-validated grading + kappa; infini-gram/Brysbaert covariates; E10 confirmatory freeze; **W30 preprint (= Phase III paper draft) by ~April** |
 | Sem 7 (Aug-Dec 2027) | Phase III | Internship squeeze. Writing, hardening, validation/verification write-up, figures and tables, **deployment: PLANTED release + demo**. No new experiments. |
 | Sem 8 (Jan-May 2028) | Phase IV | Conference submission of the already-public paper; final report; demonstration; dissemination. Consolidation only. |
+
+## A7.8 Organising principle, and the Sem 6 overload risk
+
+**Principle: Sem 5 takes everything that does NOT need a GPU; Sem 6 takes everything
+that does.** This front-loads all compute-independent work into the semester spent
+waiting on hardware, and it is the main lever for surviving the Sem 7 squeeze.
+
+GPU-free and therefore Sem 5: pre-registration drafting, the six lit notes, Living
+Review Protocol, domain-stratified bank expansion, the H8 test on existing data,
+~200 human gold labels, the infini-gram/Brysbaert covariate pipeline, packaging the
+Phase I deliverables. E11-pilot also sits in Sem 5 on the Kaggle free tier at 2B.
+
+Irreducibly Sem 6 (needs real compute): the 32B arm, the second model family, E11a
+confirmatory, re-fitting gamma with real covariates on fresh runs, and the E10
+confirmatory freeze — plus writing the W30 preprint.
+
+**RISK: Sem 6 is overloaded and every item is gated on compute arriving on time.**
+Seven major deliverables in one semester. If 32B access slips to ~March 2027, work
+spills into Sem 7 — the one thing the schedule cannot absorb, because Sem 7 is the
+internship. Mitigation 1 is the front-loading above. Mitigation 2 is A7.9.
+
+## A7.9 FALLBACK: the paper we can write with no further compute
+
+Registered now, in advance, so that a compute failure costs ambition rather than the
+degree — and so the decision is not made under deadline pressure.
+
+**Trigger: no 32B-capable access confirmed and working by ~February 2027.**
+
+**Fallback paper = the methodological contribution + the PRG + an explicitly scoped
+null.** Specifically:
+1. **The steering-vs-access confound and its decorrelation protocol** (R10/R11) —
+   already complete, needs zero additional compute, and per A5.6 speaks to two
+   literatures (concept injection AND evaluation awareness), which is precisely the
+   framing that raises its ceiling.
+2. **The Probe-Report Gap** (R7) — the measurement that does not depend on prompt
+   wording, plus the causal patching result (R8) and the naturalistic validity check
+   (R9). All complete.
+3. **A scoped null**, stated honestly: at 2B/9B under these controls we observe X;
+   the field reports L1 detection at ~32B; **we explicitly cannot adjudicate the
+   threshold question** and say so as a stated limitation rather than a hidden one.
+4. R12 as a pre-registered negative and a documented non-replication.
+
+This is a real paper — a methods-and-measurement paper rather than the full
+dissociation verdict. It loses the headline claim and keeps the contributions no
+one else has. The existence of this fallback is also the correct answer if a mentor
+or reviewer asks "what if you never get the GPUs?"
