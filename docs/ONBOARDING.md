@@ -2006,6 +2006,54 @@ The program aims to produce:
    abilities?)
 5. **The thesis + companion papers + public writeups.**
 
+## 9.1a What this project is actually competing on (read this first)
+
+**Updated 2026-07-30.** The project began with an empirical goal: settle whether models
+introspect or confabulate. That goal is now at risk for a reason worth understanding,
+because it shapes every priority below.
+
+The field is crowding fast. A single SPAR research cohort running Sept–Dec 2026 contains
+roughly **fifteen** projects on introspection, self-report faithfulness, or verbalization
+— Anthropic training models so their verbalizations match their internal activations,
+DeepMind asking whether self-explanations can be trusted, a lab planting cues and
+measuring the verbalization gap using essentially our method, and another testing whether
+self-reports depend on how they're elicited, which is our R11/R12 result. Add the parallel
+cohorts at MATS, Anthropic Fellows, Pivotal and Apollo. Our preprint lands April 2027 and
+submission is 2028.
+
+So: by the time we submit, "do models introspect?" will not be an open question we are
+answering. It will be a crowded one we are joining late.
+
+**The asymmetry that saves the project.** Almost all of that work chases the *empirical
+claim*. Almost none builds the *measurement discipline* — and from their descriptions,
+most appear to carry the very confound we already found. Every new introspection paper
+needs four things we have already built and tested:
+
+| What any such paper needs | What we have |
+|---|---|
+| Ground truth | concept injection with a KL meter |
+| A decodability baseline | probes and the Probe–Report Gap |
+| A steering control | the neutral-framing protocol (R11) |
+| A null to beat | the fitted prior-guessing model (γ) |
+
+**Empirical assets depreciate as the field crowds; methodological assets appreciate**,
+because every new paper becomes a consumer of the protocol. In a gold rush, sell shovels.
+
+**So the thesis was repositioned.** We now lead with the confound and the control
+protocol; the Gemma null becomes the *demonstration case* that the protocol overturns a
+real result — including one of our own. This is robust to the one outcome we cannot
+control, which is somebody else answering the empirical question first.
+
+**And the ambition was recalibrated honestly.** This project was originally aimed at "the
+most jaw-dropping paper of all time." An undergraduate capstone on free-tier compute, in a
+subfield actively worked by Anthropic and DeepMind, will not produce a landmark empirical
+result — and chasing one biases every decision toward breadth and novelty when the
+achievable edge is rigour and reusability. The target now is **the methods paper and
+benchmark this subfield uses for the next five years**. Nobody remembers the fourth paper
+reporting an introspection finding; everyone downstream cites the paper that told them how
+to measure it without fooling themselves. That target is reachable with the compute we
+actually have. The previous one was not.
+
 ## 9.1b Where we actually are on the calendar (read this before the week numbers)
 
 The week numbers below (W1, W12, Gate A…) are **relative to the capstone's formal

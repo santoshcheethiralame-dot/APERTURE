@@ -1342,3 +1342,117 @@ project did not work* — the precise opposite of the truth.
 4. **Expect the mentor not to be a domain specialist** (no interpretability group was
    found at PES). All external-facing material must be written for an informed
    non-specialist; the 2026-07-25 pilot summary is deliberately pitched that way.
+
+---
+
+# ADDENDUM 8 — 2026-07-30: The field is crowding. Sell shovels, not gold.
+
+The most consequential strategic revision so far. Triggered by reading the full SPAR
+Fall 2026 project list (211 projects) as a field-state snapshot rather than as an
+application target.
+
+## A8.1 The evidence: introspection is now a crowded question
+
+Of 211 SPAR Fall 2026 projects, **~15 are directly on introspection, self-report
+faithfulness, or verbalization** — in ONE program, ONE cohort, running Sept-Dec 2026:
+
+- *Introspection Training for Verbalization Activations* (Belinda Li, **Anthropic**) —
+  trains models so verbalizations match internal activations
+- *Faithfulness, Self-Knowledge, and Introspection* (Noah Siegel, **DeepMind**) — "can
+  we trust model self-explanations… privileged self-knowledge"
+- *You choose: Introspection* (Oxford) — an entire basket of introspection mini-projects
+- *Does privacy change what models disclose?* (LASR) — **plants cues, measures the
+  verbalization gap: our exact method**
+- *Red-teaming and Robustifying Model Self-reports* — **self-reports depend on
+  elicitation: our R11/R12 finding**
+- *Self-Explanation Faithfulness* (Oxford); *Understanding Self-Awareness in LLMs*
+  (MATS); *Investigating Model Internal Verbalizers* (Aether); *Do probes and NLAs see
+  the same thing?* (Vanta); *Does RL Improve Access to Internal Errors?* (IBM);
+  *Studying AI Identity* (MATS); *Whitebox Proxy Faithfulness*; two Oxford welfare
+  self-report projects
+
+Plus ~5 persona projects, ~4 evaluation-awareness, ~6 CoT-faithfulness. And this is
+one program; MATS, Anthropic Fellows, Pivotal, Apollo run parallel cohorts.
+
+**Our preprint lands April 2027; submission is 2028.** By then, "do models introspect
+or confabulate?" will not be an open question we are answering. It will be a crowded
+question we are joining late. Recorded plainly because the alternative is discovering
+it at submission.
+
+## A8.2 The asymmetry that saves the project
+
+Every one of those projects chases the **empirical claim**. Almost none builds the
+**measurement discipline** — and from their own descriptions, most appear to carry the
+confound we already identified. "We plant cues and vary whether the model verbalizes
+them"; "self-reports may depend on how they are elicited." Neither is separable from
+output steering without a matched neutral-framing control.
+
+Every new introspection paper needs four things we have already built and tested:
+ground truth (concept injection with a KL meter), a decodability baseline (probes, the
+PRG), a steering control (the R11 protocol), and a null to beat (the fitted
+prior-guessing model, gamma).
+
+**The empirical assets DEPRECIATE with crowding; the methodological assets APPRECIATE.**
+More introspection papers means more consumers of the protocol. This is the whole
+strategic insight: in a gold rush, sell shovels.
+
+**Does not survive:** "Gemma-2 does not introspect" (superseded, possibly already by the
+32B threshold); being first to any empirical introspection claim (that race is lost);
+H7 as a novelty bet (five SPAR projects touch personas).
+
+**Survives and appreciates:** the steering-vs-access confound and its control protocol;
+the PRG as a metric (Anthropic's project *trains the gap closed*, which presupposes
+measuring it); pre-registration discipline (near-absent in this space); a benchmark
+with the controls built in.
+
+## A8.3 REPOSITIONING: the paper's centre of gravity moves
+
+**Old thesis:** "Machine introspection is confabulation — here is the evidence."
+**New thesis:** "Self-knowledge claims in language models are systematically confounded
+by output steering. Here is the confound, the control protocol that detects it, and a
+demonstration that it overturns a real result — including one of our own."
+
+The Gemma null becomes the **demonstration case** for the protocol, not the headline.
+This supersedes the A5.6 framing by promoting it from "a contribution" to "the thesis."
+It also makes the project robust to exactly the outcome we cannot control: someone else
+answering the empirical question first. If they do, they answered it with our protocol
+or without it, and either way we are cited.
+
+## A8.4 Five concrete updates
+
+1. **Flip the paper.** Lead with the confound and protocol; the null is the case study.
+2. **Add an AUDIT ARM (new, cheap, no GPU).** Take published introspection claims and
+   ask which survive a neutral-framing control. This is *only possible because* the
+   field is crowded — crowding becomes an input rather than a threat. Fits the Sem 5
+   GPU-free window.
+3. **Adopt Natural Language Autoencoders as a second readout.** Two SPAR projects treat
+   probe-vs-NLA as live. PRG currently uses probes only; a three-way decomposition
+   (probe / NLA / verbal report) is strictly better and keeps the metric current.
+4. **Adopt the seed-twin control.** A second model with identical architecture,
+   tokenizer, and data, differing only in initialisation, is the clean way to test any
+   privileged-access claim — including ours. Constructed while critiquing
+   arXiv:2511.08579, whose self-vs-other comparison conflates privileged access with
+   representational compatibility. Applies to our own claims first.
+5. **PLANTED becomes a first-class deliverable.** With a dozen groups running ad-hoc
+   introspection setups, a shared harness with controls built in is the
+   highest-leverage artifact available to us. Reinforces A7.5, where the department
+   independently requires "deployment".
+
+## A8.5 Recalibration of the ambition (honest)
+
+The project's stated goal has been "the most jaw-dropping paper of all time." That
+should be restated, because it is driving worse decisions than a truer target would.
+
+An undergraduate capstone on free-tier compute, in a subfield actively worked by
+Anthropic and DeepMind, will not produce a landmark empirical result. Chasing one
+biases every decision toward breadth and novelty when the achievable edge is rigour
+and reusability.
+
+**Realistic best outcome, and the one now targeted: the methods paper and benchmark
+this subfield uses for the next five years.** In citation and career terms that is
+frequently worth more than a fourth empirical result. Nobody remembers the fourth paper
+reporting an introspection finding; everyone downstream cites the paper that told them
+how to measure it without fooling themselves.
+
+This target is achievable with the compute we actually have, which the previous target
+was not.

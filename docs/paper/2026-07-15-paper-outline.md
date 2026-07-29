@@ -35,10 +35,29 @@ decorrelation protocol."** Costs nothing; reaches the evaluation-awareness and
 CoT-monitoring communities, not just the concept-injection subfield. This becomes
 the **centrepiece of the W30 preprint** (moved earlier from W44 — see Addendum 5).
 
-## Working title
+## THESIS REPOSITIONED (2026-07-30, masterplan Addendum 8)
 
-Confabulation, Not Introspection: Injected Concepts Are Present, Causal, and
-Unreported in Open Language Models
+The centre of gravity moves from the empirical claim to the methodological one, because
+the empirical question is crowding fast (~15 introspection projects in a single SPAR
+cohort alone, several using our exact method) while the measurement discipline is not.
+
+**Old thesis:** "Machine introspection is confabulation — here is the evidence."
+**New thesis:** "Self-knowledge claims in language models are systematically confounded
+by output steering. Here is the confound, the control protocol that detects it, and a
+demonstration that it overturns a real result — including one of our own."
+
+The Gemma null (C3-C10) becomes the **demonstration case** for the protocol rather than
+the headline. Rationale: empirical assets depreciate as the field crowds; methodological
+assets appreciate, because every new introspection paper becomes a consumer of the
+protocol. This also makes the paper robust to the one outcome we cannot control —
+someone else answering the empirical question first.
+
+Working title under the new thesis (draft): *Measuring Self-Knowledge Without Fooling
+Yourself: Output Steering as a Systematic Confound in Language-Model Introspection*.
+
+**New arm added:** an **audit** of published introspection claims for which survive a
+neutral-framing control. Cheap, GPU-free, Sem-5 schedulable — and only possible because
+the field is crowded, which converts crowding from a threat into an input.
 
 ## Draft abstract (skeleton, numbers are pilot-grade)
 
