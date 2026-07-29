@@ -76,12 +76,28 @@ does not hold 27B+ in fp16; that remains IISc/NDIF territory.
 
 ---
 
-## 5. Minimum viable path to the arXiv preprint (flag-plant)
+## 5. Minimum viable path to the arXiv preprints (flag-plant)
 
-The workshop paper is dropped; the single target is a full conference paper, with
-an arXiv preprint at ~W44 as the scoop-insurance flag-plant (masterplan Addendum
-4). This near-zero-cash path is what gets the preprint out; the conference version
-then adds the confirmatory hardening (multi-seed, >=2 families, kappa).
+**UPDATED 2026-07-30 (Addendum 10): there are now TWO preprints, and the first needs
+NO NEW COMPUTE.**
+
+- **Preprint 1** — the steering confound + decorrelation protocol + PRG + the audit arm.
+  **Dec 2026 / Jan 2027. Zero GPU cost.** The science already exists; Sem 5 adds the
+  audit arm, real covariates and the stratified bank. Once this is public, priority is
+  timestamped and nothing anyone else publishes can render the thesis unpublishable.
+- **Preprint 2** — the E13 verbalization-validation benchmark + the 32B arm. May / June
+  2027. This is what the compute ask below is *for*.
+
+**Consequence for the resource ask: compute is no longer existential, it is an
+upgrade.** Preprint 1 ships without it. The 32B tier is what makes Preprint 2 strong and
+what resolves whether our null sits below the field's replication threshold. That is a
+much better position to negotiate from, and the mentor ask should be framed that way.
+
+Primary venue target is **NeurIPS Datasets & Benchmarks** — a top-tier track that scores
+utility, rigour and reproducibility rather than novelty and scale.
+
+This near-zero-cash path is what gets the preprints out; the conference version then adds
+the confirmatory hardening (multi-seed, >=2 families, kappa).
 
 Achievable on **near-zero cash**:
 

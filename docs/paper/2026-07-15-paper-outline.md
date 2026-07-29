@@ -87,26 +87,89 @@ NLA itself is out of reach (RL-trains two LLMs) and that boundary is stated, not
 neutral-framing control. Cheap, GPU-free, Sem-5 schedulable — and only possible because
 the field is crowded, which converts crowding from a threat into an input.
 
-## Draft abstract (skeleton, numbers are pilot-grade)
+## PREPRINT 1 — draft abstract (methodological framing, numbers are pilot-grade)
 
-Language models are increasingly asked to report on their own internal states —
-their confidence, their reasoning, their intentions — and oversight schemes
-quietly assume those reports are informative. We test this directly. Using
-concept injection with ground truth, we ask whether an open instruction model can
-report a concept that has been planted in its residual stream. Across injection
-strengths, layers, and model scales (2B and 9B), the model reliably fails to
-report the injected concept at strengths where it remains fluent; correct
-identifications appear almost exclusively in the high-perturbation regime where
-generation has already degenerated. We then show the failure is not an absence of
-information: a linear probe decodes the injected concept from the model's own
-downstream activations while the model's verbal report does not, and patching
-that downstream representation into a clean run causally and concept-specifically
-drives the model to produce the concept. Finally, we show the injected directions
-are the model's genuine concept representations: they decode naturally induced
-states, formed by ordinary reading with no injection, far above chance. Together
-these results characterise machine "introspection" in this regime as a read-out
-gap: the content is present and causally potent, but the self-report channel does
-not consult it.
+*Target: Dec 2026 / Jan 2027. Needs no new compute.*
+
+Language models are increasingly asked to report on their own internal states, and a
+growing set of oversight proposals — confidence elicitation, chain-of-thought
+monitoring, asking an agent why it acted — treat those reports as informative. Testing
+that assumption requires ground truth about what is actually inside the model, which is
+normally unavailable. We obtain it by injecting a known concept into the residual stream
+and asking whether the model reports it.
+
+Doing so reveals a confound that we argue is systematic across this literature. Under a
+closed-list elicitation, the model selects the injected concept far above chance, which
+reads as successful identification. **It is not.** A matched control that removes every
+reference to thoughts, minds, or introspection — asking only that the model pick a word —
+produces a *higher* rate (0.433 vs 0.302), with the paired difference excluding zero.
+The apparent self-knowledge is **output steering**: injection mechanically raises the
+concept's output probability, so a model can appear introspective with no self-access
+whatsoever. We formalise this as a fitted prior-guessing null whose access parameter
+isolates identity effects beyond frequency and concreteness, and show that the
+diagnostic quantity is not the raw effect but the *difference* between introspective and
+neutral framings.
+
+We then show the failure is not an absence of information. A linear probe recovers the
+injected concept from the model's own downstream activations while its verbal report
+does not — a **Probe–Report Gap of 0.83**, with a shuffled-label control at chance — and
+activation patching shows the representation is causally potent for the output (paired
+effect +6.15 nats, 95% CI [+4.50, +7.89]). The injected directions are the model's
+genuine concept representations, decoding naturally induced states formed by ordinary
+reading at 0.688 against 0.062 chance. In a pre-registered follow-up we predicted that
+explaining the injection mechanism would improve identification; it did not, and we
+report that prediction as falsified along with a non-replication of a published result
+obtained at larger scale.
+
+The content is therefore present, causally active, and unreported — and the one apparent
+counter-example dissolves under control. We release the elicitation protocol, the
+decorrelation control, and the null model, and argue that any self-knowledge claim
+elicited without a matched non-introspective condition is confounded to an unknown
+degree. The same confound has been independently identified in the evaluation-awareness
+literature, where single-contrast probes track prompt format rather than the construct.
+
+## PREPRINT 2 — draft abstract (E13 benchmark)
+
+*Target: May / June 2027. Primary venue: NeurIPS Datasets & Benchmarks.*
+
+Interpretability methods that verbalize a model's internal state in natural language are
+now used in production safety audits, yet there is no ground truth against which to check
+them — the authors of one such method state plainly that they cannot validate it because
+the model's underlying beliefs are unobservable. We supply the missing oracle. By
+planting known content in the residual stream, we evaluate activation-verbalization
+methods on three axes that are otherwise unmeasurable: **recovery** (does the method
+report the planted content), **attribution** (does it do so for the right reason, or via
+output steering and ordinary inference, separated by a matched neutral-framing control),
+and **confabulation rate** (with nothing planted, how often does the method assert
+content that is not there). We report the first false-positive rates for this class of
+method, release PLANTED as an extensible harness, and show that methods ranked
+comparably on existing evaluations differ substantially once ground truth is available.
+
+## Venue strategy (2026-07-30, Addendum 10)
+
+**Primary target: NeurIPS Datasets & Benchmarks.** This is a NeurIPS track — a
+publication there is top-tier — and it is judged on **utility, rigour, and
+reproducibility** rather than novelty and scale. Those are precisely our strongest three
+dimensions and precisely the axes on which main-track review would hurt us (one model
+family, small concept bank, modest scale). The benchmark repositioning is therefore not
+only scoop-insurance; it is the realistic route to a top-tier acceptance.
+
+| Venue | Deadline | Fit |
+|---|---|---|
+| **NeurIPS D&B** | ~May 2027 | **PRIMARY** — PLANTED + E13; rewards our strengths |
+| NeurIPS / ICLR main | ~May 2027 / ~Sep 2027 | Stretch. Would need the 32B arm, a second family, and human grading to be competitive |
+| COLM / EMNLP / ACL main | rolling | Realistic for the confound paper |
+| Interp/safety workshop | rolling | Preprint 1 is comfortably above this bar today |
+| arXiv | anytime | Both preprints, for priority |
+
+**Honest self-assessment (2026-07-30).** Rigour and reproducibility: top decile — a
+filed-and-falsified pre-registration, three distinct control conditions, bootstrap CIs
+throughout, an explicit cannot-claim table, 98 tests. Novelty: moderate; the
+ground-truth-benchmarking genre is active. **Scale and breadth: our weakest dimension by
+a distance** — one model family, 16 concepts, one seed. The two cheapest fixes, in
+priority order, are **a second model family** and **human-validated grading with a
+reported kappa**; neither is glamorous and both move us more than any additional
+analysis would.
 
 ## Claims table
 

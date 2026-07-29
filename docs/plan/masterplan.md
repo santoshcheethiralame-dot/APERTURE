@@ -2,7 +2,82 @@
 ## Dissociating Genuine Introspection from Confabulation in Large Language Models
 ### A 2-year, 5-person capstone research program (100 working weeks)
 
-**One-line thesis:** We will build and validate the first experimental battery that cleanly separates a language model *genuinely reading its own internal states* from a model *confabulating a plausible story about itself* — with ground truth, causal mechanism, and cross-model scale — and settle the currently contested question of whether machine introspection is real.
+---
+
+# ► CURRENT STATE — read this first (updated 2026-07-30)
+
+**This document has ten dated addenda. The body below is the ORIGINAL plan as written in
+July 2026 and is superseded in several places. This block states what is true today.
+Where the body and an addendum conflict, the LATER ADDENDUM WINS.**
+
+### What this project is now
+A measurement-methodology program on language-model self-report. We use concept
+injection to manufacture **ground truth** about what is inside a model, then test whether
+the model — or an interpretability method — can accurately report it.
+
+### The thesis (repositioned 2026-07-30, Addendum 8)
+> Self-knowledge claims in language models are systematically confounded by **output
+> steering**. Here is the confound, the control protocol that detects it, and a
+> demonstration that it overturns a real result — including one of our own.
+
+The Gemma null is the *demonstration case*, no longer the headline. Rationale: empirical
+claims depreciate as the field crowds; methodological assets appreciate.
+
+### The flagship experiment (Addendum 9)
+**E13 — a ground-truth validation benchmark for activation-verbalization methods.**
+The field now deploys verbalizers (NLA, Patchscopes, SelfIE, LatentQA) in production
+safety audits with no way to check them; Anthropic states outright it "cannot validate
+NLA measurements against ground truth." Concept injection manufactures that ground truth.
+Three axes: **recovery**, **attribution** (right reason vs steering), and
+**confabulation rate** (inject nothing, count false assertions). Mostly inference-only,
+so free-tier runnable.
+
+### Status
+- Apparatus COMPLETE and tested: injection + KL meter, probes/PRG, patching,
+  naturalistic arm, gamma prior-null, bootstrap CIs. 98 tests green, two backends.
+- 12 logged runs (R1-R12). One pre-registration, **falsified and reported as such**.
+- Headline pilot results: PRG 0.83; patching +6.15 nats CI [+4.50,+7.89]; naturalistic
+  identifiability 0.688 vs 0.062 chance; **the steering confound (R11)** — neutral
+  framing beats introspective framing, difference CI excludes 0.
+- All of the above is PRE-SEMESTER work. The capstone formally starts Aug-Sept 2026.
+
+### Publication plan (Addendum 10)
+- **Preprint 1** — confound + protocol + PRG + audit arm. **Dec 2026 / Jan 2027. Needs no
+  new compute.** Once public, nothing anyone else publishes can make this thesis
+  unpublishable.
+- **Preprint 2** — E13 benchmark + the 32B arm. May / June 2027.
+- Primary venue target: **NeurIPS Datasets & Benchmarks** (a top-tier track that rewards
+  utility and rigour over novelty and scale — our strongest axes). NeurIPS/ICLR main
+  track is a stretch, not the plan.
+
+### Binding constraints
+1. **All science finishes by end of Sem 6 (May 2027).** Internships begin Sem 7; Sems 7-8
+   are writing, hardening, and deployment only. Nothing new after ~March 2027.
+2. **Compute must be LIVE by January 2027**, not merely requested.
+3. Additions are **substitutions**. Bandwidth is the top project risk.
+
+### The three things that matter most right now
+1. **Secure a 32B-capable tier.** Our 2B/9B null may sit below the field's replication
+   threshold; Qwen-3-32B also ships a published Assistant Axis. One acquisition, two
+   unblocks.
+2. **Ship Preprint 1 by January.** It needs no GPU and it de-risks everything.
+3. **A second model family + human-validated grading (kappa).** The two cheapest fixes to
+   our weakest reviewer-facing dimensions.
+
+### Renames (Addendum 5)
+Project MIRROR → **APERTURE**. Benchmark INTROSPECT-Bench → **PLANTED**. Both original
+names collide with published work.
+
+### How to read the rest of this file
+Body = original plan (July 2026). Then Addenda 1-10 in date order; A1 pilot results and
+H7; A2 field diff; A3 scope/resources/integrity; A4 conference-only target; A5 name
+collisions + H7 rewritten to predict a shape; A6 real calendar; A7 departmental phases +
+the internship squeeze + the no-compute fallback; A8 repositioning; A9 ground truth and
+E13; A10 publication risk and the two-preprint hedge.
+
+---
+
+**One-line thesis (original, July 2026 — see CURRENT STATE above for the live version):** We will build and validate the first experimental battery that cleanly separates a language model *genuinely reading its own internal states* from a model *confabulating a plausible story about itself* — with ground truth, causal mechanism, and cross-model scale — and settle the currently contested question of whether machine introspection is real.
 
 **Flagship deliverables:**
 1. **The dissociation result** — the main paper: direct access vs. inference/confabulation, resolved with pre-registered confirmatory experiments across ≥10 open models in ≥4 families.

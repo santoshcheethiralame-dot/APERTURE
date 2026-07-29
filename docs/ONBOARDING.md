@@ -2006,6 +2006,13 @@ The program aims to produce:
    abilities?)
 5. **The thesis + companion papers + public writeups.**
 
+> **Priority update (2026-07-30).** These five are the *original* ambition and remain the
+> long-run map, but they are no longer equally weighted. **#2 (PLANTED) is now the
+> flagship**, carrying the E13 validation benchmark described in §9.1a-2, and #1 has been
+> reframed from "settle the empirical question" to "supply the measurement protocol." #4
+> (the training arm) stays a Year-2 item and may not survive the bandwidth budget at all.
+> Read §9.1a through §9.1a-3 for the live picture; this list is the horizon, not the plan.
+
 ## 9.1a What this project is actually competing on (read this first)
 
 **Updated 2026-07-30.** The project began with an empirical goal: settle whether models
@@ -2053,6 +2060,99 @@ benchmark this subfield uses for the next five years**. Nobody remembers the fou
 reporting an introspection finding; everyone downstream cites the paper that told them how
 to measure it without fooling themselves. That target is reachable with the compute we
 actually have. The previous one was not.
+
+## 9.1a-2 The flagship experiment, and why our compute disadvantage stopped mattering
+
+**Added 2026-07-30.** The repositioning above has a sharper form, and it came from
+reading what the best-funded lab in this space says about its own methods.
+
+Anthropic built **Natural Language Autoencoders** — a system that reads a model's
+activations and describes them in plain English. They used it in the pre-deployment audit
+of Claude Opus 4.6 and found **unverbalized evaluation awareness**: the model internally
+representing "I am being tested" while never saying so. On 10 of 16 evaluations the
+internal signal exceeded threshold, and on **7 of those the model verbalized nothing at
+all**.
+
+Read that against Part 5. That is **our Probe–Report Gap**, at frontier scale, in
+production. Our thesis just got corroborated on a model we will never be able to run.
+That is a citation asset, not a scoop.
+
+Now the part that matters. Their own paper says:
+
+> *"We cannot validate NLA measurements of evaluation awareness against ground truth,
+> because the model's underlying beliefs are unobservable."*
+
+They further acknowledge the method sometimes makes "verifiably false claims," is a
+black box internally, and has "excessive expressivity" — the verbalizer can infer things
+beyond what the activation actually contains. And the wider interpretability-evaluation
+literature says the same thing in general: **there is no ground truth for explanations.**
+
+**Ground truth is the binding constraint of this entire field. Concept injection
+manufactures it.** That is what our apparatus does by construction, and it is why a lab
+with a thousand times our compute cannot simply do this instead. The asymmetry is not
+scale — it is that we planted the answer.
+
+So the flagship experiment became **E13**:
+
+> *Ground truth for self-knowledge: validating activation-verbalization methods against
+> planted content.*
+
+Take the methods the field is already trusting in safety audits, plant known content, and
+measure three things nobody can currently measure:
+
+1. **Recovery** — does the method find the planted content?
+2. **Attribution** — does it find it *for the right reason*, or via output steering and
+   ordinary inference? (This is our neutral-framing control, and it directly
+   operationalises the "excessive expressivity" problem they name but cannot test.)
+3. **Confabulation rate** — plant **nothing**, ask the method what is there, and count
+   how often it asserts content anyway.
+
+The third is the one to care about. It is a false-positive rate for verbalization
+methods: a number the field urgently needs, currently cannot produce, and that we can
+generate on a 2B model.
+
+**And notice what happened to our compute problem.** Validation needs ground truth and
+controls, not frontier scale. Patchscopes, SelfIE and logit lens are inference-only and
+run on the free tier today. (NLA itself trains two language models with reinforcement
+learning and is genuinely out of our reach — we say so rather than pretend otherwise.)
+Our biggest weakness stopped being load-bearing.
+
+**One honest risk you should know:** Anthropic *invented* concept injection. Combining it
+with NLA to close their own validation gap is an obvious move they could make at any
+time. That is why the benchmark matters more than the finding — benchmarks win on
+adoption rather than on being first.
+
+## 9.1a-3 Why this is publishable no matter what happens
+
+A reasonable worry when you join a two-year project: what if we get scooped and it was
+all wasted? Here is the honest arithmetic.
+
+**A publishable paper already exists.** The PRG result, the causal patching result, the
+naturalistic validity check, the steering confound, and a pre-registered falsification
+together form a coherent, controlled, honestly-reported set — today. It is not
+NeurIPS-main-track as it stands, but "unpublishable" is not the risk. The risk is a
+weaker venue, which is a much smaller problem.
+
+**Benchmarks and protocols coexist; empirical firsts do not.** If someone publishes the
+introspection verdict before us, our version is worthless. If someone publishes a similar
+benchmark, theirs becomes concurrent work we cite while differentiating on the axes they
+lack. Six ground-truth interpretability benchmarks are published and coexisting right now
+(InterpBench, AttributionLab, OpenXAI, M4, BEExAI, F-Fidelity). Moving from the first
+category to the second was the most protective decision in this plan.
+
+**So we ship two preprints, not one:**
+- **Preprint 1** (Dec 2026 / Jan 2027) — the confound, the protocol, the PRG, the audit
+  arm. **Requires no new compute.**
+- **Preprint 2** (May / June 2027) — the E13 benchmark and the 32B arm.
+
+Once Preprint 1 is public, nothing anyone publishes afterwards can make this thesis
+unpublishable. Priority is timestamped and everything later is extension rather than
+prerequisite.
+
+**Where we are aiming:** NeurIPS **Datasets & Benchmarks**. That is a NeurIPS track, so a
+paper there is a top-tier publication — and it is judged on utility, rigour and
+reproducibility rather than novelty and scale, which is exactly the right way round for
+us. Main-track NeurIPS or ICLR is a stretch we are not planning around.
 
 ## 9.1b Where we actually are on the calendar (read this before the week numbers)
 
@@ -2116,6 +2216,11 @@ Four consequences you should treat as hard constraints:
 3. **The confirmatory freeze sits inside Sem 6**, not Sem 7.
 4. **No experiment may be load-bearing for a Sem 7/8 deadline.** If a result is still
    pending when the internship starts, the paper has to be writable without it.
+
+**Superseded 2026-07-30 — now TWO preprints (see §9.1a-3).** Preprint 1 (the confound
+protocol, no new compute) ships Dec 2026 / Jan 2027, and Preprint 2 (E13 + the 32B arm)
+ships May / June 2027, which is the artifact the paragraph below describes. The reasoning
+below still explains why the *second* one is timed where it is.
 
 **One piece of luck worth protecting.** The preprint was moved to W30 for scoop
 reasons — and W30 lands at roughly April 2027, the end of Sem 6. That means the
@@ -2553,6 +2658,40 @@ not in the registry, it didn't happen."
 
 **Sampling.** See decoding. We do *not* sample; we decode greedily.
 
+**Confabulation rate (of a method).** Distinct from model confabulation. With *nothing*
+planted, how often does an interpretability method assert that content is present? A
+false-positive rate for verbalization methods — a number the field cannot currently
+produce, and the headline metric of E13. See §9.1a-2.
+
+**E13.** The flagship experiment: a ground-truth validation benchmark for
+activation-verbalization methods. Three axes — recovery, attribution, confabulation rate.
+See §9.1a-2.
+
+**NLA (Natural Language Autoencoder).** A method that reads a model's activations and
+describes them in plain English, built from an activation *verbalizer* and an activation
+*reconstructor* trained together. Used in a Claude Opus 4.6 safety audit, where it found
+unverbalized evaluation awareness. Its authors state they cannot validate it against
+ground truth — which is the opening E13 exploits.
+
+**PLANTED.** Our public benchmark (renamed from INTROSPECT-Bench, which was taken). Now
+the flagship deliverable rather than a side artifact.
+
+**Preprint 1 / Preprint 2.** The two-artifact publication hedge. P1 = the confound and
+protocol, Dec 2026/Jan 2027, no new compute. P2 = E13 plus the 32B arm, May/June 2027.
+Once P1 is public, priority is timestamped. See §9.1a-3.
+
+**Seed twin.** A control: a second model with identical architecture, tokenizer and
+training data, differing only in random initialisation. The clean way to test a
+"privileged access" claim, because it holds representational compatibility fixed while
+removing self-identity.
+
+**Unverbalized evaluation awareness.** A model internally representing that it is being
+tested while never saying so. Found in Claude Opus 4.6 via NLA — the Probe–Report Gap at
+frontier scale, and external corroboration of our thesis.
+
+**Verbalization method.** Any technique that turns internal activations into natural
+language — NLA, Patchscopes, SelfIE, LatentQA. The objects E13 evaluates.
+
 **Seed.** A number fixing a random process so it is repeatable. Because our generation is
 greedy (deterministic), generation seeds are a no-op; the only seeded randomness that
 matters is in sampling prompt pairs when building a vector.
@@ -2645,6 +2784,27 @@ machine-generated-looking comments — anywhere in code, docs, commits, or git h
 Results → `docs/LAB_NOTEBOOK.md`. Claims and their status → the claims table in
 `docs/paper/2026-07-15-paper-outline.md`. Strategy → the masterplan + its addenda.
 Compute/funding → `docs/RESOURCES.md`.
+
+**Q: What is this project's actual contribution, in one sentence?**
+A protocol and benchmark for measuring self-knowledge claims in language models without
+being fooled by output steering — plus ground truth, which is the resource this whole
+field is short of and which concept injection manufactures.
+
+**Q: Aren't lots of people working on introspection? Won't we be scooped?**
+Yes, lots of people are — one research cohort alone had ~15 projects on it. That is why
+the thesis was repositioned from an empirical claim to a measurement protocol and
+benchmark (§9.1a). Empirical firsts are winner-take-all; benchmarks coexist. Six
+ground-truth interpretability benchmarks are published simultaneously right now. And
+Preprint 1 ships in January with no new compute, after which priority is timestamped and
+nothing anyone else publishes can make this unpublishable.
+
+**Q: Can this actually reach a top-tier venue?**
+The realistic target is **NeurIPS Datasets & Benchmarks** — a NeurIPS track, so yes,
+top-tier — because it rewards utility, rigour and reproducibility rather than novelty and
+scale. Main-track NeurIPS/ICLR is a stretch we are not planning around. The honest
+scorecard: rigour and reproducibility top-decile, novelty moderate, **scale and breadth
+our weakest dimension by a distance**. The two cheapest fixes are a second model family
+and human-validated grading with a reported kappa.
 
 **Q: What is the highest-value experiment we could run next?**
 **E11-pilot**, then E11a: steer the model along the Assistant Axis *inside* the model and
