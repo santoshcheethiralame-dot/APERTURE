@@ -55,6 +55,34 @@ someone else answering the empirical question first.
 Working title under the new thesis (draft): *Measuring Self-Knowledge Without Fooling
 Yourself: Output Steering as a Systematic Confound in Language-Model Introspection*.
 
+## FLAGSHIP UPGRADE (2026-07-30, masterplan Addendum 9)
+
+Deep field sweep found the sharper version of the same idea. Anthropic's Natural
+Language Autoencoders surfaced **unverbalized evaluation awareness** in the Claude Opus
+4.6 audit (>5% NLA-measured awareness on 10/16 evals, **7 with zero verbalized
+awareness**) — our Probe-Report Gap, at frontier scale, in production. External
+corroboration of the thesis, and a citation asset.
+
+But the NLA authors state they **"cannot validate NLA measurements against ground truth,
+because the model's underlying beliefs are unobservable"**, and acknowledge
+confabulation, no mechanistic grounding, and "excessive expressivity". The wider
+interpretability-evaluation literature agrees there is no ground truth for explanations.
+
+**Ground truth is the field's binding constraint, and concept injection manufactures
+it.** Hence the flagship becomes **E13**:
+
+> *Ground truth for self-knowledge: validating activation-verbalization methods against
+> planted content.*
+
+Three measured axes, none currently obtainable: **recovery** (does the method find
+planted content), **attribution** (does it find it for the right reason, or via steering
+/ inference — our neutral-framing control), and **confabulation rate** (inject nothing,
+count false assertions). The last is a false-positive rate for verbalization methods that
+the field needs, cannot produce, and we can generate at 2B.
+
+Compute inverts in our favour: Patchscopes, SelfIE and logit lens are inference-only.
+NLA itself is out of reach (RL-trains two LLMs) and that boundary is stated, not hidden.
+
 **New arm added:** an **audit** of published introspection claims for which survive a
 neutral-framing control. Cheap, GPU-free, Sem-5 schedulable — and only possible because
 the field is crowded, which converts crowding from a threat into an input.

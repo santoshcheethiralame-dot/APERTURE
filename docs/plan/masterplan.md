@@ -1456,3 +1456,127 @@ how to measure it without fooling themselves.
 
 This target is achievable with the compute we actually have, which the previous target
 was not.
+
+---
+
+# ADDENDUM 9 — 2026-07-30: Ground truth is the scarce resource. Sell that.
+
+Deep field sweep, July 2026. Addendum 8 said "sell shovels." This addendum identifies
+*which* shovel, and it is sharper than expected.
+
+## A9.1 The field moved from "can models introspect?" to "can we train and read it?"
+
+The frontier of this question is no longer behavioural. It is:
+- **Natural Language Autoencoders** (Kantamneni, Ong, Marks; transformer-circuits.pub/2026/nla/):
+  an activation verbalizer (AV) and activation reconstructor (AR), both initialised from
+  the target model, jointly trained — AR by supervised regression, AV by GRPO
+  reinforcement learning maximising reconstruction reward with a KL penalty. Reaches
+  0.6-0.8 fraction of variance explained.
+- **Introspection Adapters** (alignment.anthropic.com/2026/introspection-adapters/;
+  arXiv:2604.16812): fine-tuning models to self-report learned behaviours. 59% success
+  vs 53% next-best and 44% for the best white-box method.
+- **Introspective Coupling** (arXiv:2606.32038), **Self-Interpretability**
+  (arXiv:2505.17120), **Universal Activation Verbalizer** (arXiv:2605.25903), and a
+  positive case for self-explanation faithfulness (arXiv:2602.02639).
+
+Implication: measuring whether a model introspects is becoming a solved-ish, crowded
+question. Reading and training introspection is where the field now is.
+
+## A9.2 THE FINDING: Anthropic validated our phenomenon at frontier scale — and cannot validate their own instrument
+
+In the **Claude Opus 4.6 pre-deployment audit**, NLAs surfaced **unverbalized evaluation
+awareness**: the model internally representing that it was being tested while never
+saying so. NLA-measured awareness exceeded 5% on **10 of 16 evaluations, 7 of them with
+ZERO verbalized awareness**, against a 4% deployment-control noise floor, and moved as
+predicted under awareness steering and realism edits.
+
+**That is the Probe-Report Gap, at frontier scale, in production.** Our core thesis —
+content present internally, absent from the verbal report — is now externally
+corroborated on a model we will never run. This is a citation asset, not a scoop: it
+makes small-model work about the same phenomenon relevant rather than obscure.
+
+**Now the opening.** The NLA authors state plainly:
+
+> "We cannot validate NLA measurements of evaluation awareness against ground truth,
+> because the model's underlying beliefs are unobservable."
+
+They further acknowledge (i) **confabulation** — explanations containing "verifiably
+false claims about the target model's input context"; (ii) **no mechanistic grounding** —
+"NLAs are blackboxes by construction"; and (iii) **excessive expressivity** — the AV
+"has the capacity to make additional inferences beyond what is stored in an activation."
+They did **not** use planted or injected ground truth for their main validation.
+
+The general evaluation literature says the same: for interpretability "there is no
+ground truth in real-world data, and there are no ground truths for explanations", and
+methods are graded on a curve against each other rather than against an oracle.
+
+**Conclusion: ground truth is the binding constraint of this entire field, and concept
+injection manufactures it.** A lab with vastly more compute than us explicitly cannot do
+what our apparatus does by construction. That asymmetry, not scale, is our edge.
+
+## A9.3 THE FLAGSHIP UPGRADE — E13: a ground-truth validation benchmark for verbalization methods
+
+**New target paper:** *Ground truth for self-knowledge: validating activation-
+verbalization methods against planted content.*
+
+The field is now **deploying** verbalization methods in production safety audits with no
+way to check whether they are right. Plant known content by injection, then measure each
+method on three axes that are currently unmeasurable:
+
+1. **Recovery** — does the method recover the planted content? (accuracy vs oracle)
+2. **Attribution** — does it recover it *for the right reason*, or via output steering /
+   ordinary inference? This is exactly what our neutral-framing control isolates, and it
+   directly operationalises the "excessive expressivity" limitation the NLA authors name
+   but cannot test.
+3. **CONFABULATION RATE** — inject **nothing**, ask the verbalizer what is present, and
+   count how often it asserts content anyway. A false-positive rate for verbalization
+   methods is a number the field urgently needs, currently cannot produce, and that we
+   can generate on a 2B model.
+
+Prior art to extend, not duplicate: *Do Activation Verbalization Methods Convey
+Privileged Information?* (arXiv:2509.13316) asks this question and compares Patchscopes,
+SelfIE, LatentQA and probes, controlling for what a model can infer from input alone.
+Our addition is **planted ground truth plus the steering control**, which that work
+lacks.
+
+**Compute inverts in our favour.** Validation needs ground truth and controls, not
+frontier scale. Patchscopes, SelfIE, LatentQA-style probing and logit lens are all
+**inference-only** and runnable on the free tier at 2B-9B today. NLA itself requires RL
+training of two LLMs and is **out of reach** — state that as a scoped limitation and
+benchmark the accessible subset. Being honest about that boundary is stronger than
+pretending otherwise.
+
+## A9.4 Adopt
+
+- **meta-d' / M-ratio** from human metacognition (Maniscalco & Lau lineage). Mature,
+  importable, and gives L4 a principled metric — meta-d' is the d' an ideal observer
+  would need to produce the observed confidence-accuracy contingency; M-ratio =
+  meta-d'/d' normalises for task difficulty. Note arXiv:2603.25112 already applies SDT
+  to LLMs, so this is adoption, not novelty.
+- **Seed-twin control** for every privileged-access claim (identical architecture,
+  tokenizer and data; different initialisation), per A8.4.
+- **Disagreement-subset stratification** — effects hide in pooled data (A5.5).
+
+## A9.5 Drop
+
+**The developmental / training-checkpoint arm (U2, B9).** Partially claimed already —
+checkpoint work exists on attention-circuit and linguistic-feature emergence
+(arXiv:2606.02378, arXiv:2509.05291), and there is at least one report of introspection
+appearing at a specific post-training stage (DPO on OLMo-3.1-32B). Expensive, no longer
+uncontested, and it competes with E13 for the same Sem-6 window. Cut per the
+substitution rule.
+
+## A9.6 The honest risk on E13
+
+**Anthropic invented concept injection.** Lindsey's introspection work *is* this
+paradigm, in-house. Combining it with NLA to close their own validation gap is an
+obvious next step for them and they could do it at any time, better and faster.
+
+Three hedges, all consistent with the existing plan:
+1. **Move fast** — E13 is inference-only at 2B and can run in Sem 5 on the free tier.
+2. **Make the BENCHMARK the durable asset.** Benchmarks win on adoption, not novelty; if
+   Anthropic runs the same validation internally, a public benchmark others can run
+   still wins. This reinforces A8.4's promotion of PLANTED to a first-class deliverable.
+3. **Own the confabulation-rate metric specifically.** It is the axis their framing least
+   naturally produces (they audit models; we audit instruments), and it is the number a
+   safety-focused reviewer will care most about.
