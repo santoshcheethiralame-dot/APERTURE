@@ -1580,3 +1580,105 @@ Three hedges, all consistent with the existing plan:
 3. **Own the confabulation-rate metric specifically.** It is the axis their framing least
    naturally produces (they audit models; we audit instruments), and it is the number a
    safety-focused reviewer will care most about.
+
+---
+
+# ADDENDUM 10 — 2026-07-30: Publication risk analysis, and a two-preprint hedge
+
+Written in response to a direct question: will the E13 opening still exist by mid-2027,
+and is there a scenario where 1.5 years of work becomes unpublishable? Both answered
+with evidence rather than reassurance.
+
+## A10.1 The premise is wrong: a publishable paper already exists
+
+R7 (PRG 0.83 with a shuffled-label control), R8 (causal patching, paired CI excluding
+0), R9 (naturalistic validity, CI excluding chance), R10/R11 (the steering confound and
+its neutral-framing control), and R12 (a pre-registered falsification plus a documented
+non-replication) constitute a coherent, controlled, honestly-reported result set **as of
+today**.
+
+That is not NeurIPS-main-track as-is. But **"unpublishable" is not the risk in play.**
+The real risk is publishing at a weaker venue than hoped, which is a materially smaller
+problem and is already covered by the A7.9 fallback. Recorded explicitly because the
+anxiety it answers will recur.
+
+## A10.2 The honest bad news: ground-truth benchmarking is a crowded genre
+
+E13 is not virgin territory. The lineage is active and long-running:
+- **InterpBench** (arXiv:2407.14494) — 17 semi-synthetic transformers with known circuits
+  trained via Strict Interchange Intervention Training.
+- **Tracr** — compiles RASP programs into transformers with exactly known ground truth.
+- **AttributionLab** (arXiv:2310.06514), **OpenXAI**, **M4**, **BEExAI**, **F-Fidelity** —
+  synthetic-ground-truth benchmarks for feature attribution and XAI.
+- **Faithfulness Metrics Don't Measure Faithfulness: A Meta-Evaluation with Ground
+  Truth** (arXiv:2605.25052, May 2026) and **BonaFide** (3,066 ground-truth-labelled
+  CoTs) — the closest prior art, applied to CoT faithfulness metrics.
+
+One survey source states the direction outright: "a door has opened to start benchmarking
+interpretability methods based on injected ground truths, particularly through techniques
+like concept injection."
+
+**What remains genuinely open, and what E13 must be scoped to:** ground-truth validation
+of **activation verbalization methods specifically** (NLA, Patchscopes, SelfIE,
+LatentQA), with **the output-steering control**, and **the confabulation-rate metric**.
+Defensible, but a niche inside an active genre — not an empty field. Any claim of novelty
+must be stated at that granularity, and the prior art above must be cited up front rather
+than discovered by a reviewer.
+
+## A10.3 Why this is survivable: benchmarks coexist, empirical firsts do not
+
+OpenXAI, M4, BEExAI, F-Fidelity, AttributionLab and InterpBench **all exist
+simultaneously, all published.** That is the structural point:
+
+- **Empirical firsts are winner-take-all.** If someone publishes the introspection
+  verdict first, ours is worthless.
+- **Benchmarks and protocols coexist.** If someone publishes a similar benchmark, theirs
+  becomes concurrent work we cite, and we differentiate on the axes they lack.
+
+The Addendum 8 repositioning moved this project from the first category to the second.
+That is retrospectively the single most protective decision in the plan, and it should
+not be reversed under any temptation to chase an empirical headline.
+
+## A10.4 THE HEDGE: two preprints, not one
+
+Current plan concentrates all risk in one artifact in April 2027. Tier 1 is already
+finished work. Split it:
+
+| | Content | Target date | Risk | Needs compute? |
+|---|---|---|---|---|
+| **Preprint 1** | The steering confound + decorrelation protocol + PRG + the audit arm | **Dec 2026 / Jan 2027** (end of Sem 5) | LOW — the science exists | **No** |
+| **Preprint 2** | E13 verbalization-validation benchmark + the 32B arm | **May / June 2027** (end of Sem 6) | MEDIUM | Yes |
+
+Preprint 1 requires **no new compute**. Sem 5 supplies enough additional substance (the
+audit arm, real infini-gram/Brysbaert covariates, the domain-stratified bank, E11-pilot
+on free tier) to make it more than a pilot writeup, and it plants the priority flag
+**~4 months earlier** than the current W30 plan.
+
+**The decisive property: once Preprint 1 is public, no subsequent publication by anyone
+can render this thesis unpublishable.** Priority is established, the methodological
+contribution is timestamped, and everything after it is extension rather than
+prerequisite. This supersedes the single-preprint schedule in Addendum 5 §A5.6, keeping
+its narrow scoping (confound + PRG) but moving it earlier and adding the audit arm.
+
+## A10.5 Venue calendar for the mid-2027 target
+
+- **ICML 2027** — deadline ~January 2027. Too early for Preprint 2; viable for Preprint 1
+  material if a venue submission is wanted early.
+- **NeurIPS 2027** — deadline ~May 2027. Aligns exactly with the end of Sem 6 and is the
+  primary target for the full paper.
+- **ICLR 2028** — deadline ~September 2027. Falls inside the Sem 7 internship, which is
+  acceptable *only because* the writing will already be done under A7.2. Good fallback.
+- **arXiv** — no deadline; both preprints go up when ready and establish priority
+  independently of any venue decision.
+
+## A10.6 The one genuine failure mode, and its floor
+
+For this thesis to become unpublishable, all of the following would have to happen: the
+confound result is scooped AND the PRG is scooped AND E13 is scooped AND the 32B arm
+never materialises AND the grading remains unvalidated. Even in that conjunction, the
+pre-registered falsification (R12) and the non-replication remain publishable as a short
+negative-results contribution.
+
+**There is no realistic path to zero.** There are paths to a weaker venue. Planning
+should optimise venue quality, not survival — and the two-preprint split converts most
+remaining venue risk into timing risk, which we control.
