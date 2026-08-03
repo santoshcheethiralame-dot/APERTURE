@@ -57,12 +57,30 @@ so free-tier runnable.
 3. Additions are **substitutions**. Bandwidth is the top project risk.
 
 ### The three things that matter most right now
-1. **Secure a 32B-capable tier.** Our 2B/9B null may sit below the field's replication
-   threshold; Qwen-3-32B also ships a published Assistant Axis. One acquisition, two
-   unblocks.
-2. **Ship Preprint 1 by January.** It needs no GPU and it de-risks everything.
-3. **A second model family + human-validated grading (kappa).** The two cheapest fixes to
-   our weakest reviewer-facing dimensions.
+1. **Run F1 — confound hardening.** The paper's headline result currently rests on one
+   seed, one layer, one alpha. Multi-seed / multi-paraphrase / multi-layer replication is
+   the single highest-value run in the program. Free tier.
+2. **Build `readouts.py`** (logit lens, Patchscopes-style, SelfIE-style behind one
+   interface). It gates the entire E13 flagship, and E13 does **not** need scale — only
+   ground truth — so it can start at 2B immediately.
+3. **Secure a 32B-capable tier**, and **start human grading (F11) now** — it is pure
+   labour, gates the credibility of every graded number, and is the item most likely to
+   be deferred until too late.
+
+### The run program (Addendum 11 — supersedes the E0-E10 families in §3.2)
+- **Preprint 1:** F1 confound hardening · F2 real covariates + 120-concept stratified
+  bank · F3 PRG cross-validation · F4 the audit arm · F5 null robustness.
+- **Preprint 2:** F6/F7/F8 the three E13 arms (recovery · attribution · **confabulation
+  rate**) · F9 the 32B threshold arm · F10 second family · F11 human grading + kappa ·
+  F12 confirmatory freeze.
+- **Engineering first:** readouts interface; activation capture in the forced-choice
+  collector; a run-artifact archival helper; infini-gram + Brysbaert loaders; bank
+  expansion; random norm-matched vectors; the PLANTED harness.
+
+### Compute reality (corrected in Addendum 11)
+Preprint 1 needs **no paid or large-model compute**, but it does need **free-tier GPU
+sessions at 2B** — budget them. Only F9 (the 32B threshold arm) is genuinely
+compute-blocked.
 
 ### Renames (Addendum 5)
 Project MIRROR → **APERTURE**. Benchmark INTROSPECT-Bench → **PLANTED**. Both original
@@ -1757,3 +1775,174 @@ negative-results contribution.
 **There is no realistic path to zero.** There are paths to a weaker venue. Planning
 should optimise venue quality, not survival — and the two-preprint split converts most
 remaining venue risk into timing risk, which we control.
+---
+
+# ADDENDUM 11 — 2026-07-30: The run program, rebuilt for the current thesis
+
+Section 3.2's run families (E0-E10) were designed for the empirical thesis — "does the
+model introspect?" — and are largely obsolete under the repositioning (Addenda 8-10).
+This addendum replaces them with a run program that serves the two preprints, and
+specifies the engineering that has to exist first.
+
+**Superseded:** E0-E10 as the operative plan. They remain useful as a vocabulary (E1
+replication, E4 PRG, E5 mechanism, E8 naturalistic) and the pilot runs R1-R12 map onto
+them, but scheduling now follows the F-series below.
+
+## A11.1 Compute honesty correction
+
+Addendum 10 said Preprint 1 "needs no new compute." That is **imprecise and should be
+corrected**: Preprint 1 needs no **paid or large-model** compute, but it does need
+**free-tier GPU sessions** at 2B. The distinction matters because "no compute" invites a
+plan with no Kaggle budget at all.
+
+Concretely, Preprint 1 could in principle ship on the existing R1-R12 results, but it
+would carry every weakness in the claims table (one seed, proxy covariates, 16 concepts).
+The Sem 5 free-tier runs below are what turn it from a pilot writeup into a defensible
+methods paper. Budget them.
+
+## A11.2 The run program
+
+**PREPRINT 1 — the confound and the protocol (ship Dec 2026 / Jan 2027)**
+
+| ID | Run | What it does | Compute | Priority |
+|---|---|---|---|---|
+| **F1** | **Confound hardening** | The headline result must be bulletproof. Re-run the neutral-vs-introspective contrast across extraction seeds, >=8 prompt paraphrases, >=3 layers, and >=3 alphas inside the coherent band. Report the gamma difference with CIs for every cell. | free tier, 2B | **HIGHEST** |
+| F2 | Covariate replacement + bank expansion | Refit gamma with infini-gram exact counts and Brysbaert concreteness, on a domain-stratified bank (target >=120 concepts). Retires the two loudest caveats in the claims table. | free tier, 2B | HIGH |
+| F3 | PRG hardening | Leave-one-prompt-out cross-validation for the probe, with proper CIs. Retires the "tiny held-out set inflates the probe" caveat on C7. | free tier, 2B | HIGH |
+| F4 | **The audit arm** | Two parts. (a) Literature analysis, no GPU: for each published introspection claim, does it run a control that decorrelates framing from the construct? (b) One *replication with the control added* of a claim that lacks it. Part (b) is what converts the audit from commentary into evidence. | (a) none, (b) free tier | HIGH |
+| F5 | Robustness of the null | Multi-seed and paraphrase sweep of the behavioural null (R4-R6), so the demonstration case is not single-seed. | free tier, 2B | MEDIUM |
+
+**PREPRINT 2 — the E13 benchmark and scale (ship May / June 2027)**
+
+| ID | Run | What it does | Compute | Priority |
+|---|---|---|---|---|
+| **F6** | **E13 recovery arm** | Each readout method vs planted ground truth: does it name the planted concept? | free tier -> mid | **HIGHEST** |
+| **F7** | **E13 attribution arm** | The context-only control (A11.3). Separates reading the activation from inferring from context. | free tier -> mid | **HIGHEST** |
+| **F8** | **E13 confabulation arm** | No-injection and random-norm-matched-injection false-positive rates. **The headline number.** | free tier -> mid | **HIGHEST** |
+| F9 | Scale / threshold arm | 32B: does the confound replicate, and does detection appear at the scale the field reports it? Resolves whether our null is real or below-threshold. | **32B tier** | HIGH |
+| F10 | Second model family | Qwen or Llama replication of F1 and F6-F8. Kills the "one lineage" objection. | mid tier | HIGH |
+| F11 | Human grading + kappa | ~200 stratified transcripts, >=2 labellers, report human-human and rules-vs-human agreement. Labour, not compute. | none | HIGH |
+| F12 | Confirmatory freeze | The pre-registered primary endpoints re-run from clean seeds. The numbers that go in the abstract. | mid tier | REQUIRED |
+
+**SECONDARY — run only if bandwidth allows, cut first under pressure**
+
+| ID | Run | Note |
+|---|---|---|
+| F13 | H8: PRG vs direction explained-variance | Cheap free-tier re-run; a third account beside H1/H2 |
+| F14 | E11-pilot: Assistant Axis dose-response | Build the axis on our model, measure the curve, pre-register the shape after |
+| F15 | Naturalistic extension | Extends R9 to the stratified bank |
+
+## A11.3 E13 design in detail
+
+**Methods under evaluation.** Constrained to what we can actually run:
+- **Logit lens** — free, trivial, the weakest baseline and therefore a good floor.
+- **Patchscopes-style** — inference-only, prompting-based.
+- **SelfIE-style** — inference-only, the model interprets its own activation.
+- **Linear probe** — our supervised method; serves as the *decodability ceiling*, not a
+  competitor. It answers "was the information there at all", which bounds what any
+  verbalizer could recover.
+- **NLA — OUT OF SCOPE, stated explicitly.** It trains two language models with
+  reinforcement learning. We benchmark the accessible subset and say so; pretending
+  otherwise would be the exact overclaiming this project exists to criticise.
+
+**The three arms.**
+
+**(1) Recovery.** Plant concept c, run each method, score whether its output names c
+(exact/related/no, same grading stack as the model reports, with the same human-validated
+kappa from F11). Stratified by domain, frequency and concreteness so that
+domain-conditional access is visible rather than pooled away.
+
+**(2) Attribution — the key design problem, and its solution.** For a model's self-report
+the steering control is "remove the introspective framing." A verbalization method has no
+framing to remove, so the analogous confound is different: **the verbalizer can see, or
+infer from, the prompt context**, which is precisely the "excessive expressivity"
+limitation the NLA authors acknowledge but cannot test.
+
+So the control is to **remove the activation and keep the context**:
+
+| Condition | Activation | Context | Interpretation |
+|---|---|---|---|
+| Full | injected | present | what the method normally reports |
+| **Context-only** | **ablated / null / random** | **present** | what the method can infer WITHOUT reading internals |
+| Activation-only | injected | context stripped or neutralised | reading with minimal contextual scaffolding |
+
+**The reportable quantity is Full minus Context-only**, not Full. That difference is the
+method's genuine activation-reading capability. A method with high recovery and a
+context-only baseline just as high is doing inference, not interpretation — the exact
+failure mode our neutral-framing control exposed in the model's own reports, transposed
+one level up. This is the same logical move that makes the whole paper coherent: delete
+the thing that is supposed to be doing the work and see whether performance survives.
+
+**(3) Confabulation rate.** Two sub-conditions, both essential:
+- **Null injection** (alpha = 0 / no injection): ask what is present. Any assertion of
+  specific content is a false positive. This is the base rate.
+- **Random norm-matched injection**: inject a random direction with the same norm as a
+  real concept vector. The model's state genuinely *is* perturbed, but there is no
+  concept to find. **A method that confidently names a concept here is confabulating
+  under perturbation** — the most safety-relevant failure mode, because it is what
+  happens when a method meets an anomalous state it has no vocabulary for.
+
+Report per method: recovery, context-only baseline, the difference, FPR at null, FPR at
+random. **A method's headline score should be the difference and the FPRs, never raw
+recovery**, and the benchmark should present it that way so users cannot cherry-pick.
+
+## A11.4 Engineering backlog (must exist before the runs)
+
+Test-first, in dependency order:
+
+1. **`aperture/readouts.py`** — a common interface for readout methods
+   (`readout(model, tok, activation_or_prompt, **cfg) -> str`), with logit-lens,
+   Patchscopes-style and SelfIE-style implementations behind it. This is the single
+   biggest build item and it gates F6-F8.
+2. **Activation capture in the forced-choice collector.** `collect_forced_choice_hf`
+   currently records only concept/order/choice/report. It must also save activations, or
+   every downstream re-analysis needs a fresh GPU run (this is what corrected H8's cost in
+   A5.5 and what lost us R7-R12's data).
+3. **Run-artifact archival helper.** Per the A7 gotcha: a single call that writes every
+   `.jsonl`, `.npz` and config for a run into a durable location, so a Kaggle session
+   expiring cannot destroy a run again.
+4. **Covariate loaders** — infini-gram exact counts and Brysbaert concreteness, replacing
+   `wordfreq` and the binary `is_abstract` flag in `forced_choice.py`.
+5. **Concept bank expansion to >=120**, domain-stratified, preserving the
+   same-category-negative and template invariants, with the existing validators extended.
+6. **Random norm-matched vector generator** — needed for F8's second sub-condition, and a
+   good negative control generally.
+7. **The PLANTED harness** — task schema, model adapters, a report-card generator, and a
+   CLI. This is the deliverable, and it should be extracted from F6-F8's code rather than
+   written separately, so the benchmark is by construction the thing we actually ran.
+
+## A11.5 Ordering and dependencies
+
+```
+Sem 5 (free tier)          build 1-4  ->  F1, F2, F3  ->  F4  ->  PREPRINT 1
+                                     \->  F5, F13 (if bandwidth)
+Sem 6 (needs compute)      build 5-7  ->  F6, F7, F8  ->  F10  ->  PREPRINT 2
+                           32B access ->  F9
+                           labour     ->  F11 (start in Sem 5, finish Sem 6)
+                                          F12 last, after everything else freezes
+```
+
+**Critical path to Preprint 1:** engineering items 1-4, then F1. F1 is the single most
+important run in the whole program, because the confound is the paper's headline and it
+is currently supported by one seed at one layer at one alpha.
+
+**Critical path to Preprint 2:** engineering item 1 (readouts) and item 6, then F6-F8.
+Note these can start on free tier at 2B *before* 32B access lands — the benchmark does not
+require scale, only ground truth. F9 is the only genuinely compute-blocked run.
+
+**F11 (human grading) should start in Sem 5**, not Sem 6. It is pure labour with no GPU
+dependency, it gates the credibility of every graded number in both preprints, and it is
+the item most likely to be deferred until it is too late.
+
+## A11.6 What was cut, and why
+
+- **E6 training arm** — Year 2 at the earliest; violates the "science ends May 2027" rule.
+- **E7 source attribution (L3)** and **E9 adversarial/concealment** — real, but they serve
+  the old empirical thesis and would dilute the methods story. Paper #2.
+- **Developmental / checkpoint arm** — cut in A9.5; partially claimed, expensive.
+- **SAE-based mechanism work** — demoted in A5.5; seed-instability makes it unsafe for a
+  pre-registered claim. Patching remains the primary mechanism evidence.
+
+Every one of these is a legitimate research direction. They are cut because bandwidth is
+the binding constraint (Risk R7), and because a focused methods paper with a released
+benchmark beats a broad one with five thin arms.

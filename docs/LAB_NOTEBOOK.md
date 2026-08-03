@@ -536,6 +536,9 @@ master plan addenda.
 | 2026-07-22 | **Next experiment reprioritised:** informative-framing arm (prompt-only) BEFORE E11a persona gate, per Addendum 2 §A2.2 | this log |
 | 2026-07-22 | **First pre-registered run (R12):** three-framing battery scored against a git-frozen prediction; primary hypothesis FALSIFIED (informative framing hurt not helped); non-replication of Pearson-Vogel on Gemma-2-2B; recorded as clean pre-registered negative | prereg 2026-07-22; R12 |
 | 2026-07-24 | **Workshop paper DROPPED; single target is a full conference paper** (interp/safety venue). Scoop-insurance flag-plant moves to an arXiv preprint at ~W44. Evidence bar rises: every PILOT claim needs seeds + >=2 model families + real covariates + human-checked grading before submission | Addendum 4 |
+| 2026-07-30 | **RUN PROGRAM REBUILT: E0-E10 superseded by the F-series.** §6 rewritten. Preprint 1 = **F1 confound hardening (HIGHEST PRIORITY — the headline currently rests on ONE seed/layer/alpha)**, F2 real covariates + 120-concept stratified bank, F3 PRG cross-validation, F4 the audit arm, F5 null robustness. Preprint 2 = F6/F7/F8 the three E13 arms, F9 the 32B threshold arm (**the only compute-blocked run**), F10 second family, F11 human grading (**start in Sem 5 — pure labour, gates every graded number, most likely to slip**), F12 confirmatory freeze. CUT: E6 training arm, E7 source attribution, E9 adversarial, developmental arm, SAE mechanism work | Addendum 11 |
+| 2026-07-30 | **E13 ATTRIBUTION CONTROL SOLVED.** A verbalization method has no "framing" to neutralise, so the analogue of our neutral-framing control is different: its verbalizer can infer from the **prompt context** rather than read the activation (the "excessive expressivity" limitation NLA's authors admit but cannot test). **Control = remove the activation, keep the context.** Report **Full minus Context-only**, never raw recovery — a method whose context-only baseline matches its full score is doing inference, not interpretation. Confabulation gets TWO sub-conditions: null injection (base FPR) and **random norm-matched injection** (state genuinely perturbed but no concept to find → naming one is confabulation under perturbation, the most safety-relevant failure mode) | Addendum 11, §A11.3 |
+| 2026-07-30 | **COMPUTE CLAIM CORRECTED.** A10 said Preprint 1 "needs no new compute" — imprecise. It needs no **paid/large-model** compute but DOES need **free-tier 2B sessions**; budget them. Shipping P1 on existing results alone would carry every claims-table weakness (1 seed, proxies, 16 concepts). Only F9 is genuinely compute-blocked; **E13 does not need scale, only ground truth**, so F6-F8 can start at 2B before any 32B access lands | Addendum 11, §A11.1 |
 | 2026-07-30 | **TWO PREPRINTS, NOT ONE — the publication hedge.** Q: will the E13 opening survive to mid-2027 / could 1.5 yrs go unpublishable? **Premise rejected: a publishable paper EXISTS TODAY** (R7 PRG + R8 causal + R9 naturalistic + R10/R11 confound + R12 pre-reg falsification). Real risk = weaker venue, not zero. **HONEST BAD NEWS: ground-truth interp benchmarking is a CROWDED GENRE** — InterpBench (2407.14494), Tracr, AttributionLab (2310.06514), OpenXAI, M4, BEExAI, F-Fidelity, and closest: "Faithfulness Metrics Don't Measure Faithfulness: Meta-Evaluation with Ground Truth" (2605.25052, May 2026) + BonaFide. E13 must be scoped narrowly to **activation-verbalization methods + the steering control + the confabulation-rate metric**, citing that prior art up front. **STRUCTURAL SAVE: benchmarks COEXIST (all six XAI benchmarks above are simultaneously published); empirical firsts are winner-take-all.** The Addendum-8 repositioning moved us from category 1 to category 2 — retrospectively the most protective decision in the plan, do not reverse it | Addendum 10, §A10.1-3 |
 | 2026-07-30 | **SPLIT THE PREPRINT.** Preprint 1 = confound + decorrelation protocol + PRG + audit arm, **Dec 2026/Jan 2027 (end Sem 5), NEEDS NO COMPUTE**, ~4 months earlier than the old W30 plan. Preprint 2 = E13 + 32B arm, May/Jun 2027 (end Sem 6). **Decisive property: once Preprint 1 is public, NO subsequent publication by anyone can make this thesis unpublishable** — priority timestamped, everything after is extension not prerequisite. Supersedes the single-preprint schedule in A5.6. Venue calendar: ICML 2027 ~Jan (early, P1 only), **NeurIPS 2027 ~May = primary target**, ICLR 2028 ~Sept (inside the internship, acceptable only because writing is pre-done). Floor: even if everything is scooped, R12's pre-registered falsification + non-replication remains publishable as a negative-results note. **No realistic path to zero** | Addendum 10, §A10.4-6 |
 | 2026-07-30 | **GROUND TRUTH IS THE SCARCE RESOURCE — flagship upgrade to E13.** Deep sweep: Anthropic's NLA (transformer-circuits.pub/2026/nla) found **unverbalized evaluation awareness** in the Claude Opus 4.6 audit — >5% NLA-measured awareness on 10/16 evals, **7 with ZERO verbalized awareness**, 4% noise floor. That is OUR Probe-Report Gap at frontier scale = external corroboration, a citation asset not a scoop. **THE OPENING:** they state they "cannot validate NLA measurements against ground truth, because the model's underlying beliefs are unobservable", and admit confabulation ("verifiably false claims"), no mechanistic grounding, and "excessive expressivity". They did NOT use planted ground truth. General interp-eval literature agrees there is no ground truth for explanations. **Concept injection MANUFACTURES ground truth → a better-funded lab explicitly cannot do what our apparatus does by construction. That asymmetry, not scale, is the edge** | Addendum 9, §A9.2 |
@@ -567,36 +570,100 @@ master plan addenda.
 
 ## 6. Planned runs
 
-### Next priority: E11a — the H7 persona-gate test
+Superseded 2026-07-30. The E0-E10 families were designed for the empirical thesis and
+are replaced by the **F-series** (masterplan Addendum 11). The old family table is kept
+at the end for provenance, since R1-R12 map onto it.
 
-The highest-ceiling experiment available, and it reuses the existing pipeline
-(extraction, injection, probes, grading, gamma, the difference statistic).
+### Engineering backlog — must exist before the runs
 
-Design: extract an assistant-persona direction contrastively; ablate it or steer
-toward a contrasting persona; re-run the R11 two-framing identification battery
-with the probe measured throughout. Endpoints: change in PRG, and the gamma
-difference between framings under persona manipulation.
+Test-first, in dependency order. Items 1-4 gate Preprint 1; 1, 6, 7 gate the flagship.
 
-PRE-REGISTER BEFORE RUNNING: the H7 prediction is that verbal report accuracy
-RISES while probe accuracy stays FLAT — information unchanged, reportability
-gated. Writing this down first is what makes a confirmation credible.
+1. **`aperture/readouts.py`** — one interface over logit-lens, Patchscopes-style and
+   SelfIE-style readouts. **Biggest build item; gates F6-F8.**
+2. **Activation capture in `collect_forced_choice_hf`** — it currently saves only
+   concept/order/choice/report, which is why H8 became a re-run and why R7-R12 raw data
+   is gone.
+3. **Run-artifact archival helper** — one call that persists every `.jsonl`/`.npz`/config
+   durably, so an expiring Kaggle session can never destroy a run again (§7 gotcha).
+4. **Covariate loaders** — infini-gram exact counts and Brysbaert concreteness, replacing
+   `wordfreq` and the binary `is_abstract` flag.
+5. **Concept bank -> >=120**, domain-stratified, preserving the same-category-negative
+   and template invariants.
+6. **Random norm-matched vector generator** — needed for F8's second sub-condition.
+7. **The PLANTED harness** — task schema, model adapters, report-card generator, CLI.
+   Extract it from F6-F8's code so the benchmark is by construction what we actually ran.
 
-If H7 holds the flagship becomes a three-act paper (appear unable to introspect →
-the standard evidence is confounded → the failure is persona-gated). If it fails,
-acts 1-2 stand as a controlled negative plus a methodological warning.
+### PREPRINT 1 runs — the confound and the protocol (ship Dec 2026 / Jan 2027)
 
-### Near-term (concrete, next sessions)
-- **Layer sweep** on Gemma-2-2B: find which layer maximizes coherent injection
-  and any detection signal.
-- **Single-position span** comparison vs all-response at the coherent alphas.
-- **9B scale check** (Gemma-2-9B or Llama-3.1-8B): does detection emerge with
-  scale? Gates the Branch-D read.
-- **B3 grading stack**: rules + judge scoring of detect/identify, so runs
-  produce numbers not transcripts.
-- **B4 prior-guessing null**: fit the gamma access parameter with infini-gram
-  pretraining frequencies — the paper's spine.
+| ID | Run | Endpoint | Compute |
+|---|---|---|---|
+| **F1** | **Confound hardening — HIGHEST PRIORITY** | Neutral-vs-introspective gamma difference across seeds, >=8 paraphrases, >=3 layers, >=3 alphas, with CIs per cell | free tier 2B |
+| F2 | Covariates + bank expansion | Gamma refit with real frequency/concreteness on >=120 stratified concepts | free tier 2B |
+| F3 | PRG hardening | Leave-one-prompt-out CV probe accuracy with CIs | free tier 2B |
+| F4 | The audit arm | (a) which published claims decorrelate framing from construct — no GPU; (b) one replication *with* the control added | (a) none (b) free tier |
+| F5 | Null robustness | Multi-seed/paraphrase sweep of the behavioural null | free tier 2B |
 
-### Master-plan run families (status)
+**F1 is the single most important run in the program.** The confound is the paper's
+headline and currently rests on one seed at one layer at one alpha.
+
+### PREPRINT 2 runs — E13 and scale (ship May / June 2027)
+
+| ID | Run | Endpoint | Compute |
+|---|---|---|---|
+| **F6** | **E13 recovery** | Per method: does it name the planted concept? | free tier -> mid |
+| **F7** | **E13 attribution** | **Full minus context-only** — the genuine activation-reading capability | free tier -> mid |
+| **F8** | **E13 confabulation** | FPR at null injection AND at random norm-matched injection. **The headline number.** | free tier -> mid |
+| F9 | Scale / threshold | Does the confound replicate at 32B, and does detection appear where the field reports it? | **32B — the only compute-blocked run** |
+| F10 | Second family | F1 and F6-F8 on Qwen or Llama | mid tier |
+| F11 | Human grading + kappa | ~200 stratified transcripts, >=2 labellers, human-human and rules-vs-human agreement | labour, no GPU |
+| F12 | Confirmatory freeze | Pre-registered primary endpoints from clean seeds | mid tier |
+
+**Start F11 in Sem 5.** No GPU dependency, gates the credibility of every graded number,
+and is the item most likely to slip until too late.
+
+### E13 design notes (full version in masterplan A11.3)
+
+**Methods:** logit lens (floor), Patchscopes-style, SelfIE-style, plus our linear probe
+as the **decodability ceiling** (it bounds what any verbalizer could recover). **NLA is
+explicitly out of scope** — it RL-trains two LLMs. Say so rather than overclaim.
+
+**The attribution control.** A verbalization method has no "framing" to neutralise, so
+the analogous confound is that its verbalizer can infer from the *prompt context* rather
+than read the activation — the "excessive expressivity" limitation its authors admit but
+cannot test. The control is therefore to **remove the activation and keep the context**:
+
+| Condition | Activation | Context |
+|---|---|---|
+| Full | injected | present |
+| **Context-only** | ablated / random | present |
+| Activation-only | injected | stripped |
+
+**Report Full minus Context-only, never raw recovery.** A method whose context-only
+baseline matches its full score is doing inference, not interpretation.
+
+**Confabulation has two sub-conditions.** Null injection gives the base false-positive
+rate. **Random norm-matched injection** is the important one: the state genuinely is
+perturbed but there is no concept to find, so a method that confidently names one is
+confabulating under perturbation — the most safety-relevant failure mode, and what
+happens when a method meets an anomalous state it has no vocabulary for.
+
+### Secondary — cut first under bandwidth pressure
+
+- **F13** H8: does PRG vary with the injected direction's explained variance? (cheap)
+- **F14** E11-pilot: build the Assistant Axis on our model, measure the dose-response
+  curve, pre-register the shape *after*. High ceiling, poor novelty bet.
+- **F15** Naturalistic extension to the stratified bank.
+
+### Cut, with reasons
+
+**E6 training arm** (violates "science ends May 2027"), **E7 source attribution**,
+**E9 adversarial/concealment** (both serve the old thesis; paper #2), **developmental /
+checkpoint arm** (partially claimed, expensive), **SAE-based mechanism work** (seed
+instability makes it unsafe for a pre-registered claim; patching remains primary).
+
+All are legitimate directions. They are cut because bandwidth is the binding constraint.
+
+### Legacy family table (provenance for R1-R12)
 | Family | Name | Status |
 |--------|------|--------|
 | E0 | Infra smoke | DONE (R1) |
