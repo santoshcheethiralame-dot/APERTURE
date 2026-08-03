@@ -33,88 +33,114 @@ keep it open in a second tab.
 ## Table of contents
 
 - **Part 0 — The 90-second version.** The whole project in one page.
-- **Part 1 — The big picture.** What question are we answering, and why does anyone
-  care? Introspection vs confabulation, explained with humans first.
+- **Part 1 — The big picture.** Two problems: nobody can trust what a model says about
+  itself, and nobody has ground truth to check it against. We solve the second to attack
+  the first.
 - **Part 2 — Crash course: how a language model actually works.** Tokens,
   embeddings, the transformer, the residual stream, layers, logits. From zero.
-- **Part 3 — Our core trick: concept injection.** How we plant a thought in the
-  model and prove we did it.
-- **Part 4 — The science.** The Introspection Ladder, our hypotheses, the
-  Probe–Report Gap, the gamma test, and the steering-vs-access trap that everything
-  hinges on.
-- **Part 5 — The story so far.** Every experiment we have run (R1–R12), told as a
-  story, in plain language.
+- **Part 3 — Manufacturing ground truth: concept injection.** How we plant a known
+  concept inside a model and prove we did it.
+- **Part 4 — What we measure, and the trap that breaks it.** The Introspection Ladder,
+  the Probe–Report Gap, the gamma null — and **output steering**, the confound the whole
+  project now turns on.
+- **Part 5 — What the pilot established.** Twelve runs: the apparatus works, and the
+  apparent introspection signal dissolved under control.
 - **Part 6 — The code.** A guided tour of every file in `src/aperture/`.
 - **Part 7 — Getting set up and running things.** Install, test, and the hard-won
   Kaggle recipe.
 - **Part 8 — How we work.** The workflow, pre-registration, the lab notebook, git,
   and the conventions you must follow.
-- **Part 9 — The two-year plan.** Phases, gates, run families, and the contingency
-  tree.
+- **Part 9 — Where the project is going.** The flagship experiment, the two preprints,
+  the semester plan, and the constraints that shape all of it.
 - **Part 10 — Where you fit in.** Your first week, your first tasks, and the open
   questions you can grab.
 - **Part 11 — Glossary.** Every term, alphabetical.
 - **Part 12 — FAQ and cheat sheets.** Quick answers and quick reference.
+
+> **A note on how this project changed.** It began as an empirical question — *do
+> language models genuinely introspect, or do they confabulate?* In July 2026 it was
+> repositioned around a methodological one — *how do you measure any self-knowledge
+> claim without fooling yourself?* — because we found a confound that dissolves the
+> obvious experiment, and because the empirical question is being crowded by
+> better-resourced labs. This guide describes the project as it is **now**. Part 5
+> explains what the original phase established and why the shift happened.
 
 ---
 ---
 
 # Part 0 — The 90-second version
 
-Modern AI chatbots (large language models, or **LLMs**) are increasingly asked to
-*report on their own minds*: "How confident are you?", "Why did you say that?",
-"What are you thinking about?". A lot of AI-safety plans quietly assume that when a
-model answers those questions, it is actually **looking inward and telling the
-truth about its internal state**.
+Modern AI systems are increasingly asked to *report on themselves*: "How confident are
+you?", "Why did you do that?", "What were you thinking?". A growing number of AI-safety
+proposals treat those answers as informative — using self-reported confidence to decide
+when to trust a model, or asking an agent to explain an action in order to catch
+mistakes.
 
-But there is a second possibility. Maybe the model is not looking inward at all.
-Maybe it is just **making up a plausible-sounding story** about itself — the same
-way a person might confidently explain why they chose the left cereal box when the
-real reason was that it was slightly closer. Psychologists call this
-**confabulation**: a sincere, fluent explanation that is not actually based on the
-true cause.
+**Almost nobody checks whether those reports are true.** Not out of carelessness, but
+because it's genuinely hard: to know whether a model's self-report is accurate, you need
+to know what is *actually* inside it — and normally nobody does. There is no ground
+truth. This is the field's central measurement problem, and it applies not only to the
+model's own words but to the interpretability tools researchers use to read models'
+internals: those tools are now used in real safety audits, and there's no oracle to check
+them against either.
 
-**PROJECT APERTURE is a two-year research program to settle which one is happening.**
-We do it with a clean trick: we can reach *inside* a language model and physically
-plant a specific concept into its "mind" (say, the concept *volcano*) while it is
-talking. Because we planted it, **we know the ground truth**. Then we ask the model
-what it notices, and we check whether its answer reflects the thing we actually
-planted — or just a good guess.
+**PROJECT APERTURE manufactures the missing ground truth.** We reach inside a language
+model and plant a specific concept — say *volcano* — into its internal activity while it
+generates text. Because we planted it, we know exactly what's in there. Then we can ask
+whether the model, or an interpretability method, correctly reports it.
 
-So far, on the small open models we can afford to run, the answer looks like
-**confabulation, not genuine introspection** — but with a fascinating twist we did
-not expect (the concept is *provably present and active* inside the model; the
-model just does not *report* it). The whole point of the project is to nail this
-down rigorously, across many models, so the field has to take the answer seriously
-either way.
+The first thing this revealed was a trap. Ask a model to pick which concept was planted
+and it succeeds far above chance, which looks like introspection. But run the *same*
+injection while asking only "pick a word from this list" — no mention of thoughts,
+minds, or introspection at all — and it does **better**. The apparent self-knowledge was
+**output steering**: planting a concept mechanically pushes that word toward the model's
+mouth, no self-awareness required. Any self-report result without that control is
+confounded, and most published ones don't have it.
 
-**Why it is a big deal no matter how it turns out:**
-- If we find genuine self-access somewhere, we will have found and located the
-  first real machine introspection — a landmark.
-- If it is confabulation all the way down, we will have shown that "just ask the
-  model about itself" is an unreliable foundation for AI oversight — also a
-  landmark, and arguably more useful.
+**So the project is now about measurement.** We build the protocol that separates real
+self-knowledge from steering, and a benchmark — **PLANTED** — that uses planted ground
+truth to test whether the field's interpretability methods actually report what's inside
+a model, how often they're right for the wrong reason, and how often they simply make
+things up.
 
-There is no boring outcome. Welcome aboard.
+**Why this matters:** if AI oversight is going to rest on systems explaining themselves,
+somebody has to check whether those explanations are true. Right now the tools for
+checking are themselves unchecked. That's the gap we can fill — and, unusually, our lack
+of enormous compute doesn't block it, because what this needs is ground truth and
+controls, not scale.
+
+Welcome aboard.
 
 ---
 ---
 
-# Part 1 — The big picture
+# Part 1 — The big picture: two problems
 
-## 1.1 The one question this whole project exists to answer
+## 1.1 Two problems, and why we attack the second one
 
-Here it is, in one sentence:
+The question that started this project was:
 
-> **When a language model talks about its own internal state, is it actually
-> reading that state, or is it inventing a believable story?**
+> **When a language model talks about its own internal state, is it actually reading
+> that state, or is it inventing a believable story?**
 
-Everything — every experiment, every line of code, every statistic — exists to
-answer that one question carefully enough that other scientists have to believe
-the answer.
+That question is real and important, and Part 1 explains why. But it turned out to sit
+on top of a second, more basic problem — and that second problem is what this project
+now works on:
 
-Let us unpack the two possibilities, because the entire project is a contest
-between them.
+> **How would you check? To know whether a self-report is accurate, you need to know
+> what is actually inside the model. Normally, nobody does.**
+
+This is not a niche technicality. It is the binding constraint on the entire field. The
+interpretability literature says so directly: *there is no ground truth for
+explanations.* When researchers build a tool that reads a model's internals and
+describes them in English, they cannot fully verify it, because the thing it's
+describing is unobservable. Even the best-resourced labs run into this — one team
+shipped such a tool into a real pre-deployment safety audit while stating plainly in
+their paper that they **could not validate it against ground truth**.
+
+**We can manufacture that ground truth.** That is what concept injection does, and it is
+the single asset that makes a small, low-compute project genuinely useful here. The rest
+of this guide is about how, and what we found when we used it.
 
 ## 1.2 Introspection vs confabulation — first, in humans
 
@@ -208,28 +234,36 @@ mechanically, with no self-awareness involved at all. A huge part of this projec
 building the controls that separate "right for the right reason" from "right by
 accident." Part 4 is entirely about that.
 
-## 1.5 What "the most jaw-dropping paper" would actually look like
+## 1.5 What we are actually trying to produce
 
-Our stated ambition is a landmark paper. Concretely, a landmark result here is one
-that does one of two things, airtight:
+Being precise about the goal matters, because it drives every priority in Part 9.
 
-1. **Finds genuine introspection and locates it.** We identify a specific
-   condition — a model size, a layer, a training recipe — where the model
-   *demonstrably* reads its planted state, beyond any lucky-guessing explanation,
-   and we trace the internal "read-out" pathway that makes it possible. That would
-   be the first validated, mechanistically located machine introspection. Huge.
+We are **not** trying to be first to answer "do models introspect?" That race is
+crowded — one research programme alone had roughly fifteen projects on it in a single
+cohort, several using our exact method, and they are staffed by people with far more
+compute than we have. Empirical firsts are winner-take-all, and we would probably lose.
 
-2. **Demolishes the assumption, rigorously.** We show that across many models and
-   many careful controls, the self-report channel *never* genuinely reads the
-   internal state — it confabulates — and we prove the information *was* there to be
-   read (so it is not that there was nothing to report). That would tell the whole
-   field: stop trusting "ask the model about itself" as a safety tool without
-   independent verification. Also huge, and arguably more actionable.
+We **are** trying to produce the measurement standard that this crowd needs:
 
-Notice both outcomes are landmarks. The design is built so that **there is no
-losing result, only a losing execution.** Our job is to execute so carefully that
-whichever way nature falls, the answer is undeniable. That is the standard we hold
-every experiment to.
+1. **A protocol** that separates genuine self-knowledge from output steering, with a
+   demonstration that it overturns a real result — including one of our own.
+2. **A benchmark (PLANTED)** that uses planted ground truth to test whether
+   interpretability methods actually report what is inside a model — how often they are
+   right, how often they are right for the wrong reason, and **how often they simply
+   make things up.**
+
+The strategic logic is worth internalising because it is unusual: **empirical findings
+depreciate as a field gets crowded; measurement tools appreciate.** Every new paper on
+introspection is one more potential user of the protocol. If someone publishes the
+empirical verdict before us, our version is worthless — but if someone publishes a
+similar benchmark, theirs becomes concurrent work we cite while differentiating on the
+axes they lack. Several ground-truth interpretability benchmarks are published and
+coexisting right now.
+
+That repositioning is also what makes a top-tier venue realistic. Benchmarks are judged
+on utility, rigour and reproducibility rather than novelty and scale — which is exactly
+the right way round for a small team with an unusually disciplined method and modest
+compute.
 
 ## 1.6 A first taste of what we have actually seen
 
@@ -523,10 +557,12 @@ actual trick.
 
 ---
 
-# Part 3 — Our core trick: concept injection
+# Part 3 — Manufacturing ground truth: concept injection
 
-This part explains, step by step, how we plant a concept in a model's mind and prove
-we did it. This is the engine the whole project runs on. It has three moving parts:
+This part explains, step by step, how we plant a concept inside a model and prove we did
+it. This is the engine the whole project runs on — and, as Part 1 argued, the reason a
+small team can contribute something the big labs currently cannot: **it manufactures the
+ground truth this field otherwise lacks.** It has three moving parts:
 (1) building a **concept vector**, (2) **injecting** it into the residual stream, and
 (3) **measuring** the effect. We will do each in plain language, then connect them.
 
@@ -725,7 +761,11 @@ much harder than it sounds.
 ---
 ---
 
-# Part 4 — The science: asking the question correctly
+# Part 4 — What we measure, and the trap that breaks it
+
+> **If you read only one section of this guide, read §4.4.** Output steering is the
+> confound the entire project now turns on. Everything else in Part 4 is the vocabulary
+> you need to understand why it matters and how we detect it.
 
 We can plant a concept and read the model's answer. Now: how do we turn "it said
 volcano" into a rigorous claim about introspection? This part is the intellectual
@@ -814,73 +854,47 @@ report tell you about the content once you already know the detection state?" If
 is zero, it is pure confabulation; if positive, there is access. But you do not need
 the math to get the picture: is there a direct content-to-report arrow or not.)
 
-## 4.3 A newer hypothesis we added: H7, persona-gating
+## 4.3 A secondary hypothesis: H7, persona-gating
 
-During the pilot we started to suspect a more interesting middle possibility, which we
-named **H7 — persona-gated introspection**:
+One further possibility sits between H1 and H2, which we call **H7 — persona-gated
+introspection**: perhaps the ability to read the injected state exists, but is
+suppressed by the model's trained "helpful assistant" character, which is scripted to
+deny having inner states.
 
-> Maybe the *ability* to read the injected state exists in the model, but it is
-> **blocked by the "helpful assistant" persona**. When you ask an instruct model
-> "what are you thinking?", it answers in its trained assistant character, and that
-> character is scripted to say reassuring things ("I don't have thoughts of my own")
-> — which could suppress a genuine read-out that is physically there underneath.
+H7 is currently **a secondary line, not a priority** — several better-resourced groups
+are working on persona directions, so it is a poor novelty bet. But the way it evolved
+is worth reading, because it is a compact lesson in how this project is meant to
+operate.
 
-If H7 is right, then the access exists but is *gated* by the persona, and you could
-unlock it by suppressing the assistant character. This would be a genuinely novel and
-exciting finding — it would reconcile "the info is clearly in there" (which we see)
-with "the model won't report it" (which we also see). H7 is one of the main things the
-next phase of the project is built to test. (Our pilot's R12 experiment was a first,
-prompt-only probe at a neighboring idea; it did not confirm the mechanism story — see
-Part 5 — which is exactly why the real test, ablating the persona *direction* inside
-the model, still needs to be run.)
+We originally stated H7 as a *direction*: suppress the persona and identification goes
+**up**. Then a published paper (*The Assistant Axis*) reported that prompts pushing a
+model to reflect on its own processes drive it **away** from the assistant persona —
+the opposite of the mechanism we had assumed when explaining our own R11 result. Both
+stories cannot be right.
 
-### H7 was rewritten in July 2026 — and the story of why is worth your time
-
-**Update (2026-07-25).** H7 as stated above predicted a *direction*: suppress the
-persona and identification goes **up**. A published paper — *The Assistant Axis*
-(arXiv:2601.10387) — forced us to rewrite it, and the episode is a good lesson in how
-this project is supposed to work.
-
-That paper builds a map of "persona space" from 275 character archetypes and finds its
-main axis: how strongly the model is sitting in its default Assistant character. Then
-comes the finding that hit us — prompts **pushing the model to reflect on its own
-processes make it drift AWAY from the Assistant persona**, while ordinary bounded tasks
-("technical questions," "practical how-to's") keep it anchored there.
-
-Now compare that with our own R11 (Part 5.10). We found that introspective framing
-*lowered* identification, and we explained it by saying the prompt pushes the model
-*into* an assistant-explaining-itself register. But our introspective prompt is exactly
-the kind of self-reflective prompt that the Assistant Axis paper says pushes the model
-the **other** way. **Both stories cannot be the mechanism.**
-
-Be precise about what is damaged here, because the distinction matters:
-- **R11's actual result is untouched.** Introspective framing did not help; the γ is
-  steering. Those are measurements, and they stand.
+Note carefully what was and wasn't damaged:
+- **The R11 measurement is untouched.** Introspective framing didn't help; γ is steering.
+  Those are numbers, and they stand.
 - **Our post-hoc explanation of *why* is contested** — and that explanation was the seed
   H7 grew from. It was exploratory (found and explained after the fact), which is exactly
-  the class of claim that is allowed to be overturned like this.
+  the class of claim that should be overturnable like this.
 
-So H7 now predicts a **shape** rather than a direction:
+So H7 now predicts a **shape**, not a direction:
 
-> **H7 (rewritten):** identification performance is a **non-monotonic** function of
-> where the model sits on the Assistant Axis, while **probe decodability stays flat**
-> across that range.
+> **H7:** identification is a **non-monotonic** function of the model's position on the
+> Assistant Axis, while **probe decodability stays flat** across that range.
 
-The **probe-flat half is the load-bearing part**. If identification and the probe move
-*together*, we have merely made the model globally better or worse — that is not a gate.
-Only **identification moving while the probe holds steady** shows a read-out gate being
-opened or closed.
+The **probe-flat clause is the load-bearing half**. If identification and probe accuracy
+move together, we have merely made the model globally better or worse — that is not a
+gate. Only identification moving *while the probe holds steady* demonstrates a read-out
+gate opening or closing.
 
-The sequencing changed to match: we now run **E11-pilot** (steer along the axis in
-*both* directions and *measure* the curve, exploratory) **before** E11a pre-registers a
-shape. Pre-registering a direction before measuring the shape is precisely the mistake
-R12 taught us — cheaply — not to repeat.
-
-Two practical notes a newcomer would otherwise trip on: the published axis exists for
-Gemma-2-**27B**, Qwen-3-32B and Llama-3.3-70B — **not** for our Gemma-2-2B, so we have
-to *build* the axis on our model. And we cannot reuse our old runs for it, because our
-forced-choice code never saved activations; E11-pilot needs a fresh run that captures
-them.
+The sequencing changed to match: **measure the curve first (exploratory), pre-register
+the shape second.** Registering a direction before measuring the shape is precisely the
+error that a pre-registration had already caught us making once, cheaply. Two practical
+notes if you pick this up: the published axis covers Gemma-2-27B, Qwen-3-32B and
+Llama-3.3-70B but **not** our 2B model, so it must be built; and our forced-choice code
+never saved activations, so it needs a fresh capture run.
 
 ## 4.4 The trap that everything hinges on: steering vs access
 
@@ -1071,15 +1085,45 @@ reported** (behavioral null), and that the one apparent "report success" (γ > 0
 forced choice) turned out to be **steering, not access** (the neutral-framing
 control). Four methods, one coherent picture. Part 5 tells that story run by run.
 
+## 4.9 The same three questions, now asked of *methods* rather than models
+
+Here is the move that defines the project's current phase, and it follows directly from
+everything above.
+
+Those three questions were asked about **the model's own verbal report**. But the field
+has since built a family of *interpretability methods* whose job is to read a model's
+internals and describe them in English — and those methods are now used in real safety
+audits. They face **exactly the same three questions**, and nobody can answer them,
+because checking a method requires knowing what was actually inside the model.
+
+We know, because we planted it. So the same apparatus, pointed at methods instead of
+models, asks:
+
+1. **Recovery** — does the method report the content we planted?
+2. **Attribution** — does it report it *for the right reason*, or because the injection
+   mechanically steered its output? (Same neutral-framing control, same logic as §4.4.)
+3. **Confabulation rate** — plant **nothing**, ask what is present, and count how often
+   the method asserts content anyway.
+
+That third question is the one to remember. It is a **false-positive rate for
+interpretability methods**: a number the field needs, cannot currently produce, and that
+we can measure on a small model. It is the core of the flagship experiment in Part 9.
+
 ---
 ---
 
-# Part 5 — The story so far (every experiment, in plain language)
+# Part 5 — What the pilot established
 
-This part narrates everything we have actually done, in order. In the lab notebook
+This part narrates everything we have actually run, in order. In the lab notebook
 (`docs/LAB_NOTEBOOK.md`) these are logged as runs **R1 through R12** plus a graded
-analysis **G1**. Here they are told as a story, so you understand not just *what* each
-found but *why we did it next*. 
+analysis **G1**. They are told as a story so you understand not just *what* each found
+but *why we did the next one*.
+
+**Read this as two things at once.** It is the empirical record — and it is also the
+evidence that the apparatus works, which is what the current phase is built on. The
+pilot's most valuable output was not the finding that a small model fails to introspect.
+It was **discovering the confound that made that finding necessary in the first place**,
+and proving we can detect it. That is why Part 9 looks the way it does.
 
 **Two honesty labels up front, used throughout:**
 - Everything below is **PILOT** work: mostly one model (Gemma-2-2B, with one 9B
@@ -1392,13 +1436,21 @@ open models:
 and unreported* — a read-out gap that looks like confabulation, with the apparent
 introspection signal explained by steering.
 
-**What the pilot is NOT yet:** rigorous. It is one model family (Gemma; 2B and 9B are
-the same lineage), one seed, 16 concepts, automatic grading, and only one
-pre-registered run. To become a landmark paper it needs (see Part 9): a second model
-family, more concepts, human-checked grading, better frequency data, multi-seed
-robustness, and — above all — the **H7 persona-gate test done properly** (ablating the
-persona *direction inside the model*, not just changing the prompt wording as R12 did).
-That is the road ahead.
+**What the pilot is NOT:** rigorous enough to publish as-is at a strong venue. One model
+family (Gemma; 2B and 9B share a lineage), one seed, 16 concepts, rules-based grading,
+one pre-registered run. The two cheapest fixes — and they matter more than any further
+analysis — are **a second model family** and **human-validated grading with a reported
+agreement score**.
+
+**And what the pilot's real contribution turned out to be.** Item 5 is the one that
+changed the project. We built an experiment that looked like it demonstrated
+introspection, then built the control that killed it. That control — and the fact that
+it overturned *our own* result — is more valuable than the null itself, because the
+field is now full of self-knowledge claims measured without it.
+
+That is the pivot from Part 5 to Part 9. The pilot proved the apparatus works and
+surfaced the confound. The current phase turns both into a measurement standard, and
+points the same machinery at the interpretability methods the field is already trusting.
 
 ---
 ---
@@ -1924,7 +1976,7 @@ chat, not in a notebook cell — here).
 
 ## 8.6 The planning documents (know what lives where)
 
-- **`docs/plan/masterplan.md`** — the full two-year plan: research questions,
+- **`docs/plan/masterplan.md`** — the full plan (start with its CURRENT STATE block): research questions,
   hypotheses, the 100-week schedule, the model roster, the risk register, the budget.
   It has dated **addenda** at the bottom (Addendum 1–4) recording every major change of
   course since it was written; addenda are read in date order and *supersede* the
@@ -1981,359 +2033,159 @@ A few hard constraints from how the team operates:
 ---
 ---
 
-# Part 9 — The two-year plan
+# Part 9 — Where the project is going
 
-The pilot proved the apparatus and sketched the story. The masterplan
-(`docs/plan/masterplan.md`) lays out the full program to turn that into a landmark
-paper. Here is the shape of it in plain language, so you know where the whole thing is
-headed and where the pilot sits within it (near the very beginning — we are essentially
-in the early foundations phase, having front-loaded a lot of apparatus).
+The pilot proved the apparatus works and surfaced the confound. This part is what we do
+with that. It is the live plan; the masterplan (`docs/plan/masterplan.md`) has the full
+detail and a CURRENT STATE block at the top.
 
-## 9.1 The five flagship deliverables
+## 9.1 The flagship: PLANTED and the E13 benchmark
 
-The program aims to produce:
+**What we are building:** a public benchmark that uses planted ground truth to test
+whether interpretability methods actually report what is inside a model.
 
-1. **The dissociation result** — the main paper: does genuine self-access exist, or is
-   it confabulation? — resolved with pre-registered experiments across many models and
-   families.
-2. **PLANTED** — a public, reusable benchmark so *other* researchers can
-   measure introspection in *their* models the way we do. (Benchmarks are citation
-   engines and field-shapers.)
-3. **The mechanism** — a causal, circuit-level account of *how* detection/identification
-   happens or fails inside the model.
-4. **The training result** — does fine-tuning a model *for* introspection create genuine
-   access, or just better confabulation? (And what does it cost — does it damage other
-   abilities?)
-5. **The thesis + companion papers + public writeups.**
+The setup, from §4.9: the field has built methods that read a model's activations and
+describe them in English — and those methods are now used in real pre-deployment safety
+audits. But nobody can check them, because checking requires knowing what was actually
+inside the model. One team shipped exactly such a method into a Claude audit while
+stating in their own paper that they **could not validate it against ground truth,
+because the model's beliefs are unobservable**. They also acknowledge it sometimes makes
+"verifiably false claims", and that its verbalizer can infer things beyond what the
+activation actually contains.
 
-> **Priority update (2026-07-30).** These five are the *original* ambition and remain the
-> long-run map, but they are no longer equally weighted. **#2 (PLANTED) is now the
-> flagship**, carrying the E13 validation benchmark described in §9.1a-2, and #1 has been
-> reframed from "settle the empirical question" to "supply the measurement protocol." #4
-> (the training arm) stays a Year-2 item and may not survive the bandwidth budget at all.
-> Read §9.1a through §9.1a-3 for the live picture; this list is the horizon, not the plan.
+**We plant the answer, so we have the oracle they lack.** E13 measures three things:
 
-## 9.1a What this project is actually competing on (read this first)
+| Axis | Question | Why it is new |
+|---|---|---|
+| **Recovery** | Does the method report the planted content? | Needs an oracle — nobody has one |
+| **Attribution** | Right reason, or output steering / inference? | Our neutral-framing control (§4.4) |
+| **Confabulation rate** | Plant nothing — how often does it assert content anyway? | **A false-positive rate for interpretability methods. Nobody has this number.** |
 
-**Updated 2026-07-30.** The project began with an empirical goal: settle whether models
-introspect or confabulate. That goal is now at risk for a reason worth understanding,
-because it shapes every priority below.
+The third is the one to fight for. It is the number a safety reviewer will care most
+about, and it is measurable on a 2B model.
 
-The field is crowding fast. A single SPAR research cohort running Sept–Dec 2026 contains
-roughly **fifteen** projects on introspection, self-report faithfulness, or verbalization
-— Anthropic training models so their verbalizations match their internal activations,
-DeepMind asking whether self-explanations can be trusted, a lab planting cues and
-measuring the verbalization gap using essentially our method, and another testing whether
-self-reports depend on how they're elicited, which is our R11/R12 result. Add the parallel
-cohorts at MATS, Anthropic Fellows, Pivotal and Apollo. Our preprint lands April 2027 and
-submission is 2028.
-
-So: by the time we submit, "do models introspect?" will not be an open question we are
-answering. It will be a crowded one we are joining late.
-
-**The asymmetry that saves the project.** Almost all of that work chases the *empirical
-claim*. Almost none builds the *measurement discipline* — and from their descriptions,
-most appear to carry the very confound we already found. Every new introspection paper
-needs four things we have already built and tested:
-
-| What any such paper needs | What we have |
-|---|---|
-| Ground truth | concept injection with a KL meter |
-| A decodability baseline | probes and the Probe–Report Gap |
-| A steering control | the neutral-framing protocol (R11) |
-| A null to beat | the fitted prior-guessing model (γ) |
-
-**Empirical assets depreciate as the field crowds; methodological assets appreciate**,
-because every new paper becomes a consumer of the protocol. In a gold rush, sell shovels.
-
-**So the thesis was repositioned.** We now lead with the confound and the control
-protocol; the Gemma null becomes the *demonstration case* that the protocol overturns a
-real result — including one of our own. This is robust to the one outcome we cannot
-control, which is somebody else answering the empirical question first.
-
-**And the ambition was recalibrated honestly.** This project was originally aimed at "the
-most jaw-dropping paper of all time." An undergraduate capstone on free-tier compute, in a
-subfield actively worked by Anthropic and DeepMind, will not produce a landmark empirical
-result — and chasing one biases every decision toward breadth and novelty when the
-achievable edge is rigour and reusability. The target now is **the methods paper and
-benchmark this subfield uses for the next five years**. Nobody remembers the fourth paper
-reporting an introspection finding; everyone downstream cites the paper that told them how
-to measure it without fooling themselves. That target is reachable with the compute we
-actually have. The previous one was not.
-
-## 9.1a-2 The flagship experiment, and why our compute disadvantage stopped mattering
-
-**Added 2026-07-30.** The repositioning above has a sharper form, and it came from
-reading what the best-funded lab in this space says about its own methods.
-
-Anthropic built **Natural Language Autoencoders** — a system that reads a model's
-activations and describes them in plain English. They used it in the pre-deployment audit
-of Claude Opus 4.6 and found **unverbalized evaluation awareness**: the model internally
-representing "I am being tested" while never saying so. On 10 of 16 evaluations the
-internal signal exceeded threshold, and on **7 of those the model verbalized nothing at
-all**.
-
-Read that against Part 5. That is **our Probe–Report Gap**, at frontier scale, in
-production. Our thesis just got corroborated on a model we will never be able to run.
-That is a citation asset, not a scoop.
-
-Now the part that matters. Their own paper says:
-
-> *"We cannot validate NLA measurements of evaluation awareness against ground truth,
-> because the model's underlying beliefs are unobservable."*
-
-They further acknowledge the method sometimes makes "verifiably false claims," is a
-black box internally, and has "excessive expressivity" — the verbalizer can infer things
-beyond what the activation actually contains. And the wider interpretability-evaluation
-literature says the same thing in general: **there is no ground truth for explanations.**
-
-**Ground truth is the binding constraint of this entire field. Concept injection
-manufactures it.** That is what our apparatus does by construction, and it is why a lab
-with a thousand times our compute cannot simply do this instead. The asymmetry is not
-scale — it is that we planted the answer.
-
-So the flagship experiment became **E13**:
-
-> *Ground truth for self-knowledge: validating activation-verbalization methods against
-> planted content.*
-
-Take the methods the field is already trusting in safety audits, plant known content, and
-measure three things nobody can currently measure:
-
-1. **Recovery** — does the method find the planted content?
-2. **Attribution** — does it find it *for the right reason*, or via output steering and
-   ordinary inference? (This is our neutral-framing control, and it directly
-   operationalises the "excessive expressivity" problem they name but cannot test.)
-3. **Confabulation rate** — plant **nothing**, ask the method what is there, and count
-   how often it asserts content anyway.
-
-The third is the one to care about. It is a false-positive rate for verbalization
-methods: a number the field urgently needs, currently cannot produce, and that we can
-generate on a 2B model.
-
-**And notice what happened to our compute problem.** Validation needs ground truth and
-controls, not frontier scale. Patchscopes, SelfIE and logit lens are inference-only and
-run on the free tier today. (NLA itself trains two language models with reinforcement
-learning and is genuinely out of our reach — we say so rather than pretend otherwise.)
+**And note what this does to our compute problem.** Validation needs ground truth and
+controls, not scale. Several of the methods we would evaluate are inference-only and run
+on free-tier GPUs today. (One of them trains two language models with reinforcement
+learning and is genuinely beyond us — we scope that out honestly rather than pretend.)
 Our biggest weakness stopped being load-bearing.
 
-**One honest risk you should know:** Anthropic *invented* concept injection. Combining it
-with NLA to close their own validation gap is an obvious move they could make at any
-time. That is why the benchmark matters more than the finding — benchmarks win on
-adoption rather than on being first.
+**The honest risk:** the lab that published that method also invented concept injection.
+Closing their own validation gap is an obvious move they could make at any time. That is
+why the **benchmark** matters more than the finding — benchmarks win on adoption, not on
+being first.
 
-## 9.1a-3 Why this is publishable no matter what happens
+## 9.2 Two preprints, not one
 
-A reasonable worry when you join a two-year project: what if we get scooped and it was
-all wasted? Here is the honest arithmetic.
+| | Content | When | Compute |
+|---|---|---|---|
+| **Preprint 1** | The steering confound, the control protocol, the Probe–Report Gap, and an audit of published claims | **Dec 2026 / Jan 2027** | **None needed** |
+| **Preprint 2** | The E13 benchmark and a larger-model arm | May / June 2027 | Yes |
 
-**A publishable paper already exists.** The PRG result, the causal patching result, the
-naturalistic validity check, the steering confound, and a pre-registered falsification
-together form a coherent, controlled, honestly-reported set — today. It is not
-NeurIPS-main-track as it stands, but "unpublishable" is not the risk. The risk is a
-weaker venue, which is a much smaller problem.
+The reasoning is worth understanding, because it is the main thing protecting two years
+of work: **once Preprint 1 is public, nothing anyone else publishes can make this thesis
+unpublishable.** Priority is timestamped, and everything afterwards is extension rather
+than prerequisite. Preprint 1 needs no new experiments — the science already exists.
 
-**Benchmarks and protocols coexist; empirical firsts do not.** If someone publishes the
-introspection verdict before us, our version is worthless. If someone publishes a similar
-benchmark, theirs becomes concurrent work we cite while differentiating on the axes they
-lack. Six ground-truth interpretability benchmarks are published and coexisting right now
-(InterpBench, AttributionLab, OpenXAI, M4, BEExAI, F-Fidelity). Moving from the first
-category to the second was the most protective decision in this plan.
+**Venue target: NeurIPS Datasets & Benchmarks.** That is a NeurIPS track, so it counts as
+a top-tier publication, and it is judged on utility, rigour and reproducibility rather
+than novelty and scale — the right way round for us. Main-track NeurIPS or ICLR is a
+stretch we are not planning around.
 
-**So we ship two preprints, not one:**
-- **Preprint 1** (Dec 2026 / Jan 2027) — the confound, the protocol, the PRG, the audit
-  arm. **Requires no new compute.**
-- **Preprint 2** (May / June 2027) — the E13 benchmark and the 32B arm.
+## 9.3 The calendar, and the squeeze that shapes everything
 
-Once Preprint 1 is public, nothing anyone publishes afterwards can make this thesis
-unpublishable. Priority is timestamped and everything later is extension rather than
-prerequisite.
-
-**Where we are aiming:** NeurIPS **Datasets & Benchmarks**. That is a NeurIPS track, so a
-paper there is a top-tier publication — and it is judged on utility, rigour and
-reproducibility rather than novelty and scale, which is exactly the right way round for
-us. Main-track NeurIPS or ICLR is a stretch we are not planning around.
-
-## 9.1b Where we actually are on the calendar (read this before the week numbers)
-
-The week numbers below (W1, W12, Gate A…) are **relative to the capstone's formal
-start, which is August–September 2026** — so W1 is roughly September 2026 and Gate A
-lands around December 2026. Two things follow that are easy to misread otherwise.
-
-**First: everything described in Part 5 happened *before* week 1.** The whole apparatus,
-both backends, the 98 tests, runs R1–R12, and the first pre-registration were built
-ahead of the official start. In the plan's own terms, the work scheduled for W1–W12
-(infrastructure, vector extraction, injection harness, grading, first replication) is
-already done, and parts of Phase II are too. That is a genuinely unusual position for a
-capstone at kickoff, and it is the reason a compute request from an undergraduate is
-credible here — there is a working pilot behind it.
-
-**Second: the head start must not turn into scope inflation.** The saved months go to
-paying down the Addendum 5 debt (digesting the six newly surfaced papers, stratifying
-the concept bank, drafting the pre-registration), *not* to adding new experimental arms.
-Bandwidth is still the thing most likely to kill this project.
-
-**The first semester (Aug–Dec) is departmental literature review and groundwork — and
-that suits us.** None of the work we owe right now needs a GPU: lit notes, the Living
-Review Protocol, bank expansion, the pre-registration draft, the H3 rewrite, and the H8
-test on existing data. The institutional timeline and our actual needs coincide this
-semester rather than competing.
-
-One consequence worth understanding, because it changes what Gate A even asks. Gate A
-was written as "does the base effect replicate on open models?" We already know it does
-not, at 2B/9B, on L2. So Gate A's real question is now **"is our null a real null, or a
-below-threshold null?"** — and that is a *compute* question, not a replication question.
-It is why the 32B tier (§10.3) outranks everything else, and why the compute request
-goes out in August for a January need: institutional access takes months to arrange.
-
-## 9.1c The departmental structure — and the one deadline that shapes everything
-
-The project runs inside the university's four-phase capstone structure, one phase per
-semester, each with graded deliverables:
+The project runs inside a four-phase university capstone, one phase per semester:
 
 | Phase | Semester | The department requires |
 |---|---|---|
 | I | Sem 5 (Aug–Dec 2026) | Problem statement, literature survey, requirements spec, system design, initial prototype |
-| II | Sem 6 (Jan–May 2027) | Extended lit review, detailed architecture, module implementation, experimental evaluation, preliminary results |
-| III | Sem 7 (Aug–Dec 2027) | System testing, validation & verification, **deployment**, final results, tables and graphs, **complete research paper draft** |
+| II | Sem 6 (Jan–May 2027) | Extended lit review, architecture, module implementation, experimental evaluation, preliminary results |
+| III | Sem 7 (Aug–Dec 2027) | System testing, validation, **deployment**, final results, tables and graphs, **complete paper draft** |
 | IV | Sem 8 (Jan–May 2028) | Consolidation, **paper submission**, final report, **demonstration**, dissemination |
 
-**Now spot the trap.** Internships start in **Sem 7** — and Sem 7 is exactly when the
-department wants the complete paper draft, with submission in Sem 8. The heaviest
-intellectual output is demanded precisely when your available hours collapse.
-
-So the single governing rule of this project's schedule is:
+**Now spot the trap: internships start in Sem 7** — exactly when the department wants the
+complete paper draft. Peak output demanded at your bandwidth trough. Hence the single
+governing rule of this schedule:
 
 > **All science finishes by the end of Sem 6 (May 2027). Sems 7 and 8 are writing,
-> hardening, deployment, and dissemination — never discovery.**
+> hardening, deployment and dissemination — never discovery.**
 
-Four consequences you should treat as hard constraints:
-1. **Any experiment not started by roughly March 2027 does not happen** in this paper.
-   It becomes paper #2. Say so out loud when someone proposes a new arm late.
-2. **Compute must be *live* by January 2027**, not merely requested — which is why the
-   mentor ask goes out in August for a January need (institutional access takes
-   months).
-3. **The confirmatory freeze sits inside Sem 6**, not Sem 7.
+Four consequences, all hard constraints:
+1. **Nothing new starts after roughly March 2027.** Later ideas become paper #2.
+2. **Compute must be *live* by January 2027**, not merely requested — institutional
+   access takes months, which is why the ask goes out in August.
+3. The confirmatory freeze sits inside Sem 6.
 4. **No experiment may be load-bearing for a Sem 7/8 deadline.** If a result is still
-   pending when the internship starts, the paper has to be writable without it.
+   pending when the internship starts, the paper must be writable without it.
 
-**Superseded 2026-07-30 — now TWO preprints (see §9.1a-3).** Preprint 1 (the confound
-protocol, no new compute) ships Dec 2026 / Jan 2027, and Preprint 2 (E13 + the 32B arm)
-ships May / June 2027, which is the artifact the paragraph below describes. The reasoning
-below still explains why the *second* one is timed where it is.
+**Two things this makes non-optional.** The public benchmark and a working demo are
+*graded departmental deliverables* ("deployment", "project demonstration") — not optional
+polish — and they fit Sems 7–8 well because they are engineering against frozen results.
+And because the department's template is a software-engineering one while this is
+empirical research, present the work under **their** vocabulary: "requirements
+specification" is our design specs plus the pre-registration; "initial prototype" is the
+injection core. The full mapping is in masterplan Addendum 7.
 
-**One piece of luck worth protecting.** The preprint was moved to W30 for scoop
-reasons — and W30 lands at roughly April 2027, the end of Sem 6. That means the
-preprint *is* the Phase III "complete research paper draft." One artifact satisfies
-both the field-priority need and the departmental requirement, and it lands *before*
-the internship squeeze instead of during it. That date should not slip.
+## 9.4 The semester plan
 
-**And one thing that is not optional, despite looking like a luxury.** The public
-benchmark release and the interactive demo might read as nice-to-have reach items. They
-are not: the department grades **"Deployment"** and **"Project Demonstration"** as
-required deliverables, and those two artifacts are how an empirical interpretability
-project satisfies them. They are budgeted into Sems 7–8, where they fit well — they are
-engineering work against already-frozen results, so they don't violate the
-no-discovery-after-Sem-6 rule.
+The organising principle: **Sem 5 takes everything that does not need a GPU; Sem 6 takes
+everything that does.**
 
-**A presentation note.** Because the pilot was done pre-semester, *every* Phase I
-deliverable is already complete and most of Phase II is too. Resist the urge to dump all
-of it into a Phase I review: leading with Phase II material either confuses the process
-or sets an expectation ratchet you then have to exceed for three more semesters. Lead
-with the Phase I items, and hold R7–R12 as evidence that the approach works.
+**Sem 5 (Aug–Dec 2026) — prepare, and ship Preprint 1**
+- Secure compute (must be live by January)
+- Draft the pre-registration
+- Digest the recent literature; stand up the weekly review protocol
+- Expand and domain-stratify the concept bank
+- Replace proxy covariates with real frequency and concreteness data
+- Begin human gold labels for grading agreement
+- Spec E13 and pilot its cheap, inference-only parts on free tier
+- **Ship Preprint 1**
 
-Finally, a translation habit. The departmental template is a **software-engineering**
-one ("requirements specification," "module implementation," "system testing,"
-"deployment") while this is an **empirical research** project. The work maps cleanly, but
-present it under *their* names or reviews stall on "where is your requirements
-specification?" (Answer: `docs/specs/` plus the pre-registration.) The full mapping table
-is in masterplan Addendum 7.
+**Sem 6 (Jan–May 2027) — the science semester**
+- The larger-model arm (resolves whether our null sits below the field's threshold)
+- A second model family
+- E13 proper
+- Human-validated grading with a reported agreement score
+- The confirmatory freeze
+- **Ship Preprint 2**
 
-## 9.2 The six phases and four gates
+**Sem 7 (Aug–Dec 2027)** — internship squeeze. Writing, figures, the validation
+write-up, benchmark release and demo. No new experiments.
 
-The 100-week plan runs in six phases, punctuated by four formal **gates** (Gate A–D) —
-checkpoints where the team writes a report, a mentor reviews it, and a go/pivot decision
-is made. Gates are where the plan is "forced to be honest"; between them it is allowed to
-breathe.
+**Sem 8 (Jan–May 2028)** — submission, final report, demonstration, dissemination.
 
-- **Phase I — Foundations & Replication (W1–W12).** Read the field, build the harness,
-  reproduce the base effect on open models. **Gate A (W12):** does the effect even
-  replicate on models we can run? (Much of our pilot is really advanced Phase-I work.)
-- **Phase II — Design Freeze & Dissociation (W13–W30).** Freeze the pre-registration and
-  the concept bank; run the core dissociation battery (controls, frequency analysis, the
-  Probe–Report Gap). **Gate B (W30):** which way is the dissociation pointing?
-- **Phase III — Mechanism (W31–W44).** Activation patching and ablation to find the
-  causal pathway; source-attribution (L3) experiments; first public flag-plant.
-- **Phase IV — Training Arm & Scale (W45–W60).** Fine-tune for introspection and test
-  whether it creates real access or a shortcut; push to larger models via remote
-  compute. **Gate C (W60):** lock the flagship claim; freeze the confirmatory runs.
-- **Phase V — Confirmation & Benchmark (W61–W74).** Run the frozen confirmatory
-  experiments from clean seeds (the numbers that go in the abstract); package
-  PLANTED.
-- **Phase VI — Publication, Thesis, Defense (W75–W100).** Hostile internal reviews,
-  de-overclaiming passes, preprint + public release, submission, thesis, defense. **Gate
-  D (W84):** where does it publish?
+## 9.5 Where we actually are, and what is honest about it
 
-## 9.3 The experiment families (E0–E10)
+Everything in Part 5 was done **before the capstone formally started**. In the
+department's terms, all of Phase I and most of Phase II is already complete. Two cautions
+follow.
 
-The masterplan organizes runs into families you will hear referenced by ID: **E0** infra
-smoke-tests, **E1** replication, **E2** the dissociation battery (controls, forced
-identification), **E3** confabulation characterization (the frequency/concreteness
-analysis with exact counts), **E4** the Probe–Report Gap at scale, **E5** mechanism
-(patching/ablation/circuits), **E6** the training arm, **E7** source & memory (L3),
-**E8** the naturalistic arm, **E9** pressure & adversarial (can a model *conceal* a
-detected injection? — directly safety-relevant), **E10** the confirmatory freeze. Our
-pilot runs are early, small versions of E1/E2/E4/E5/E8. The new hypothesis H7 has its own
-planned run, **E11a** (the persona-gate ablation), which is the single highest-value next
-experiment.
+**Do not let the head start become scope inflation.** The saved months go to paying down
+what the plan already owes — literature, the stratified bank, the pre-registration — not
+to adding new arms. Bandwidth is the thing most likely to kill this project.
 
-## 9.4 The contingency tree: why no result can sink us
+**Pace the reveal.** Leading a Phase I review with Phase II material either confuses the
+process or sets an expectation you then have to exceed for three more semesters.
 
-A distinctive feature of the plan: it pre-commits to what the paper *becomes* under every
-possible outcome, so no result is a "failure."
+**And the honest self-assessment**, because you will be asked and should not oversell.
+Rigour and reproducibility: top-decile — a filed-and-falsified pre-registration, three
+distinct control conditions, bootstrap confidence intervals, an explicit list of claims
+we cannot make, 98 tests. Novelty: moderate; ground-truth benchmarking is an active
+genre. **Scale and breadth: our weakest dimension by a distance.** A solid published
+paper with an adopted benchmark is the realistic good outcome — and for an undergraduate
+project in a subfield worked by frontier labs, that is genuinely strong.
 
-- **Branch A — genuine access found:** flagship becomes *"Conditions for Genuine Machine
-  Introspection"* — the regime map plus the causal read-out circuit. Maximal glory;
-  guard hardest against wishful thinking.
-- **Branch B — confabulation everywhere:** flagship becomes *"Machine Introspection Is
-  Confabulation: A Pre-Registered Dissociation"* — with a direct safety payload
-  (self-report-based oversight inherits these error bars). Strong *because* of
-  pre-registration and breadth. **This is where the pilot currently points.**
-- **Branch C — mixed/graded (most likely a priori):** flagship becomes *"The
-  Introspection Ladder: What Models Can and Cannot Know About Themselves"* — the ladder
-  and benchmark become the field's measurement standard.
-- **Branch D — the base effect does not even replicate at our scale:** pivot toward the
-  scale/emergence question and the training arm as the main event.
+## 9.6 If the compute never arrives
 
-The plan is written so ≥70% of the work survives any single branch switch. That is
-deliberate insurance against a two-year bet on one outcome.
+Registered in advance, so the decision is not made under deadline pressure. If no
+larger-model access is working by around February 2027, the paper becomes: the steering
+confound and its control protocol, the Probe–Report Gap with the causal and naturalistic
+results, an explicitly scoped null, and the pre-registered falsification. All of that is
+**already complete and needs no further compute**. It loses the headline and keeps the
+contributions nobody else has.
 
-## 9.5 What has to be true before we submit (the honest gap list)
-
-From the paper outline's "what must be true before submission," in priority order — this
-is the concrete to-do list that turns the pilot into a paper:
-
-1. **Variance beyond concepts** — confidence intervals that also capture prompt-wording
-   and model-family variability, not just concept-to-concept.
-2. **Separate steering from access with better data** — redo the R11/R12 control with
-   *real* frequency counts (infini-gram) and concreteness norms (Brysbaert) instead of
-   the current proxies.
-3. **Rule out "the prompt was just bad"** — the informative-framing question, ideally at
-   larger scale (this is what R12 started and what the Pearson-Vogel non-replication
-   makes urgent).
-4. **Human-validated grading** — a human-labeled gold set and a judge model with a
-   reported agreement (kappa), so the grading section is defensible.
-5. **A second model family** — Qwen or Llama, because "Gemma 2B and 9B" is one lineage
-   and a reviewer will pounce on it.
-6. **A bigger concept bank** — toward the 240-concept stratified bank, so
-   frequency/concreteness effects can be cleanly separated.
-7. **Pre-registration of the confirmatory claims** — especially the H7 persona-gate
-   prediction, registered *before* E11a is run.
-
-The publication target is a **full conference paper** at an interpretability/safety venue
-(NeurIPS / ICML / ICLR), with an **arXiv preprint** as an early flag-plant to establish
-priority (masterplan Addendum 4). The old "workshop paper" milestone was dropped in favor
-of this.
+This is also the correct answer when a mentor or reviewer asks "what if you never get the
+GPUs?"
 
 ---
 ---
@@ -2344,17 +2196,22 @@ Welcome again — here is how to actually get productive.
 
 ## 10.1 Your first week
 
-1. **Read Parts 1–5 of this guide** (big picture → science → what we found). Do not
-   worry about memorizing the code yet.
+1. **Read Parts 1–5 of this guide** (big picture → how models work → the method → what we
+   measure → what we found). Do not worry about memorising the code yet. If you are short
+   on time, **§4.4 is the one section you cannot skip.**
 2. **Get the repo running and `pytest` green** (Part 7). This alone teaches you a lot.
-3. **Read `docs/paper/2026-07-15-paper-outline.md`**, especially the claims table. It is
-   the fastest way to see the whole result-space on one screen.
-4. **Skim `docs/LAB_NOTEBOOK.md`** — read the detail entries for R7, R8, R11, and R12
-   (the four most important runs). You now have the context to understand them.
-5. **Read the masterplan's addenda** (bottom of `docs/plan/masterplan.md`) to know the
-   current strategic state.
-6. **Read Part 8 of this guide again** before you touch git — the human-authored
-   convention and pre-registration discipline especially.
+3. **Read Part 9** to know what we are actually building now, then the **CURRENT STATE
+   block** at the top of `docs/plan/masterplan.md` — one screen, and it supersedes
+   anything older that contradicts it.
+4. **Read the claims table** in `docs/paper/2026-07-15-paper-outline.md`. Fastest way to
+   see the whole result-space, including what we explicitly *cannot* claim.
+5. **Skim `docs/LAB_NOTEBOOK.md`** — read the detail entries for R7, R8, R11 and R12 (the
+   four that matter). You will have the context to understand them by now.
+6. **Re-read Part 8** before you touch git — the human-authored convention and the
+   pre-registration discipline especially.
+
+Only read the masterplan's ten addenda if you need the reasoning behind a specific
+decision; the CURRENT STATE block and Part 9 are the live picture.
 
 ## 10.2 A good first task
 
@@ -2366,45 +2223,47 @@ test-first code → lab-notebook entry). Good candidates that are genuinely usef
   `concepts.py`, `dev_bank.yaml`, `synonyms.yaml`.)
 - **Replace a covariate proxy** — swap the `wordfreq` frequency proxy for real
   infini-gram counts, or the binary abstractness for Brysbaert concreteness norms, in
-  `forced_choice.py`, with tests. (This is on the critical path — item 2 in 9.5.)
+  `forced_choice.py`, with tests. (This is on the critical path — §10.3 item 3.)
 - **Add the probe's confidence interval** (leave-one-prompt-out cross-validation for the
   PRG), which the outline flags as not yet computed.
 
 Whatever you pick: write the spec, write the plan, do it test-first, log it. Have it
 reviewed before it lands.
 
-## 10.3 The biggest open questions (where the exciting work is)
+## 10.3 The open questions, in priority order
 
-If you want to aim at the heart of the project, these are the live scientific questions:
+These are ordered by what actually moves the project, not by what sounds most exciting.
+The first three are the ones that matter.
 
-- **E11-pilot, then the H7 test (E11a).** The pilot shows the information is present and
-  active but unreported. Is the report *gated by the assistant persona*? The test is to
-  build the "Assistant Axis" direction, steer the model along it **inside the model**
-  (not just reword the prompt, as R12 did), and watch whether identification moves
-  **while the probe stays flat**. As of 2026-07-25 we run **E11-pilot first** — measure
-  the dose-response curve across the axis in both directions, exploratory — and only
-  then pre-register the measured shape as E11a. See §4.3 for why the direction-predicting
-  version of H7 was withdrawn. Still the highest-ceiling experiment on the board.
-- **Get to a 32B tier — now the top priority, and it unblocks two things at once.**
-  Field-wide, L1 detection replicates at around 32B. Our 2B/9B null may therefore sit
-  *below the effect threshold*, and a null below threshold means nothing — this is the
-  single biggest threat to our headline claim. Separately, **Qwen-3-32B already has a
-  published Assistant Axis**, so the same acquisition also hands E11-pilot its direction
-  for free. (Related: does the Pearson-Vogel informative-framing benefit appear at that
-  scale? Their result was 32B; ours reversed at 2B. A clean scale threshold is a real
-  finding.)
-- **A second model family.** Everything so far is Gemma. Does the whole story replicate
-  on Qwen or Llama? Until it does, we cannot generalize.
-- **Is our concept bank hiding the effect?** Access looks **domain-conditional**, and
-  our 16 concepts are mostly concrete nouns — we may be sampling the domain where access
-  is *weakest*, which would make our null an artifact of bank composition. Stratify by
+**1. E13 — build the validation benchmark (the flagship).** Take the interpretability
+methods the field already trusts, plant known content, and measure recovery, attribution
+and — above all — **confabulation rate**. See §9.1. Much of it is inference-only and
+runnable on free tier, which makes it the rare high-value item that is not
+compute-blocked. This is where a newcomer can have the most impact.
+
+**2. Get to a larger-model tier.** Field-wide, the detection effect replicates at around
+32B. Our 2B/9B null may therefore sit *below the threshold where the phenomenon exists*,
+and a null below threshold means nothing. It also unblocks a published persona axis for
+free. Not a coding task — an access/logistics one — but it gates Preprint 2.
+
+**3. A second model family, and human-validated grading.** Unglamorous, and the two
+cheapest fixes to our weakest reviewer-facing dimensions. Everything so far is Gemma;
+until it replicates on Qwen or Llama we cannot generalise. And without a human gold set
+with a reported agreement score, the grading section is indefensible regardless of how
+good the science is.
+
+**Secondary, genuinely interesting, but lower priority:**
+
+- **Is the concept bank hiding the effect?** Access looks domain-conditional, and our 16
+  concepts are mostly concrete nouns — we may be sampling the domain where access is
+  *weakest*, which would make the null an artifact of bank composition. Stratify by
   domain and pre-register the stratification.
 - **H8 — the constrained metacognitive space.** A third account beside H1/H2: access may
-  exist only for directions that are interpretable / high-explained-variance. It predicts
-  the Probe–Report Gap varies with the injected direction's explained variance — cheap,
-  and mostly testable on data we already have.
-- **Human-validated grading.** Unglamorous but gating: without it, the grading section is
-  indefensible.
+  exist only for directions that are interpretable or high-variance. Predicts the
+  Probe–Report Gap varies with the injected direction's explained variance. Cheap.
+- **H7 — the persona gate (§4.3).** Measure the dose-response curve along the Assistant
+  Axis first, pre-register the shape second. High ceiling, but several better-resourced
+  groups work on persona directions, so treat it as a poor novelty bet.
 
 ## 10.4 How to be useful on this team
 
@@ -2661,11 +2520,11 @@ not in the registry, it didn't happen."
 **Confabulation rate (of a method).** Distinct from model confabulation. With *nothing*
 planted, how often does an interpretability method assert that content is present? A
 false-positive rate for verbalization methods — a number the field cannot currently
-produce, and the headline metric of E13. See §9.1a-2.
+produce, and the headline metric of E13. See §9.1.
 
 **E13.** The flagship experiment: a ground-truth validation benchmark for
 activation-verbalization methods. Three axes — recovery, attribution, confabulation rate.
-See §9.1a-2.
+See §9.1.
 
 **NLA (Natural Language Autoencoder).** A method that reads a model's activations and
 describes them in plain English, built from an activation *verbalizer* and an activation
@@ -2678,7 +2537,7 @@ the flagship deliverable rather than a side artifact.
 
 **Preprint 1 / Preprint 2.** The two-artifact publication hedge. P1 = the confound and
 protocol, Dec 2026/Jan 2027, no new compute. P2 = E13 plus the 32B arm, May/June 2027.
-Once P1 is public, priority is timestamped. See §9.1a-3.
+Once P1 is public, priority is timestamped. See §9.2.
 
 **Seed twin.** A control: a second model with identical architecture, tokenizer and
 training data, differing only in random initialisation. The clean way to test a
@@ -2735,26 +2594,34 @@ Our standard loop. See 8.3.
 
 ## 12.1 FAQ
 
-**Q: In one sentence, what is the project trying to find out?**
-Whether a language model, when it talks about its own internal state, is genuinely reading
-that state or just confabulating a plausible story.
+**Q: In one sentence, what is this project?**
+We plant known content inside a language model to manufacture **ground truth**, and use it
+to test whether claims about a model's internal state — the model's own, or an
+interpretability method's — are actually trustworthy.
 
-**Q: What is the current answer?**
-On the small open models we can afford, it looks like **confabulation** — but with the
-twist that the injected concept is provably *present and causally active* inside the model
-while going *unreported* (a read-out gap). The one apparent "introspection" signal turned
-out to be output steering, not access. All of this is pilot-grade and needs rigorous,
-multi-model, pre-registered confirmation.
+**Q: What did we find?**
+The headline is a **confound**. Ask a model which concept was planted and it succeeds far
+above chance, which looks like introspection. Ask it to "pick a word from this list" —
+same injection, no mention of minds — and it does *better*. The apparent self-knowledge
+was **output steering**. Separately: the planted concept is provably present in the
+model's activations and causally drives its output, yet goes unreported (a Probe–Report
+Gap of 0.83). All pilot-grade, one model family.
 
-**Q: Why is it a big deal either way?**
-If genuine introspection exists somewhere, we would be the first to find and locate it. If
-it is confabulation, we undermine "just ask the model about itself" as an AI-safety tool.
-No boring outcome.
+**Q: Why does this matter?**
+If AI oversight is going to rest on systems explaining themselves, somebody has to check
+whether those explanations are true — and right now the tools used for checking are
+themselves unchecked, because nobody has ground truth. We do.
 
 **Q: What is the single most important concept to understand?**
-The **residual stream** (the conveyor belt inside the model that we read from and add to)
-— and, close behind, the **steering-vs-access** trap (why "injected X, model said X" is
-not automatically introspection).
+The **residual stream** (the conveyor belt inside the model that we read from and add to),
+and then **output steering** (§4.4) — why "injected X, model said X" is not automatically
+introspection. Steering is the confound the whole project turns on.
+
+**Q: The project changed direction — what actually changed?**
+The *question* moved from empirical ("do models introspect?") to methodological ("how do
+you measure any self-knowledge claim without fooling yourself?"). The *apparatus* did not
+change at all. Two reasons: the empirical question is crowded by better-resourced labs,
+and measurement tools appreciate as a field crowds while empirical findings depreciate.
 
 **Q: Why do we keep saying our own results are "just pilot"?**
 Because they are one model family, one seed, 16 concepts, automatic grading, and only one
@@ -2793,7 +2660,7 @@ field is short of and which concept injection manufactures.
 **Q: Aren't lots of people working on introspection? Won't we be scooped?**
 Yes, lots of people are — one research cohort alone had ~15 projects on it. That is why
 the thesis was repositioned from an empirical claim to a measurement protocol and
-benchmark (§9.1a). Empirical firsts are winner-take-all; benchmarks coexist. Six
+benchmark (§1.5, §9.1). Empirical firsts are winner-take-all; benchmarks coexist. Six
 ground-truth interpretability benchmarks are published simultaneously right now. And
 Preprint 1 ships in January with no new compute, after which priority is timestamped and
 nothing anyone else publishes can make this unpublishable.
@@ -2884,10 +2751,17 @@ infrastructure space. Different field; the research namespace is clear.
 - We check whether the info is even present with a **probe** (the **Probe–Report Gap**),
   whether it is causally active with **patching**, and whether our directions are real with
   the **naturalistic arm**.
-- The pilot says: **present, active, unreported** — confabulation, with the apparent access
-  signal explained by steering.
+- The pilot says: **present, active, unreported** — with the apparent access signal
+  explained by steering.
+- **Now we point the same apparatus at the field's own tools.** Interpretability methods
+  that read a model's internals face the same three questions and have no ground truth to
+  answer them. We plant the answer, so we can measure their **recovery**, their
+  **attribution**, and their **confabulation rate** — the flagship, **PLANTED / E13**.
 - We work **test-first**, **pre-register** confirmatory claims, **log every run**, and keep
   the repo **human-authored**.
+
+**The one-line version:** *ground truth is what this field is short of, and we manufacture
+it.*
 
 Welcome to APERTURE. Now go read `docs/LAB_NOTEBOOK.md` and get `pytest` green.
 
