@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/header/graph.svg?title=APERTURE&subtitle=Measuring+self-knowledge+in+language+models+without+being+fooled+by+output+steering&theme=slate&align=left&font=geist&mode=dark" />
-    <img alt="APERTURE — measuring self-knowledge in language models without being fooled by output steering" src="https://shieldcn.dev/header/graph.svg?title=APERTURE&subtitle=Measuring+self-knowledge+in+language+models+without+being+fooled+by+output+steering&theme=slate&align=left&font=geist&mode=light" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/header/graph.svg?title=APERTURE&subtitle=Ground+truth+for+language-model+self-knowledge&theme=cyan&logo=data:image/svg%2Bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMS45Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI5LjIiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIzLjYiLz48L3N2Zz4=&logoColor=22d3ee&mode=dark" />
+    <img alt="APERTURE — ground truth for language-model self-knowledge" src="https://shieldcn.dev/header/graph.svg?title=APERTURE&subtitle=Ground+truth+for+language-model+self-knowledge&theme=cyan&logo=data:image/svg%2Bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMS45Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI5LjIiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIzLjYiLz48L3N2Zz4=&logoColor=0891b2&mode=light" />
   </picture>
 </p>
 
@@ -11,7 +11,6 @@
   <a href="LICENSE"><img alt="license" src="https://shieldcn.dev/github/license/santoshcheethiralame-dot/APERTURE.svg?variant=secondary&font=geist" /></a>
   <a href="docs/LAB_NOTEBOOK.md"><img alt="runs logged" src="https://shieldcn.dev/badge/runs-12%20logged-violet.svg?variant=secondary&font=geist" /></a>
   <a href="docs/prereg/"><img alt="pre-registered" src="https://shieldcn.dev/badge/pre--registered-2%20filed-orange.svg?variant=secondary&font=geist" /></a>
-  <a href="https://github.com/santoshcheethiralame-dot/APERTURE/commits/main"><img alt="last commit" src="https://shieldcn.dev/github/last-commit/santoshcheethiralame-dot/APERTURE.svg?variant=secondary&font=geist" /></a>
 </p>
 
 ---
